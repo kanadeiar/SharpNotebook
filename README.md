@@ -6,9 +6,9 @@
 [Привет мир](./welcome/index.md)
 
 ## Платформа
-[Общее по платформе .NET](./platform/index.md).
-
+[Общее по платформе .NET](./platform/index.md).  
 [Среда CLR](./platform/clr.md).
+[Система типов CTS](./platform/cts.md).
 
 ## Базовые конструкции
 Все базовые конструкции, типы языка C#.
