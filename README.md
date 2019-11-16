@@ -5,6 +5,7 @@
 ## Платформа
 Сведения о платформе .NET.
 
+по [ссылке](./platform/index.md).
 * [Создание приложения Hello World на C# с помощью .NET Core в Visual Studio 2017.](./tutorials/with-visual-studio.md)
 
 ## Базовые конструкции
