@@ -3,10 +3,8 @@
 Мой блокнот по языку C#.
 
 ## Платформа
-Сведения о платформе .NET.
-
-по [ссылке](./platform/index.md).
-* [Создание приложения Hello World на C# с помощью .NET Core в Visual Studio 2017.](./tutorials/with-visual-studio.md)
+[Общие сведения о платформе .NET](./platform/index.md).
+[Среда CLR](./platform/clr.md).
 
 ## Базовые конструкции
 Все базовые конструкции, типы языка C#.
