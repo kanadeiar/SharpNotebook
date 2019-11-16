@@ -5,15 +5,12 @@
 ```csharp
 using System;
 
-namespace ConsoleApp1
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            Console.WriteLine("Привет, мир!");
-            Console.ReadKey();
-        }
+        Console.WriteLine("Привет, мир!");
+        Console.ReadKey();
     }
 }
 ```
