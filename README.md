@@ -1,16 +1,15 @@
-# <a name="dot-net-notebook"></a>Блокнот по C#
+# Блокнот по C#
 
 Мой блокнот по языку C#.
 
 ## Платформа
-[Общие сведения о платформе .NET](./platform/index.md).
+[Общее по платформе .NET](./platform/index.md).
 
 [Среда CLR](./platform/clr.md).
 
 ## Базовые конструкции
 Все базовые конструкции, типы языка C#.
 
-* [Создание приложения Hello World на C# с помощью .NET Core в Visual Studio 2017.](./tutorials/with-visual-studio.md)
 
 ## Ссылки
 Рихтер Рихтер Дж. -  CLR via C#. Программирование на платформе Microsoft .NET Framework 4.5 на языке C# (Мастер-класс) - 2013
