@@ -1,3 +1,3 @@
 
 
-[Среда CLR](./platform/clr.md).
+[Среда CLR](./clr.md).
