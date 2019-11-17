@@ -73,7 +73,7 @@ class MySuperArray
     {
         arr[i] = value;
     }
-    public int this[int i] //индексируемое свойство
+    public int this[int i] //индексируемое свойство - лучше всего рабоать этим
     {
         get { return arr[i];}
         set { arr[i] = value; }
@@ -90,7 +90,7 @@ MySuperArray arr = new MySuperArray(10);
 for (int i = 0; i < 10; i++)
     arr.Set(i, i); //через свойство
 for (int i = 0; i < 10; i++)
-    arr[i] = i; //через индексатор
+    arr[i] = i; //через индексатор - лучше всего работать этим
 for (int i = 0; i < 10; i++)
     arr.GetRef(i) = 10; //через ссылку
 ```
