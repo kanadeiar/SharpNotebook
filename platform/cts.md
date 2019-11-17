@@ -15,21 +15,37 @@
 - Типы делегатов CTS. Класс, выполняющий функцию безопасного вызова функции через указатели.
 
 Встроенные типы данных CTS:
+
 Тип в CTS      Тип в C#
+
 System.Boolean - bool
+
 System.Byte - byte
+
 System.SByte - sbyte
+
 System.Int16 - short
+
 System.Int32 - int
+
 System.Int64 - long
+
 System.UInt16 - ushort
+
 System.UInt32 - uint
+
 System.UInt64 - ulong
+
 System.Single - float
+
 System.Double - double
+
 System.Decimal - decimal
+
 System.Object - object
+
 System.Char - char
+
 System.String - string
 
 Большинстрово этих типов располагают любом количеством членов, таких как: конструктор, финализатор, статический коснструктор, вложенный тип, операция, метод, свойство, индексатор, поле, константа, событие. И член может быть открытый, закрытый, защищенный, абстрактым, виртуальным, статическим или членом экземплра.
