@@ -30,19 +30,19 @@
 
 [Ветвления](./basic/indexIfs.md).
 
-[Цикличность](./basic/Whiles.md).
+[Цикличность](./basic/indexWhiles.md).
 
-[Объекты](./basic/Objects.md).
+[Объекты](./basic/indexObjects.md).
 
-[Массивы](./basic/Arrs.md).
+[Массивы](./basic/indexArrs.md).
 
-[Строки](./basic/String.md).
+[Строки](./basic/indexString.md).
 
-[Делегаты](./basic/Delegates.md).
+[Делегаты](./basic/indexDelegates.md).
 
-[Коллекции](./basic/Collections.md).
+[Коллекции](./basic/indexCollections.md).
 
-[Файлы](./basic/Files.md).
+[Файлы](./basic/indexFiles.md).
 
 ## Оконный C#
 
