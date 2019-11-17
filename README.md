@@ -26,7 +26,7 @@
 
 [Типы данных](./basic/indexTypes.md).
 
-[Функции](./basic/indexFuncs.md).
+[Методы](./basic/indexFuncs.md).
 
 [Ветвления](./basic/indexIfs.md).
 

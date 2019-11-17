@@ -5,14 +5,14 @@
 То есть просто статический метод и есть "функция".
 
 ```csharp
-модификаторы  тип вертаемого   имя
-    public static void MyFunc()
+модификаторы  тип вертаемого   имя     параметры
+    public static void MyFunc(str string)
     {
         ...         тело метода
     }  
 ```
 
-# Вызов метода (функции).
+## Вызов метода.
 Круглые скобки после названия - это значит метод.
 ```csharp
 class My Class
@@ -27,7 +27,7 @@ class My Class
     }    
 }
 ```
-# Вертаемое значение функции (метода).
+## Вертаемое значение функции (метода).
 Вместо void поставить тип - тогда через return можно вертать значения.
 ```csharp
     static int MyFunc()
@@ -39,7 +39,7 @@ class My Class
 ```csharp
     int i = MyFunc();
 ```
-# Перегрузка методов (функций)
+## Перегрузка методов.
 Методы с одинаковыми именами, но разными параметраами являются перегруженными методами.
 ```csharp
 static void Pause()                    
@@ -52,5 +52,43 @@ static void Pause()   //это перегруженный метод
     Console.ReadKey();
 }
 ```
+## Процедурное программирование.
+Программирование, при котором все выполняемые операторы собираются в подпрограммы, в более крупные еденицы кода.
+Исходный код:
+```csharp
+static void Main()
+{
+    Console.WriteLine("Введите вещественное число a:");
+    double a = double.Parse(ReadLine());
+    a = Math.Pow(a, 3);
+    Console.WriteLine($"a в степени 3 равено {a}");
+    ReadKey();
+}
+```
+Можно выделить операции ввода чисел, логической обработки и вывода.
+```csharp
+static double InputDouble()
+{
+    Console.WriteLine("Введите вещественное число a:");
+    return double.Parse(ReadLine());
+}
+static double CalcPowThreee(double a)
+{
+    a = Math.Pow(a, 3);
+}
+static void WriteDoubleToConsole(double a)
+{
+    Console.WriteLine($"a в степени 3 равено {a}");
+}
+static void Main()
+{
+    double a = InputDouble();
+    a = CalcPowThreee(a);
+    WriteDoubleToConsole(a);
+    ReadKey();
+}
+```
+Взаимозаменяемые функции можно заменять другими. Умение представить программу в виде подпрограмм является очень важным умением программиста.
+
 
 
