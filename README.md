@@ -36,7 +36,7 @@
 
 [Массивы](./basic/indexArrs.md).
 
-[Строки](./basic/indexString.md).
+[Строки](./basic/indexStrings.md).
 
 [Делегаты](./basic/indexDelegates.md).
 
