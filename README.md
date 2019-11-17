@@ -4,13 +4,18 @@
 
 ## Введение
 [Привет мир](./welcome/index.md)
+
 [Фичи C#](./welcome/features.md)
 
 ## Платформа
-[Общее по платформе .NET](./platform/index.md).  
+[Общее по платформе .NET](./platform/index.md). 
+
 [Среда CLR](./platform/clr.md).
+
 [Управляемый код](./platform/managed.md).
+
 [Общая система типов CTS](./platform/cts.md).
+
 [Общеязыковая спецификация CLS](./platform/cls.md).
 
 ## Базовые конструкции
