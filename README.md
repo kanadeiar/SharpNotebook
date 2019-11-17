@@ -18,8 +18,42 @@
 
 [Общеязыковая спецификация CLS](./platform/cls.md).
 
-## Базовые конструкции
-Все базовые конструкции, типы языка C#.
+[Общеязыковая инфраструктура CLI](./platform/cli.md)
+
+## Базовый С#
+
+[Консоль](./basic/indexConsole.md).
+
+[Типы данных](./basic/indexTypes.md).
+
+[Функции](./basic/indexFuncs.md).
+
+[Ветвления](./basic/indexIfs.md).
+
+[Цикличность](./basic/Whiles.md).
+
+[Объекты](./basic/Objects.md).
+
+[Массивы](./basic/Arrs.md).
+
+[Строки](./basic/String.md).
+
+[Делегаты](./basic/Delegates.md).
+
+[Коллекции](./basic/Collections.md).
+
+[Файлы](./basic/Files.md).
+
+## Оконный C#
+
+Окно
+
+
+
+## Классический C#
+
+Класс
+
 
 
 ## Использованные источники
