@@ -15,4 +15,4 @@ class Program
 }
 ```
 
-[Фичи C#](./welcome/features.md)
+[Фичи C#](./features.md)
