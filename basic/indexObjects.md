@@ -5,24 +5,24 @@
 В языке C# имеется составной тип данных, называется он структурой. Может в своем составе содержать обычне переменные и методы.
 Структура:
 ```csharp
-        struct MyStruct
-        {
-            public int a;
-            MyStruct(int a) //конструктор
-            {
-                this.a = a;
-            }
-            public MyStruct Plus(MyStruct p) //метод
-            {
-                MyStruct y;
-                y.a = a + p.a;
-                return y;
-            }
-            public string ToString() //перегруженный метод получения строкового заначения
-            {
-                return $"<<a = {a}>>";
-            }
-        }
+struct MyStruct
+{
+    public int a;
+    MyStruct(int a) //конструктор
+    {
+        this.a = a;
+    }
+    public MyStruct Plus(MyStruct p) //метод
+    {
+        MyStruct y;
+        y.a = a + p.a;
+        return y;
+    }
+    public string ToString() //перегруженный метод получения строкового заначения
+    {
+        return $"<<a = {a}>>";
+    }
+}
 ```
 Структуры не поддерживают один из основных принципов ООП - наследование. Назначение - объединить в себе небольшой объем данных.
 
