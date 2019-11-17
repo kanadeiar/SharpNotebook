@@ -44,7 +44,7 @@
 
 [Файлы](./basic/indexFiles.md).
 
-[Библиотека классов](./basic/indexLins.md).
+[Библиотека классов](./basic/indexLibs.md).
 
 ## Оконный C#
 
