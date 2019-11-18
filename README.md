@@ -36,6 +36,8 @@
 
 [Массивы](./basic/indexArrs.md).
 
+[Исключения](./basic/indexExceptions.md).
+
 [Строки](./basic/indexStrings.md).
 
 [Делегаты](./basic/indexDelegates.md).
@@ -46,17 +48,13 @@
 
 [Библиотека классов](./basic/indexLibs.md).
 
-## Оконный C#
-
-Окно
-
-
-
 ## Классический C#
 
 Класс
 
+## Оконный C#
 
+Окно
 
 ## Использованные источники
 [Интересные книги](./link/books.md). 
