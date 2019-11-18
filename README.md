@@ -48,6 +48,8 @@
 
 [Файлы](./basic/indexFiles.md).
 
+[Файловая система](./basic/indexFileSys.md).
+
 [Библиотека классов](./basic/indexLibs.md).
 
 ## Классический C#
