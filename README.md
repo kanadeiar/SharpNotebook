@@ -40,6 +40,8 @@
 
 [Строки](./basic/indexStrings.md).
 
+[Регулярные выражения](./basic/indexRegular.md).
+
 [Делегаты](./basic/indexDelegates.md).
 
 [Коллекции](./basic/indexCollections.md).
