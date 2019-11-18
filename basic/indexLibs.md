@@ -32,8 +32,6 @@ Console.WriteLine(finish-start);
 ```
 
 
-
-
 ## Замер скорости выполения кода:
 ```csharp
 Stopwatch stopwatch = new Stopwatch();
