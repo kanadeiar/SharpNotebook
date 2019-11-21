@@ -50,6 +50,10 @@
 
 [Файловая система](./basic/indexFileSys.md).
 
+[Рефлексия](./basic/indexReflex.md).
+
+[Сериализация и десериализация](./basic/indexSerialization.md).
+
 [Библиотека классов](./basic/indexLibs.md).
 
 ## Оконный C#
@@ -58,7 +62,7 @@
 
 ## Продвинутый C#
 
-Рефлексия
+
 
 ## Классический C#
 
