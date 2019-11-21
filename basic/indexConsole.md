@@ -13,12 +13,43 @@ namespace Lesson1
   }
 }
 ```
+Варианты метода Main() (точка входа приложения):
+```csharp
+static int Main(string [ ] args)
+{
+    return 0;
+}
+static void Main()
+{
+}
+static int Main ()
+{
+    return 0;
+}
+```
+По соглашению возврат значения 0 указывает на то, что программа завершилась успешно, тогда как любое другое значение (вроде -1) представляет условие ошибки (имейте в виду, что значение 0 автоматически возвращается даже в случае, если метод Мат () прототипирован для возвращения void).
+
+## Обработка аргументов командной строки
+```csharp
+foreach(string arg in args)
+    Console.WriteLine("Arg: {0}", arg);
+```
+либо, если допустим применен метод Main без параметров:
+```csharp
+string[] theArgs = Environment.GetCommandLineArgs();
+foreach(string arg in theArgs)
+    Console.WriteLine("Arg: {0}", arg);
+```
+вызов приложения с аргументами: SimpleCSharpApp.ехе /argl -arg2
 
 ## Команды вывода результата в окошко консоли:
+Статический метод WriteLine () помещает в поток вывода строку текста (включая символ возврата каретки).
+Метод Write() помещает в поток вывода текст без символа возврата каретки.
 ```csharp
 Console.Write("Нет перехода");
 Console.WriteLine("Переход на след строку");
 ```
+Ввести cw <Tab><Tab> - сокращение Console.WriteLine().
 
 ## Управляющие последовательности символов:
 Управляющая последовательность      Описание
@@ -51,14 +82,43 @@ F1                  12345.0
 F7                  12345.0000000
 
 ## Команда ввода данных с консольного окошка
+Метод ReadLine () позволяет получить информацию из потока ввода вплоть до нажатия клавиши <Enter>.
+Метод Read() используется для захвата одиночного символа из потока ввода.
 ```csharp
 string str = Console.ReadLine();
 ```
 
+# Продвинутое
 
+## Асинхронные методы main()
+Используются при асинхронном программировании.
+```csharp
+static Task Main ()
+static Task<int> Main()
+static Task Main(string[])
+static Task<int> Main(string[])
+```
 
-
-
-
+## Дополнительные члены класса System.Enviroment
+Показ информации о среде выполения:
+```csharp
+static void ShowEnvironmentDetails ()
+{
+    // Вывести информацию о дисковых устройствах
+    // данной машины и другие интересные детали,
+    foreach (string drive in Environment.GetLogicalDrives())
+        Console.WriteLine("Drive: {0}", drive); // Логические устройства
+    Console.WriteLine("OS: {0}", Environment.OSVersion) ; // Версия
+    // операционной системы
+    Console.WriteLine("Number of processors: {0}", Environment.ProcessorCount); // Количество процессоров
+    Console.WriteLine (".NET Version: {0}", Environment.Version); // Версия платформы .NET
+```
+## Интересные члены класса System.Console
+Beep() - звуковой сигнал определенной частоны, длительности, например Beep(500,500)
+BackgroundColor() - цвет фона
+Title - заголовок консоли
+BufferHeight BufferWidth размер буферной области консоли
+Clear() - очистить вывод консоли
+WindowHeight WindowWidth WindowTop WindowLeft - размер окна
 
 
