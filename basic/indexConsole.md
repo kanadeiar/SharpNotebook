@@ -49,7 +49,7 @@ foreach(string arg in theArgs)
 Console.Write("Нет перехода");
 Console.WriteLine("Переход на след строку");
 ```
-Ввести cw <Tab><Tab> - сокращение Console.WriteLine().
+Ввести cw два раза Tab - сокращение Console.WriteLine().
 
 ## Управляющие последовательности символов:
 Управляющая последовательность      Описание
@@ -67,6 +67,9 @@ Console.WriteLine("Переход на след строку");
 \\                                  Обратная косая черта
 
 ## Форматированный вывод чисел:
+```csharp
+Console.WriteLine ("{1:d}, {0:d2}, {2:d9}”, 10, 20, 30);
+```
 Тип форматирования          Код формата         Результат
 
 Decimal (десятичный)        D                   12345
@@ -114,11 +117,18 @@ static void ShowEnvironmentDetails ()
     Console.WriteLine (".NET Version: {0}", Environment.Version); // Версия платформы .NET
 ```
 ## Интересные члены класса System.Console
+
 Beep() - звуковой сигнал определенной частоны, длительности, например Beep(500,500)
+
 BackgroundColor() - цвет фона
+
 Title - заголовок консоли
+
 BufferHeight BufferWidth размер буферной области консоли
+
 Clear() - очистить вывод консоли
+
 WindowHeight WindowWidth WindowTop WindowLeft - размер окна
+
 
 
