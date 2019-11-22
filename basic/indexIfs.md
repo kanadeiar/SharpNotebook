@@ -98,6 +98,9 @@ switch(choise)
     case string s when s.Equals("who"):
         WriteLine($"Что-то равно двум");
         break;
+    case int _: //отбрасывание
+        WriteLine("Это какое-то число");
+        break;
     default: WriteLine("Неизвестное");
         break;
 }
