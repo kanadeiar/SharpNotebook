@@ -49,7 +49,7 @@ foreach(string arg in theArgs)
 Console.Write("Нет перехода");
 Console.WriteLine("Переход на след строку");
 ```
-Ввести cw два раза Tab - сокращение Console.WriteLine().
+>Ввести cw два раза Tab - сокращение Console.WriteLine().
 
 ## Управляющие последовательности символов:
 Управляющая последовательность      Описание
