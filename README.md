@@ -30,6 +30,8 @@
 
 [Ветвления](./basic/indexIfs.md).
 
+[Перечисления](./basic/indexEnums.md).
+
 [Цикличность](./basic/indexWhiles.md).
 
 [Объекты](./basic/indexObjects.md).
