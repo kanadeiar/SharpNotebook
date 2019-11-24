@@ -65,6 +65,10 @@ WriteLine(values1.Item2);
 var myCort = new {one = "super", two = 5};
 var myTwoCort = (myCort.two, myCort.one);
 WriteLine($"{myTwoCort.one} {myTwoCort.two}");
+
+int count = 5;
+string label = "Colors used in the map";
+var pair = (count, label);
 ```
 
 Кортежи удобно применять как вертаемое значение от методов:
@@ -105,6 +109,12 @@ Super super = new Super {a = 10, b = true};
 var (aVal, bVal) = super.Deconstruct();
 WriteLine(aVal);
 WriteLine(bVal);
+```
+Начиная с версии C# 7.3 типы кортежей поддерживают операторы == и !=.
+```csharp
+var left = (a: 5, b: 10);
+var right = (a: 5, b: 10);
+Console.WriteLine(left == right); // displays 'true'
 ```
 
 
