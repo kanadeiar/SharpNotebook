@@ -10,6 +10,7 @@
 [Фичи C#](./welcome/features.md)
 
 ## Платформа
+
 [Общее по платформе .NET](./platform/index.md). 
 
 [Среда CLR](./platform/clr.md).
@@ -68,13 +69,18 @@
 
 [Обобщения](./advance/indexGeneralized.md).
 
+[События](./advance/indexEvents.md).
+
 ## Классический C#
 
 
 
+## Система контроля версий
 
+[Базовый Git](./git/indexBasic.md).
 
 ## Использованные источники
+
 [Интересные книги](./link/books.md). 
 
 [Интерактивный тур в git](https://githowto.com/ru).
