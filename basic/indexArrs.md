@@ -76,7 +76,18 @@ for(inti=0;i<5;1++)
 ```
 
 ## Индексаторы массивов
-У массивов есть специальные свойства - индексаторы. Такие свойства позволяют получить публичный доступ к приватному полу класса - массиву. Это либо публичный метод, либо индексируемое свойство.
+У массивов есть специальные свойства - индексаторы. Такие свойства позволяют получить публичный доступ к приватному полу класса - массиву. Это либо публичный метод, либо индексируемое свойство. В языке C# предлагается возможность проектирования специальных классов и структур, которые могут индексироваться подобно стандартному массиву, за счет определения индексаторного метода.
+
+>Это наиболее полезно при создании специальных классов коллекций (обобщенных и необобщенных).
+
+Синтаксис индексаторного свойства с применением лямда-выражений:
+```csharp
+public MyClass this[int index]
+{
+    get => arr[index];
+    set => arr[index] = value;
+}
+```
 
 Пример класса:
 ```csharp
@@ -117,10 +128,83 @@ for (int i = 0; i < 10; i++)
     arr.GetRef(i) = 10; //через ссылку
 ```
 
+>Индексаторы являются еще одной формой "синтаксического сахара", учитывая, что ту же самую функциональность можно получить и с помощью старых открытых методов.
 
 
 
 # Продвинутое
+
+## Использование строковых значений в индексаторном свойстве
+Пример класса с индексаторным свойством - строкой:
+```csharp
+public class MyClass
+{
+    public string Name { get; set; }
+    public string SurName { get; set; }
+    public override string ToString()
+    {
+        return $"{SurName} {Name}";
+    }
+}
+public class MyClassCollection : IEnumerable
+{
+    private Dictionary<string, MyClass> list = new Dictionary<string, MyClass>();
+
+    public MyClass this[string name]
+    {
+        get => list[name];
+        set => list[name] = value;
+    }
+    public void Clear()
+    {
+        list.Clear();
+    }
+    public int Count => list.Count;
+    public IEnumerator GetEnumerator() => list.GetEnumerator();
+}
+```
+Пример использования:
+```csharp
+MyClassCollection myCollect = new MyClassCollection();
+myCollect["Max"] = new MyClass {Name = "Max", SurName = "Vik"};
+myCollect["And"] = new MyClass {Name = "And", SurName = "Rot"};
+WriteLine($"SurName = {myCollect["And"]}");
+```
+>Методы индексаторов могут быть перегружены в отдельном классе или структуре - по порядковой позиции, по дружественному строковому имени и по строковому имени с дополнительным пространством имен.
+
+## Многомерные индексаторы
+Пример класса с индексаторным свойством для доступа к многомерному массиву:
+```csharp
+public class DoubleCollection
+{
+    private int[,] myDou = new int[10, 10];
+    public int this[int row, int col]
+    {
+        get => myDou[row, col];
+        set => myDou[row, col] = value;
+    }
+}
+```
+
+## Индексаторы в интерфейсных типах
+Пример использования интерфейса:
+```csharp
+public interface IStringContainer
+{
+    string this[int index] { get; set; }
+}
+public class MyClassInterfaceCollection : IStringContainer
+{
+    private List<string> list = new List<string>();
+    public string this[int index]
+    {
+        get => list[index];
+        set => list[index] = value;
+    }
+}
+```
+
+## Члены класса System.Array
 
 Базовый массив получает массу функциональности от класса System.Array. Вот наиболее интересное что можно сделать с массивами:
 ```csharp

@@ -71,6 +71,8 @@
 
 [События](./advance/indexEvents.md).
 
+[Перегрузка операций](./advance/indexOverloads.md).
+
 ## Классический C#
 
 
