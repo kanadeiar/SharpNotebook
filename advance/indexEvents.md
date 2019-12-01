@@ -225,7 +225,11 @@ class MyClass
 {
     private string name;
     public MyClass(string name) => this.name = name;
-    public string Name => name;
+    public string Name
+    {
+        get => name;
+        set => name = value;
+    }
 }
 ```
 
