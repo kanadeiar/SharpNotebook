@@ -211,14 +211,11 @@ Number n4 = 5 + n1;
 n1 += n2;
 ```
 ## Перегрузка унарных операций
+Пример класса:
 ```csharp
 public class Number
 {
     public int Val { get; set; }
-    //public static Number operator +(Number n1, Number n2) =>
-    //    new Number { Val = n1.Val + n2.Val };
-    //public static Number operator -(Number n1, Number n2) =>
-    //    new Number { Val = n1.Val - n2.Val };
     public static Number operator ++(Number n1) =>
         new Number { Val = n1.Val + 1 };
     public static Number operator --(Number n1) =>
@@ -237,5 +234,53 @@ n2--;
 >В языке C# не допускается перегружать операции префиксного и посфикснго инкремента/декремента. Это автоматически обрабатывается корректно.
 
 ## Перегрузка операций эквивалентности
-
+Пример класса:
+```csharp
+public class Number
+{
+    public int Val { get; set; }
+    public override bool Equals(object obj) => obj.ToString() == this.ToString();
+    public static bool operator ==(Number n1, Number n2) => n1.Equals(n2);
+    public static bool operator !=(Number n1, Number n2) => !n1.Equals(n2);
+}
+```
+Использование:
+```csharp
+var n1 = new Number { Val = 1 };
+var n2 = new Number { Val = 10 };
+bool b = n1 == n2;
+bool b2 = n1 != n2;
+```
 ## Перегрузка операций сравнения
+Для перегрузок операций сравнения рекомендуется применять обобщенный эквивалент интерфейса IComparable. Пример класса с реализованным этим интерфейсом:
+```csharp
+public class Number : IComparable<Number>
+{
+    public int Val { get; set; }
+    public int CompareTo(Number other)
+    {
+        if (this.Val > other.Val)
+            return 1;
+        if (this.Val < other.Val)
+            return -1;
+        return 0;
+    }
+    public static bool operator <(Number n1, Number n2) =>
+        n1.CompareTo(n2) < 0;
+    public static bool operator >(Number n1, Number n2) =>
+        n1.CompareTo(n2) < 0;
+    public static bool operator <=(Number n1, Number n2) =>
+        n1.CompareTo(n2) <= 0;
+    public static bool operator >=(Number n1, Number n2) =>
+        n1.CompareTo(n2) <= 0;
+}
+```
+Использование:
+```csharp
+var n1 = new Number { Val = 1 };
+var n2 = new Number { Val = 10 };
+bool bow = n1 > n2;
+bool men = n2 <= n1;
+```
+
+
