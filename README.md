@@ -37,7 +37,7 @@
 
 [Цикличность](./basic/indexWhiles.md).
 
-[Объекты](./basic/indexObjects.md).
+[Объекты (структуры, кортежи, перегрузка операций)](./basic/indexObjects.md).
 
 [Массивы](./basic/indexArrs.md).
 
