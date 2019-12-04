@@ -149,3 +149,8 @@ Console.WriteLine($"{MyClass.stat_variable} {myclass.variable}"); // 10 20
 ReadKey();
 ```
 
+
+# Продвинутое
+
+## Перегрузка операций
+

@@ -29,7 +29,7 @@
 
 [Типы данных](./basic/indexTypes.md).
 
-[Методы](./basic/indexFuncs.md).
+[Методы (функции)](./basic/indexFuncs.md).
 
 [Ветвления](./basic/indexIfs.md).
 
