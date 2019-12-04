@@ -168,6 +168,8 @@ ReadKey();
 ()                              Не может быть. Ту же функциональность обеспечивают спец методы преобразования.
 += -= *= /= %= &= |= ^= <<= >>= Нельзя. Получение автоматически, когда перегружается бинарная операция.
 ```
+## Перегрузка бинарных операций
+
 Пример перегруженных операций класс:
 ```csharp
 public class Number
@@ -186,3 +188,54 @@ var n2 = new Number { Val = 10 };
 var n3 = n1 + n2;
 var n4 = n1 - n2;
 ```
+В качестве второго параметра может выступать другой тип даных, в этом случае нужно определить обе версии метода.
+Пример операции класс:
+```csharp
+public class Number
+{
+    public int Val { get; set; }
+    public static Number operator +(Number n1, int val) =>
+        new Number { Val = n1.Val + val };
+    public static Number operator +(int val, Number n2) =>
+        new Number { Val = val + n2.Val };
+}
+```
+Использование:
+```csharp
+var n1 = new Number { Val = 1 };
+Number n3 = n1 + 10;
+Number n4 = 5 + n1;
+```
+>Операции += и -= уже перегружены автоматическии:
+```csharp
+n1 += n2;
+```
+## Перегрузка унарных операций
+```csharp
+public class Number
+{
+    public int Val { get; set; }
+    //public static Number operator +(Number n1, Number n2) =>
+    //    new Number { Val = n1.Val + n2.Val };
+    //public static Number operator -(Number n1, Number n2) =>
+    //    new Number { Val = n1.Val - n2.Val };
+    public static Number operator ++(Number n1) =>
+        new Number { Val = n1.Val + 1 };
+    public static Number operator --(Number n1) =>
+        new Number { Val = n1.Val - 1 };
+}
+```
+Использование:
+```csharp
+var n1 = new Number { Val = 1 };
+var n2 = new Number { Val = 10 };
+n1++;
+++n2;
+n2--;
+--n1;
+```
+>В языке C# не допускается перегружать операции префиксного и посфикснго инкремента/декремента. Это автоматически обрабатывается корректно.
+
+## Перегрузка операций эквивалентности
+
+## Перегрузка операций сравнения
