@@ -254,11 +254,24 @@ myInt.AddX(12);
 
 Пример расширяющего класса - расширяет интерфейс IEnumerable<T>:
 ```csharp
-
+static class MyExtentions
+{
+    public static void WriteNBeep(this System.Collections.IEnumerable iterator)
+    {
+        foreach (var item in iterator)
+        {
+            WriteLine(item);
+            Beep(500, 500);
+        }
+    }
+}
 ```
 Пример использования:
 ```csharp
-
+//реализует интерфейс IEnumerable
+List<int> myInts = new List<int> { 10, 11, 12, 1, 5 };
+myInts.WriteNBeep();
+ReadKey();
 ```
 
 
