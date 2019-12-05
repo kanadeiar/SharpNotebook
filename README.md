@@ -27,9 +27,9 @@
 
 [Консоль](./basic/indexConsole.md).
 
-[Типы данных](./basic/indexTypes.md).
+[Типы данных (преобразование типов и null-операции)](./basic/indexTypes.md).
 
-[Методы (функции)](./basic/indexFuncs.md).
+[Методы (функции, модификаторы и расширяющие методы)](./basic/indexFuncs.md).
 
 [Ветвления](./basic/indexIfs.md).
 
