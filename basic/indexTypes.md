@@ -135,6 +135,88 @@ long c = b; //преобразование типа - расширение
 
 # Продвинутое
 
+## Преобразование между связанными типами данных
+
+Когда типы данных связаны классическим наследованием то преобразование можно осуществлять вверх и вниз по иерархии классов. Производный класс всегда может быть приведен к базовому классу. Однако, если нужно сохраниь объект базового класса в переменной производного класса, то нужно выполнить явное приведение:
+```csharp
+class Base { }
+class Derived : Base { }
+//использование:
+Base myBase;
+myBase = new Derived(); //неявное
+Derived myDeriv = (Derived)myBase; //явное
+```
+## Специальные процедуры преобразования
+В языке C# предусмотреты два ключевых слова для управления тем, как типы должны реагировать на попытку преобразования:
+
+explicit - явное преобразование
+
+implicit - неявное преобразование
+
+Пример класса:
+```csharp
+class DoubleVal
+{
+    public double Val { get; set; }
+}
+class IntVal
+{
+    public int Val { get; set; }
+    //явное преобразование типа
+    public static explicit operator IntVal(DoubleVal v1)
+    {
+        return new IntVal { Val = Convert.ToInt32(v1.Val) };
+    }
+}
+```
+Использование:
+```csharp
+DoubleVal dv = new DoubleVal { Val = 1.5 };
+IntVal iv = (IntVal)dv; //явное приведение типа
+```
+Возможно явное преобразование типа относительно стандартного типа, такого как int.
+Пример класса:
+```csharp
+class IntVal
+{
+    public int Val { get; set; }
+    //явное преобразование типа
+    public static explicit operator IntVal(int val)
+    {
+        return new IntVal { Val = val };
+    }
+    public static explicit operator int(IntVal val) => val.Val;
+}
+```
+Использование:
+```csharp
+IntVal iv = (IntVal)10; //явное приведение типа
+int side = (int)iv;
+```
+
+Насчет неявного преобразования. Не допускается определять одновременно функции явного и неявного преобразования. Но когда тип определяет процедуру неявного преобразования, вызывающий код может использовать явное преобразование.
+
+Пример класса:
+```csharp
+class DoubleVal
+{
+    public double Val { get; set; }
+    //неявное преобразование типа
+    public static implicit operator DoubleVal(IntVal v1)
+    {
+        return new DoubleVal { Val = v1.Val };
+    }
+}
+```
+Использование:
+```csharp
+IntVal iv = new IntVal { Val = 19 }; //явное приведение типа
+DoubleVal dv = iv;
+DoubleVal dv2 = (DoubleVal)iv;
+```
+
+
+
 ## Типы значений и ссылочные типы
 
 Типы значений (структура) наследуются от класса System.ValueType и размещаются в стеке, поэтому имеют ограниченное время жизни.
