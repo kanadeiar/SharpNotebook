@@ -27,7 +27,7 @@
 
 [Консоль](./basic/indexConsole.md).
 
-[Типы данных (преобразование типов и null-операции)](./basic/indexTypes.md).
+[Типы данных (преобразование типов, null-операции и анонимные типы)](./basic/indexTypes.md).
 
 [Методы (функции, модификаторы и расширяющие методы)](./basic/indexFuncs.md).
 
@@ -35,11 +35,11 @@
 
 [Перечисления](./basic/indexEnums.md).
 
-[Цикличность](./basic/indexWhiles.md).
+[Цикличность (рекурсия)](./basic/indexWhiles.md).
 
 [Объекты (структуры, кортежи, перегрузка операций)](./basic/indexObjects.md).
 
-[Массивы](./basic/indexArrs.md).
+[Массивы (индексаторы)](./basic/indexArrs.md).
 
 [Исключения](./basic/indexExceptions.md).
 
@@ -47,7 +47,7 @@
 
 [Регулярные выражения](./basic/indexRegular.md).
 
-[Делегаты](./basic/indexDelegates.md).
+[Делегаты (обобщенные делегаты)](./basic/indexDelegates.md).
 
 [Коллекции](./basic/indexCollections.md).
 
@@ -72,6 +72,8 @@
 [События](./advance/indexEvents.md).
 
 [Перегрузка операций](./advance/indexOverloads.md).
+
+[Небезопасный код](./advance/indexUnsafe.md).
 
 ## Классический C#
 
