@@ -74,21 +74,31 @@ StreamReader fileIn=new StreamReader ("c:\temp\data.txt", Encoding.GetEncoding(1
 Пример простого использования:
 ```csharp
 //запись
-StreamWriter sw = new StreamWriter("..\\..\\data.txt");
-for (int i = 0; i < 5; i++)
+StreamWriter writer = new StreamWriter(fileName);
+for (int i = 0; i < arrInts.Length; i++)
 {
-    sw.WriteLine(i);
+    writer.WriteLine(arrInts[i]);
 }
-sw.Close();
+writer.Close();
 //чтение
-StreamReader sr = new StreamReader("..\\..\\data.txt");
-int n = int.Parse(sr.ReadLine());
-for (int i = 0; i < n; i++)
+const int size = 20; //массив из 20 элементов
+StreamReader reader = new StreamReader(fileName);
+int[] retArray = new int[20];
+for (int i = 0; i < size; i++)
 {
-    int a = int.Parse(sr.ReadLine());
-    Console.WriteLine(a);
+    retArray[i] = int.Parse(reader.ReadLine());
 }
-sr.Close();
+reader.Close();
+return retArray;
+```
+
+Пример наипростого использования:
+```csharp
+string[] strs = {"1 первый", "2 второй"};
+File.WriteAllLines("test.txt", strs);
+
+string[] strs2 = File.ReadAllLines("test.txt");
+Array.ForEach(strs2, WriteLine); //вывод элементов массива в консоль
 ```
 
 ## Двоичный поток

@@ -111,6 +111,11 @@ class MySuperArray
         get { return arr[i];}
         set { arr[i] = value; }
     }
+    public int this[int i, int plus] //индексируемое свойство с доп параметром
+    {
+        get { return arr[i] + plus; }
+        set { arr[i] = value + plus; }
+    }
     public ref int GetRef(int i) //через ссылку
     {
         return ref arr[i];
