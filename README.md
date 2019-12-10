@@ -77,7 +77,11 @@
 
 ## Классический C#
 
+[Инкапсуляция](./classic/indexEncapsulation.md).
 
+[Наследование](./classic/indexInheritance.md).
+
+[Полиморфизм](./classic/indexPolymorphism.md).
 
 ## Система контроля версий
 
