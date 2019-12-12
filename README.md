@@ -61,6 +61,16 @@
 
 [Библиотека классов](./basic/indexLibs.md).
 
+## Классический C#
+
+[Основы](./classic/indexBasic.md).
+
+[Инкапсуляция](./classic/indexEncapsulation.md).
+
+[Наследование](./classic/indexInheritance.md).
+
+[Полиморфизм](./classic/indexPolymorphism.md).
+
 ## Оконный C#
 
 [Самые стремные окна](./windows/indexEasy.md).
@@ -74,14 +84,6 @@
 [Перегрузка операций](./advance/indexOverloads.md).
 
 [Небезопасный код](./advance/indexUnsafe.md).
-
-## Классический C#
-
-[Инкапсуляция](./classic/indexEncapsulation.md).
-
-[Наследование](./classic/indexInheritance.md).
-
-[Полиморфизм](./classic/indexPolymorphism.md).
 
 ## Система контроля версий
 
