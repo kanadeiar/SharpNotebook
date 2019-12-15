@@ -29,20 +29,18 @@ FileStream(string filename, FileMode mode, FileAccess how)
 Пример:
 ```csharp
 //запись
-FileStream fileOut = new FileStream("data.txt", FileMode.Create, FileAccess.Write);
+using FileStream fileOut = new FileStream("data.txt", FileMode.Create, FileAccess.Write);
 for (int i = 0; i < 5; i++)
 {
     fileOut.WriteByte((byte)i); 
 }
-fileOut.Close();
 //чтение
-FileStream fileIn = new FileStream("data.txt", FileMode.Open, FileAccess.Read);
-int i;
-while ((i = fileIn.ReadByte())!=-1)
+using FileStream fileIn = new FileStream("data.txt", FileMode.Open, FileAccess.Read);
+int j;
+while ((j = fileIn.ReadByte())!=-1)
 {
-    Console.Write(i);
-} 
-fileIn.Close();
+    Console.Write(j);
+}
 ```
 
 ## Работа с текстовыми файлами - символьный поток
@@ -74,22 +72,22 @@ StreamReader fileIn=new StreamReader ("c:\temp\data.txt", Encoding.GetEncoding(1
 Пример простого использования:
 ```csharp
 //запись
-StreamWriter writer = new StreamWriter(fileName);
+int[] arrInts = {1, 2, 3, 4, 5};
+StreamWriter writer = new StreamWriter("data.txt");
 for (int i = 0; i < arrInts.Length; i++)
 {
     writer.WriteLine(arrInts[i]);
 }
 writer.Close();
 //чтение
-const int size = 20; //массив из 20 элементов
-StreamReader reader = new StreamReader(fileName);
-int[] retArray = new int[20];
-for (int i = 0; i < size; i++)
+StreamReader reader = new StreamReader("data.txt");
+int[] array = new int[5];
+for (int i = 0; i < 5; i++)
 {
-    retArray[i] = int.Parse(reader.ReadLine());
+    array[i] = int.Parse(reader.ReadLine());
 }
 reader.Close();
-return retArray;
+Array.ForEach(array, i => Write(i + " "));
 ```
 
 Пример наипростого использования:
@@ -109,30 +107,71 @@ Array.ForEach(strs2, WriteLine); //вывод элементов массива 
 Пример:
 ```csharp
 //запись
-FileStream f=new FileStream("data.bin",FileMode.Create);
-BinaryWriter fOut=new BinaryWriter(f);
-for (int i=0; i<5; i++)
+using (FileStream f=new FileStream("data.bin",FileMode.Create))
 {
-    fOut.Write(i);
+    using (BinaryWriter fOut=new BinaryWriter(f))
+    {
+        for (int i=0; i<5; i++)
+        {
+            fOut.Write(i);
+        }
+    }
 }
-fOut.Close();
-f.Close();
 //чтение
-FileStream f=new FileStream("data.bin",FileMode.Open);
-BinaryReader fIn=new BinaryReader(f);
-for (int i=0; i<5; i++)
+using (FileStream f=new FileStream("data.bin",FileMode.Open))
 {
-    int a=fIn.ReadInt32();
-    Console.Write(a+" ");
+    using (BinaryReader fIn=new BinaryReader(f))
+    {
+        for (int i=0; i<5; i++)
+        {
+            int a=fIn.ReadInt32();
+            Console.Write(a+" ");
+        }
+    }
 }
-fIn.Close();
-f.Close();
 ```
-Дфоичные потоки являются потоками с произвольным доступом, нумерация начинается с ноля. Произвольный метод обеспечивает метод Seek. 
+Двоичные потоки являются потоками с произвольным доступом, нумерация начинается с ноля. Произвольный метод обеспечивает метод Seek. 
 ```csharp
 Seek(long newPos, SeekOrigin pos)
 ```
 
- 
+## Буферизированный поток
 
+Самым быстрым способом чтения и записи данных является буферизированный поток.
+```csharp
+//запись
+using (FileStream fs = new FileStream("data.bin", FileMode.Create, FileAccess.Write))
+{
+    int countPart = 4;
+    int bufSize = (int) (8 / countPart);
+    byte[] buffer = new byte[8];
+    for (int i = 0; i < buffer.Length; i++)
+    {
+        buffer[i] = (byte)i;
+    }
+    using (BufferedStream bs = new BufferedStream(fs, bufSize))
+    {
+        for (int i = 0; i < countPart; i++)
+        {
+            bs.Write(buffer, i * bufSize, bufSize);
+        }
+    }
+}
+//чтение
+using (FileStream fs = new FileStream("data.bin", FileMode.Open, FileAccess.Read))
+{
+    int countPart = 4;
+    int bufSize = (int)fs.Length / countPart;
+    byte[] arr = new byte[fs.Length];
+    BufferedStream reader = new BufferedStream(fs);
+    for (int i = 0; i < countPart; i++)
+    {
+        reader.Read(arr, i * bufSize, bufSize);
+    }
+    foreach (byte el in arr)
+    {
+        Write(el + " ");
+    }
+}
+```
 

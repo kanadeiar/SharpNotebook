@@ -295,5 +295,147 @@ public class MyClass
 
 ## Принципы инкапсуляции
 
+Данные класса не должны быть доступны напрямую через его экземпляр, данные класса должны быть закрытыми. Если нужно получить доступ к данным, то нужно получать его косвенно, используя открытые члены.
 
+Инкапсуляция предусматривает вмето открытых полей определение закрытых данных, управление которыми осуществляется с применением одного из двух:
 
+- пары открытх методово доступа и изменения.
+
+- открытого свойства.
+
+Хорошо инкапсулированный класс должен защищать свои данные и скрывать подробности своего функционирования от внешнего мира.
+
+>Члены класса, которые определяют состояние объекта, не должны быть публичными, однако нормально иметь открытые константы и открытые поля, допускающе только чтение.
+
+Пример традиционного подхода:
+```csharp
+class Sample
+{
+    private string name;
+    public string GetName()
+    {
+        return name;
+    }
+    public void SetName(string name)
+    {
+        this.name = name;
+    }
+}
+```
+Использование:
+```csharp
+Sample sample = new Sample();
+sample.SetName("and");
+string name = sample.GetName();
+```
+
+В языке C# лучше использовать свойства для доступа к закрытым полям. Свойства - упрощенное представление настоящих методов доступа и изменения. Пример класса со свойствами:
+```csharp
+class Sample
+{
+    private string name;
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+}
+```
+Использование:
+```csharp
+Sample sample = new Sample();
+sample.Name = "and";
+string name = sample.Name;
+```
+Методы свойства get & set могут записываться в виде членов, сжатых до выражений. Пример:
+```csharp
+class Sample
+{
+    private string name;
+    public string Name
+    {
+        get => name;
+        set => name = value;
+    }
+}
+```
+Для получение и установки значения внутри класса нужно всегда применять свойства. Пример с конструктором:
+```csharp
+class Sample
+{
+    private string name;
+    public string Name
+    {
+        get => name;
+        set => name = value;
+    }
+
+    public Sample(string name)
+    {
+        Name = name;
+    }
+}
+```
+Могут быть свойства только для чтения и только для записи. Пример:
+```csharp
+class Sample
+{
+    private string name;
+    public string Name => name;
+    public string SetName
+    {
+        set => name = value;
+    }
+}
+```
+Может быть статическое свойство:
+```csharp
+class Sample
+{
+    private string name;
+    public string Name => name;
+    public string SetName
+    {
+        set => name = value;
+    }
+    private static int count = 1;
+    public static int Count
+    {
+        get => count;
+        set => count = value;
+    }
+}
+```
+Использование:
+```csharp
+Sample.Count = 10;
+int count = Sample.Count;
+```
+
+## Автоматические свойства
+
+Доступно вместо полного написания свойства и приватного поля данных использовать синтаксис автоматических свойств. Это свойство перекладывает работу по определению закрытых полей и связанных свойств на компилятор. Пример класса:
+```csharp
+class Sample
+{
+    public string Name { get; set; }
+}
+```
+Можно определять автоматическое свойство только для чтения:
+```csharp
+class Sample
+{
+    public string Name { get; }
+}
+```
+>Можно написать prop и два раза нажать таб - среда сгенерирует начальный код автоматического свойства.
+
+Автоматическим свойствам присваиваются стандартные значения - булевской переменной - false, а для числовых данных - 0. Однако для переменной дригого класса - null.
+
+Нужно, если требуется, устанавливать первоначальные значения в такие свойства. Пример:
+```csharp
+
+```
+    
+    
+public string NoName => name;
