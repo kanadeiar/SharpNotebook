@@ -434,8 +434,129 @@ class Sample
 
 Нужно, если требуется, устанавливать первоначальные значения в такие свойства. Пример:
 ```csharp
-
+class Sample
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Sample()
+    {
+        Name = "noname";
+        Age = 18;
+    }
+}
 ```
+Однако лучше присваивать начальные значения автоматическим свойствам прямо при объявлении этого свойства.
+```csharp
+class Sample
+{
+    public string Name { get; set; } = "default";
+    public int Age { get; set; } = 18;
+}
+```
+
+## Синтаксис иницаиализации объектов
+
+Для упрощения процесса создания и подготовки объекта в C# предлагается синтаксис инициализации объектов. Этот прием позволяет создавать новый объект и присвоение начальных значений свойствам и открытым полям при создании этого объекта. Инициализатор объекта - это переменные в усатых скобках {}.
+
+Пример класса и создание объекта на его основе:
+```csharp
+class Sample
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+//создание объекта
+Sample sample = new Sample {Name = "alex", Age = 24};
+```
+При использовании этого синтаксиса допускается вызывать стандартный или специальный конструтор, определенный в классе:
+```csharp
+class Sample
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Sample(string name)
+    {
+        Name = name;
+    }
+}
+//создание объекта
+Sample sample = new Sample("alex") {Name = "Andrei", Age = 24};
+```
+При создании объекта можно вызвать любой конструктор, определенный в классе, при этом значения, записанные в скобках будут установлены в приоритете.
+
+Синтаксиси инициализации объектов позволяет создавать объекты класса, содержаещго в своем составе другие классы:
+```csharp
+class Sample
+{
+    public MyClass MyVar = new MyClass();
+    public class MyClass
+    {
+        public int Value { get; set; }
+    }
+}
+//создание объекта
+Sample sam = new Sample
+{
+    MyVar = new Sample.MyClass {Value = 10}
+};
+```
+
+## Константные поля
+
+В языке C# 8 доступна работа с константными полями, которые после первоначальной установки больше не изменяются. Нужно использовать ключевое слово const. Пример:
+```csharp
+class Sample
+{
+    public const double PI = 3.14;
+}
+//обращение к полю
+double PI = Sample.PI;
+```
+Константные поля являются неявно статическими.
+
+Есть еще поля, доступные только для чтения и онт может быть присвоены во время выполнения только внутри внутри конструктора, и больше нигде:
+```csharp
+class Sample
+{
+    public const double PI = 3.14;
+    public readonly double PI2;
+    public Sample()
+    {
+        PI2 = 3.14;
+    }
+}
+//обращение к полям
+double PI = Sample.PI;
+Sample sample = new Sample();
+double PI2 = sample.PI2;
+```
+Можно также определить статическое поле, доступное только для чтения на уровне класса, и значение ему устанавливать в статическом конструкторе:
+```csharp
+class Sample
+{
+    public static readonly double PI;
+    static Sample()
+    {
+        PI = 3.14;
+    }
+}
+```
+## Частичные классы
+
+В языке C# можно разносить код класса по нескольким файлам для отеделения например стереотипного кода от более полезных и интереных членов. Нужно ко всем определениям класса добавить ключевое слово partial.
+
+Пример такого класса:
+Файл Sample.cs
+```csharp
+partial class Sample
+{
+}
+```
+Файл Sample.Data.cs
+```csharp
+partial class Sample
+{
+}
+```
+
     
-    
-public string NoName => name;
