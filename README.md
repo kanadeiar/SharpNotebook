@@ -69,11 +69,13 @@
 
 [Основы](./classic/indexBasic.md).
 
-[Инкапсуляция](./classic/indexEncapsulation.md).
+[Класс (конструктор, this, static, синтаксис инициализации, константы, частичные классы)](./classic/indexClass.md).
 
-[Наследование](./classic/indexInheritance.md).
+[Инкапсуляция (модификаторы доступа, свойства, автоматические свойства)](./classic/indexEncapsulation.md).
 
-[Полиморфизм](./classic/indexPolymorphism.md).
+[Наследование (является, имеет, включает)](./classic/indexInheritance.md).
+
+[Полиморфизм (виртуальные, абстрактные, сокрытие членов, приведение родственных классов, object)](./classic/indexPolymorphism.md).
 
 ## Оконный C#
 
