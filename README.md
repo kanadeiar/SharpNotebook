@@ -91,6 +91,10 @@
 
 [Небезопасный код](./advance/indexUnsafe.md).
 
+## Xamarin
+
+[Базовый Xamarin](./xamarin/indexBasic.md).
+
 ## Система контроля версий
 
 [Базовый Git](./git/indexBasic.md).
