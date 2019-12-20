@@ -102,7 +102,7 @@ foreach (DictionaryEntry el in e.Data)
 }
 ```
 
-## Исключения уровня системы
+## Исключения разных уровней
 
 Исключения, которые генерируются самой платформой .NET, называются системными исключениями, эти исключения рассматриваются как неисправимые фатальные ошибки. Они унаследованы от класса System.SystemException а он является System.Exception а он является System.Object.
 
@@ -111,8 +111,6 @@ foreach (DictionaryEntry el in e.Data)
 NullReferenceException nullex = new NullReferenceException();
 WriteLine($"Is SystemException -> {nullex is SystemException}");
 ```
-
-## Исключения уровня приложения
 
 Исключения, производные от класса System.ApplicationException, созданные разработчиком, будут иметь идентификацию, что они не системные, а уровня приложения. Можно предполагать, что такие исключения созданы кодовой базой приложения, а не библиотекой базовый классов или исполняющей средой.
 
@@ -194,22 +192,20 @@ public class MyException : Exception
     public MyException()
     {
     }
-
     public MyException(string message) : base(message)
     {
     }
-
     public MyException(string message, Exception inner) : base(message, inner)
     {
     }
-
     protected MyException(
-        SerializationInfo info,
-        StreamingContext context) : base(info, context)
+        SerializationInfo info, StreamingContext context) : base(info, context)
     {
     }
 }
 ```
+
+## Обработка исключений
 
 
 

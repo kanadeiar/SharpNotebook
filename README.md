@@ -77,6 +77,9 @@
 
 [Полиморфизм (виртуальные, абстрактные, сокрытие членов, приведение родственных классов, object)](./classic/indexPolymorphism.md).
 
+[Интерфейсы](./classic/indexInterface.md).
+
+
 ## Оконный C#
 
 [Самые стремные окна](./windows/indexEasy.md).
