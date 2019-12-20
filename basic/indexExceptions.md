@@ -119,6 +119,11 @@ WriteLine($"Is SystemException -> {nullex is SystemException}");
 ApplicationException ex = new ApplicationException("На ноль делить нельзя");
 throw ex;
 //обработка:
+Sample sample = new Sample();
+try
+{
+    sample.Action();
+}
 catch (ApplicationException e)
 {
     WriteLine("111");
@@ -152,6 +157,11 @@ if (two == 0)
     throw ex;
 }
 //обработка
+Sample sample = new Sample();
+try
+{
+    sample.Action();
+}
 catch (MyException e)
 {
     WriteLine(e.ToString());
@@ -207,7 +217,84 @@ public class MyException : Exception
 
 ## Обработка исключений
 
+Когда исключение сгенерировано, оно будет обрабатываться первым подходящим блоком catch. Пример:
+```csharp
+Sample sample = new Sample();
+try
+{
+    sample.Action();
+}
+catch (IndexOutOfRangeException e)
+{
+    WriteLine(e.Message);
+}
+catch (MyException e)
+{
+    WriteLine(e.Message + " " + e.MyData);
+}
+catch (Exception e)
+{
+    WriteLine(e.Message);
+}
+```
+Правило обработки нескольких исключений состоит в том, что первые блоки catch должны перехватывать наиболее специфические исключения, а последний catch - самое общее исключение. 
 
+Важно! Везде где возможно нужно отдавать предпочтение перехвату специфичных классов исключений, а не общего класса. Нужно помнить, что финальный блок catch, который работает с System.Exception, на самом деле имеет тенденцию быть чрезвычайно общим.
 
+В языке C# таеже поддерживается общий контекст catch, который не получает объект исключения, сгенерированный заданным членом, простая обработка:
+```csharp
+catch
+{
+    WriteLine("Исключение!");
+}
+```
 
+Исключение может сгенерироватся в время обработки другого исключения.
+
+Пример:
+```csharp
+catch
+{
+    try
+    {
+        File.WriteAllText("log.log", "лог");
+    }
+    catch (Exception e)
+    {
+        throw new Exception("Невозможно записать лог в файл" + e.Message);
+    }
+    WriteLine("Исключение!");
+}
+```
+
+## Блок всегда выполняемых инструкций
+
+Целью блока finally является обеспечение того, что заданный код бдует выполнятся всегда, независисом от того, возникло исключение или нет. Пример:
+```csharp
+Sample sample = new Sample();
+try
+{
+    sample.Action();
+}
+catch
+{
+    WriteLine("Исключение!");
+}
+finally
+{
+    WriteLine("Всегда исполняется");
+}
+```
+
+## Фильтры исключений
+
+В языке C# версии 6 добавлена конструкция when, которая позволяет фильтровать исключения. Одиночное булевское выражение в конструкции when нужно поместить в круглые скобки, исключение будет перехвачено этим блоком, если выражение в блоке будет true.
+
+Пример перехвата исключения:
+```csharp
+catch (MyException e) when (e.MyData == "data")
+{
+    WriteLine($"Исключение {e.Message} {e.MyData}!");
+}
+```
 
