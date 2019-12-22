@@ -41,6 +41,7 @@ Console.WriteLine(regex.IsMatch(string1)); // True
 номер телефона в формате xxx-xx-xx 	        @\d\d\d-\d\d-\d\d или  @\d{3}(-\d\d){2}
 номер автомобиля, etc: D123AF42RUS          @[A-Z]\d{3}[A-Z]{2}\d{2,3}RUS
 адрес почты email                           @[A-Za-z]+[\.A-Za-z0-9_-]*[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z]{2,6}
+логин                                       @^[a-z][a-z\d]{1,9}$
 ```
 
 ## Некоторые метасимволы регулярных выражений
