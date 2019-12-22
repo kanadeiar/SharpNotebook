@@ -89,6 +89,7 @@ class AsiaWorker : Worker
 
 
 ![Интерфейс](../img/interface.png) 
+
 Иерархия вместе с интерфейсами.
 
 # Использование членов интерфейсов
@@ -164,6 +165,7 @@ class Boss : Person, ICofee
 ```
 
 ![Интерфейс](../img/interfaceAdvance.png) 
+
 Та-же иерархия с дополнительным интерфейсом.
 
 
