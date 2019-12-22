@@ -184,9 +184,50 @@ Person[] persons = { new Boss(), new Manager(), new Worker(), new AsiaWorker() }
 foreach (var item in persons)
 {
     if (item is ICofee cofee) //положено ли ему кофе пить?
-        cofee.GiveCoffee(); //раздача всем кому положено кофеев
+        CoffeeBrake(cofee); //раздача всем кому положено кофеев
 }
 ```
 
+Интерфейсы можно применять в качетсве типов возвращаемых значений методов. Пример:
+```csharp
+//срочный поиск любого работника
+static IWork AnyWorker(Person[] persons)
+{
+    foreach (Person elem in persons)
+    {
+        if (elem is IWork work)
+            return work;
+    }
+    return null;
+}
+```
+Использование:
+```csharp
+Person[] persons = { new Boss(), new Manager(), new Worker(), new AsiaWorker() };
+IWork worker = AnyWorker(persons);
+WriteLine("Fast work => " + worker.Work);
+```
 
+## Массивы интерфейсных типов
+
+Из интерфейсов можно формировать массивы из несвязанных по наследованию объектов. Пример нового класса с реализованным в нем интерфейсом:
+```csharp
+class OtherWorker : IWork
+{
+    public int Work => 200; //отличный работник!
+}
+```
+Использование:
+```csharp
+//только работники которые умеют работать, босс сюда не относится
+IWork[] workers = { new Manager(), new OtherWorker(), new AsiaWorker(), new Worker() };
+foreach (IWork item in workers)
+{
+    WriteLine("Work = " + item.Work);
+}
+```
+
+Та-же иерархия с посторонним классом.
+
+![Интерфейс](../img/interfaceAdvance.png) 
 
