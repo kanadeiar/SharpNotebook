@@ -229,5 +229,5 @@ foreach (IWork item in workers)
 
 Та-же иерархия с посторонним классом.
 
-![Интерфейс](../img/interfaceAdvance.png) 
+![Интерфейс](../img/interfaceOther.png) 
 
