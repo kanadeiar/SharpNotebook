@@ -87,10 +87,10 @@ class AsiaWorker : Worker
 }
 ```
 
+Иерархия вместе с интерфейсами.
 
 ![Интерфейс](../img/interface.png) 
 
-Иерархия вместе с интерфейсами.
 
 # Использование членов интерфейсов
 
@@ -144,9 +144,9 @@ foreach (var item in persons)
 
 Пример добавления еще одного специфического интерфейса в иерархию классов:
 ```csharp
-interface IBoss
+interface ICofee
 {
-    int Coffee(); //только элите можно пить кофе
+    void GiveCoffee(); //только элите можно пить кофе
 }
 ```
 И лишь избранным их всей иерархиии реализовать новый интерфейс:
@@ -164,11 +164,29 @@ class Boss : Person, ICofee
 }
 ```
 
-![Интерфейс](../img/interfaceAdvance.png) 
-
 Та-же иерархия с дополнительным интерфейсом.
 
+![Интерфейс](../img/interfaceAdvance.png) 
 
+
+Теперь можно создать новый метод который будет работать с таким интерфейсом:
+```csharp
+//раздача всем кому положено кофе
+static void CoffeeBrake(ICofee cofee)
+{
+    WriteLine("Cofee:");
+    cofee.GiveCoffee();
+}
+```
+Использование этого метода:
+```csharp
+Person[] persons = { new Boss(), new Manager(), new Worker(), new AsiaWorker() };
+foreach (var item in persons)
+{
+    if (item is ICofee cofee) //положено ли ему кофе пить?
+        cofee.GiveCoffee(); //раздача всем кому положено кофеев
+}
+```
 
 
 
