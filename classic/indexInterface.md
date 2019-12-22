@@ -223,6 +223,8 @@ class OtherWorker : IWork
 IWork[] workers = { new Manager(), new OtherWorker(), new AsiaWorker(), new Worker() };
 foreach (IWork item in workers)
 {
+    if (item is Worker worker)
+        WriteLine("WORK!!!");
     WriteLine("Work = " + item.Work);
 }
 ```
@@ -230,4 +232,313 @@ foreach (IWork item in workers)
 Та-же иерархия с посторонним классом.
 
 ![Интерфейс](../img/interfaceOther.png) 
+
+## Явная реализация интерфейсов
+
+Когда класс или структура реализует несколько интерфейсов с идентичными именами членов, возникают проблемы конфликта имен. 
+
+Пример простых объявлений интерфейсов и класса:
+```csharp
+interface IDrawToForm
+{
+    void Draw();
+}
+interface IDrawToPrinter
+{
+    void Draw();
+}
+class Sample : IDrawToForm, IDrawToPrinter
+{
+    public void Draw()
+    {
+        WriteLine("draw");
+    }
+}
+```
+При использовании все обращения приводят к вызову одного и того же метода:
+```csharp
+Sample sample = new Sample();
+((IDrawToForm)sample).Draw();
+((IDrawToPrinter)sample).Draw();
+```
+Явно реализованные члены интерфейсов будут закрытыми, для доступа к ним нужно приводить к конктектному интерфейсу всегда. Пример объявлений интерфейсов и класса с явной реализацией:
+```csharp
+interface IDrawToForm
+{
+    void Draw();
+}
+interface IDrawToPrinter
+{
+    void Draw();
+}
+class Sample : IDrawToForm, IDrawToPrinter
+{
+    void IDrawToForm.Draw()
+    {
+        WriteLine("draw form");
+    }
+    void IDrawToPrinter.Draw()
+    {
+        WriteLine("draw printer");;
+    }
+    public void Draw()
+    {
+        WriteLine("simple draw");
+    }
+}
+```
+Теперь при использовании обращения приводят к вызову разных методов:
+```csharp
+    Sample sample = new Sample();
+    ((IDrawToForm)sample).Draw(); //draw form
+    ((IDrawToPrinter)sample).Draw(); //draw printer
+    sample.Draw(); //sample draw
+    IDrawToForm idtform = (IDrawToForm) sample;
+    idtform.Draw(); //draw form
+    if (sample is IDrawToPrinter printer)
+        printer.Draw(); //draw printer
+```
+
+## Иерархии интерфейсов
+
+Интерфейсы поддерживаются организацию в иерархии подобно классам, но в отличие от них производный интерфейс может дополнять собственное определение членов дополнительными унаследованными. Это пригодится когда нужно расширить функциональность имеющегося интерфейса, не нарушая работу существующих кодовых баз.
+
+Пример определений интерфейсов:
+```csharp
+interface IDrawable
+{
+    void Draw();
+}
+interface ISuper
+{
+    void Super();
+}
+interface ISuperDrawable : IDrawable, ISuper
+{
+    void SimpleDraw();
+}
+```
+Теперь если класс реализует интерфейс, который наследует несколько базовых интерфейсаов, то этот класс должен реализовать все методы и родительских интерфейсных типов всей цепочки наследования:
+```csharp
+public class Sample : ISuperDrawable
+{
+    public void Draw()
+    {
+        WriteLine("Draw");
+    }
+    public void Super()
+    {
+        WriteLine("Super");
+    }
+    public void SimpleDraw()
+    {
+        WriteLine("SuperDraw");
+    }
+}
+```
+Объект этого класса может вызывать методы интерфейсов всей линии наследования и быть приведенным к типу интерфейса из цепочки наследования:
+```csharp
+    Sample sample = new Sample();
+    sample.Draw();
+    sample.SimpleDraw();
+    sample.Super();
+    IDrawable idr = sample as IDrawable;
+    if (idr != null)
+        idr.Draw();
+    ISuper isp = sample; //неявное приведение типа
+    isp?.Super();
+    ((ISuperDrawable)isp).SimpleDraw();
+```
+
+Интерфейсы могут быть полезны в следующих случаях:
+
+- существует единственная иерархия, в которой только подмножество производных типов поддерживают общее поведение;
+
+- необходимо моделировать общее поведение, которое встречается в нескольких иерархиях, не имеющих общего родительского класса кроме System.Object.
+
+## Стандартные интерфейсы базовых классов
+
+В библиотеке базовых классов платформы .NET определены стандартные интерфейсы, которые можно использовать при проектрировании своих классов.
+
+## Итераторы
+
+Интерфейсы IEnumarable и IEnumerator используются в конструкциях foreach.
+
+Интерфейс IEnumerable сообщает вызывающий код, что элементы этого объекта могут перечислятся:
+```csharp
+interface IEnumerable
+{
+    IEnumerator GetEnumerator();
+}
+```
+Интерфейс IEnumerator позволяет вызывающему коду вызывать элементы контейнера:
+```csharp
+interface IEnumerator
+{
+    bool MoveNext();
+    object Current { get; }
+    void Reset();
+}
+```
+Пример реализации в классе этого интерфейса:
+```csharp
+public class Sample : IEnumerable
+{
+    private int[] arr;
+    public Sample()
+    {
+        arr = new int[] {19, 1, 4, 5, 5};
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return arr.GetEnumerator();
+    }
+}
+```
+Можно метод GetEnumerator сделать с атрибутом publilc и без явной реализации, тогда он станет доступен вызывающему коду, однако делать так не стоит.
+```csharp
+public IEnumerator GetEnumerator()
+{
+    return arr.GetEnumerator();
+}
+```
+Конструкция foreach обнаружит метод GetEnumerator() в классе вне зависимости от того как он реализован как публичный или как явной реализаиции интерфейса IEnumerable.
+
+Допускается строить итераторный метод с использованием ключевого слова yield. Итератор - это член, который указывает, каким образом должны возвращаться внутренние элементы контейнера во время обработки в цикле foreach. 
+
+Пример использования yield:
+```csharp
+public class Sample : IEnumerable
+{
+    private int[] arr= new int[] {19, 1, 4, 5, 5};
+    public IEnumerator GetEnumerator()
+    {
+        foreach (var elem in arr)
+        {
+            yield return elem;
+        }
+    }
+}
+```
+Ключевое слово yield применяется для указания значения или значений, которые подлежат возвращению конструкцией foreach вызывающему коду. При достижении этого оператора текущее местоположение в контейнере сохраняется и выполнение возобновляется с этого местоположения, когда итератор вызывается в следующий раз.
+
+Использование локальной функции и исключения в ситуации когда функция вызывается просто для получения значения и ничего не делается:
+```csharp
+//вызывающий метод
+Sample sample = new Sample();
+//foreach (var elem in sample)
+//{
+//    WriteLine(elem);
+//}
+IEnumerator en = sample.GetEnumerator(); //просто получаем и ничего не делаем
+```
+Решение:
+```csharp
+public class Sample : IEnumerable
+{
+    private int[] arr= new int[] {19, 1, 4, 5, 5};
+    public IEnumerator GetEnumerator()
+    {
+        throw new ApplicationException("New");
+        return actual();
+        IEnumerator actual()
+        {
+            foreach (var elem in arr)
+            {
+                yield return elem;
+            }
+        }
+    }
+}
+```
+
+
+Допускается применять именованные итераторы - методы, которые спомобны принимать любое количество элементов, при этом yield return будет возвращать интерфейс IEnumerable, а не ожидаемфй совместимый тип.
+```csharp
+public class Sample : IEnumerable
+{
+    private int[] arr= new int[] {19, 1, 4, 5, 5};
+    public IEnumerator GetEnumerator()
+    {
+        foreach (var elem in arr)
+            yield return elem;
+    }
+    public IEnumerable GetMyEnum(bool reverse)
+    {
+        if (reverse)
+        {
+            for (int i = arr.Length; i != 0; i--)
+            {
+                yield return arr[i - 1];
+            }
+        }
+        else
+        {
+            foreach (var elem in arr)
+            {
+                yield return elem;
+            }
+        }
+    }
+}
+```
+Вызов метода итератора:
+```csharp
+foreach (var elem in sample.GetMyEnum(true))
+{
+    WriteLine(elem);
+}
+```
+Именованные итераторы позволяют определять в единственном спец контейнере множество способов запрашивания возвращаемого набора.
+
+## Интерфейс клонирования
+
+В недрах System.Object существует метод MemberwiseClone() для получения поверхностной копии текущего объекта, этот метод - защищенный. Объект его может вызывать для клонирования себя.
+
+Пример определения класса с поверхностным клонированием:
+```csharp
+public class Sample : ICloneable
+{
+    private int X { get; set; }
+    public object Clone() => this.MemberwiseClone();
+}
+```
+Использование:
+```csharp
+Sample s1 = new Sample();
+Sample s2 = (Sample)s1.Clone();
+```
+
+Глубокое клонирование. Для того чтобы заставить метод Clone() создавать глубокую копию внутренних ссылочных типов класса, в составе которого есть ссылочные типы данных, нужно настроить объект, возвращаемый методом MemberwiseClone(). 
+
+Если класс или структура содержат только типы значений, необходимо реализовать метод Clone() с использованием волшебного метода MemberwiseClone(), но если внутри типа есть ссылочный тип, тогда для глубокой копии нужно создать новый объект, который учитывает каждую переменную члена ссылочного типа:
+```csharp
+public class Sample : ICloneable
+{
+    public int X { get; set; }
+    public string Name { get; set; }
+    public object Clone()
+    {
+        Sample newSam = (Sample)this.MemberwiseClone();
+        newSam.Name = this.Name;
+        return newSam;
+    }
+}
+```
+Использование:
+```csharp
+    Sample s1 = new Sample() {Name = "111", X = 2};
+    Sample s2 = (Sample)s1.Clone();
+    s2.Name = "22222";
+    s2.X = 1;
+    WriteLine($"{s1.Name} - {s1.X}");
+    WriteLine($"{s2.Name} - {s2.X}");
+```
+
+## Интерфейс сравнения
+
+Интерфейс сравнения IComparable позволяет объекту указывать, как он соотносится с другими подобными объектами.
+
+
 

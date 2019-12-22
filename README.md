@@ -65,9 +65,9 @@
 
 [Библиотека классов](./basic/indexLibs.md).
 
-## Продвинутый C#
+## Классический C#
 
-[Основы](./classic/indexBasic.md).
+[Основы ООП](./classic/indexBasic.md).
 
 [Класс (конструктор, this, static, синтаксис инициализации, константы, частичные классы)](./classic/indexClass.md).
 
@@ -78,6 +78,8 @@
 [Полиморфизм (виртуальные, абстрактные, сокрытие членов, приведение родственных классов, object)](./classic/indexPolymorphism.md).
 
 [Интерфейсы](./classic/indexInterface.md).
+
+## Продвинутый C#
 
 [Обобщения](./advance/indexGeneralized.md).
 
