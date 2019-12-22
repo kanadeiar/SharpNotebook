@@ -538,7 +538,96 @@ public class Sample : ICloneable
 
 ## Интерфейс сравнения
 
-Интерфейс сравнения IComparable позволяет объекту указывать, как он соотносится с другими подобными объектами.
+Для того, чтобы с помощью System.Array.Sost() можно было отсортировать массив из определенного пользователем типа нужно реализовать в типе интерфейс сравения.
 
+Интерфейс сравнения IComparable позволяет объекту указывать, как он соотносится с другими подобными объектами. Пример реализации интерфейса в объекте:
+```csharp
+public class Sample : IComparable
+{
+    public int X { get; set; }
+    public string Name { get; set; }
+    int IComparable.CompareTo(object obj)
+    {
+        Sample temp = obj as Sample;
+        if (temp != null)
+        {
+            if (this.X > temp.X)
+                return 1;
+            if (this.X < temp.X)
+                return -1;
+            else
+                return 0;
+        }
+        else
+        {
+            throw new ArgumentException("Parameter is not a Sample");
+        }
+    }
+}
+```
+Возвращаемые значения метода CompareTo:
+```csharp
+Любое число меньше нуля - этот экземпляр находится перед указанным объектом в порядке сортировки
+Ноль - Этот экземпляр равен указанному объекту
+Любое число больше нуля - этот экземпляр находится после указанного объекта в порядке сортировки
+```
+Более сокращенная реализация:
+```csharp
+    int IComparable.CompareTo(object obj)
+    {
+        Sample temp = obj as Sample;
+        if (temp != null)
+        {
+            return this.X.CompareTo(temp.X);
+        }
+        else
+            throw new ArgumentException("Parameter is not a Sample");
+    }
+```
+Использование:
+```csharp
+Sample[] arrs =
+{
+    new Sample {Name = "And", X = 1},
+    new Sample {Name = "Two", X = 2}, 
+};
+Array.Sort(arrs);
+foreach (var elem in arrs)
+{
+    WriteLine($"{elem.Name} - {elem.X}");
+}
+```
 
+Вожможно простроение реализации метода интерфейса сравнения, использующего поля класса объекта с помощью интерфейса IComparer. Для этого потребуется создать дополнительный класс, реализующий интерфейс IComparer:
+```csharp
+public class SampleComparer : IComparer
+{
+    int IComparer.Compare(object o1, object o2)
+    {
+        Sample s1 = o1 as Sample;
+        Sample s2 = o2 as Sample;
+        if (s1 != null && s2 != null)
+            return String.Compare(s1.Name, s2.Name);
+        else
+            throw new ArgumentException("Parameter is not a Sample!");
+    }
+}
+```
+Теперь использование этого класса в сортировке:
+```csharp
+Array.Sort(arrs, new SampleComparer()); //утонченная сортировка
+```
+Но можно упростить это добавив в класс статическое свойство только для чтения, реализующего интерфейс IComparer:
+```csharp
+public class Sample : IComparable
+{
+    public int X { get; set; }
+    public string Name { get; set; }
+    public static IComparer SortByName => new SampleComparer();
+}    
+```
+Использование в сортировке:
+```csharp
+Array.Sort(arrs, Sample.SortByName); //жестко ассоциированное свойство
+```
 

@@ -89,6 +89,8 @@
 
 [Небезопасный код](./advance/indexUnsafe.md).
 
+[LINQ](./advance/indexLINQ.md).
+
 ## Оконный C#
 
 [Самые стремные окна](./windows/indexEasy.md).
