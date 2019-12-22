@@ -2,7 +2,7 @@
 
 ![Блокнот](img/header.png) 
 
-Мой маленький блокнот по языку C#.
+Мой маленький справочник по языку C#.
 
 - [ ] Методички
 - [ ] Троелсон C# 7
@@ -65,7 +65,7 @@
 
 [Библиотека классов](./basic/indexLibs.md).
 
-## Классический C#
+## Продвинутый C#
 
 [Основы](./classic/indexBasic.md).
 
@@ -79,13 +79,6 @@
 
 [Интерфейсы](./classic/indexInterface.md).
 
-
-## Оконный C#
-
-[Самые стремные окна](./windows/indexEasy.md).
-
-## Продвинутый C#
-
 [Обобщения](./advance/indexGeneralized.md).
 
 [События](./advance/indexEvents.md).
@@ -93,6 +86,14 @@
 [Перегрузка операций](./advance/indexOverloads.md).
 
 [Небезопасный код](./advance/indexUnsafe.md).
+
+## Оконный C#
+
+[Самые стремные окна](./windows/indexEasy.md).
+
+## Алгоритмы C#
+
+[Основы](./algoritms/indexBasic.md).
 
 ## Xamarin
 

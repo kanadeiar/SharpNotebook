@@ -104,7 +104,19 @@ class Program
     }
 }
 ```
-
+Пример класса который будет более компактно сериализоватся т.к. поля будут в атрибутах:
+```csharp
+[Serializable]
+public class Person
+{
+    [XmlAttribute]   
+    public string Name;
+    [XmlAttribute]   
+    public string SurName;
+    [XmlAttribute]   
+    public int Age;
+}
+```
 
 
 
