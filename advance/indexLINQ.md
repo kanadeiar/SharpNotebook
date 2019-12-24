@@ -347,5 +347,89 @@ Info[] infos = Info.GetTestArr();
 var all = from p in infos orderby p select p; //по возрастанию
 var all2 = from p in infos orderby p descending select p; //по убыванию
 ```
+Класс Enumerable поддерживает несколько расширяющих методов для работы с двумя и более коллекциями одновременно с целью нахождения их объединений, разностей, конкатенаций и пересечений данных.
+
+- пример разности двух контейнеров метод Except():
+```csharp
+List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
+List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+var diff = (from n in name1 select n)
+    .Except(from n in name2 select n);
+foreach (var el in diff)
+{
+    WriteLine(el); //And
+}
+```
+- пример общие элементы данных в наборе контейнеров метод Intersect():
+```csharp
+List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
+List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+var intersect = (from n in name1 select n)
+    .Intersect(from n in name2 select n);
+foreach (var el in intersect)
+{
+    WriteLine(el); //Vlad Sergey
+}
+```
+- пример включеие всех членов множества запросов LINQ метод Union():
+```csharp
+List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
+List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+var union = (from n in name1 select n)
+    .Union(from n in name2 select n);
+foreach (var el in union)
+{
+    WriteLine(el); //And Vlad Sergey Max
+}
+```
+- пример прямой конкатенацией результирующих наборов LINQ метод Concat():
+```csharp
+List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
+List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+var concat = (from n in name1 select n)
+    .Concat(from n in name2 select n);
+foreach (var el in concat)
+{
+    WriteLine(el); //And Vlad Sergey Vlad Sergey Max
+}
+```
+Пример метода удаления дубликатов - расширяющий метод Distinct():
+```csharp
+List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
+List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+var concat = ((from n in name1 select n)
+    .Concat(from n in name2 select n)).Distinct();
+foreach (var el in concat)
+{
+    WriteLine(el); //And Vlad Sergey Max
+}
+```
+Операции агрегирования могут использоватся для выполнения надо результирующим набором разообразных операций агрегирования.
+
+- Count - количество.
+
+- Average - среднее значение.
+
+- Max - самое большое значение.
+
+- Min - самое малое значение.
+
+- Sum - сумма значений.
+
+Примеры:
+```csharp
+int[] arrInts = {2, -3, 4, 9, 0, 10};
+WriteLine($"Max = {(from i in arrInts select i).Max()}");
+WriteLine($"Min = {(from i in arrInts select i).Min()}");
+WriteLine($"Average = {(from i in arrInts select i).Average()}");
+WriteLine($"Sum = {(from i in arrInts select i).Sum()}");
+```
+
+## Внутренности операторов запросов LINQ.
+
+В действительности компилятор C# транслирует все операции запросов (представленные выше) в вызов расширяющих методов класса Enumerable. Огромное их количество прототипировано для приема делегатов в качестве аргументов, многие методы требуют делегат обобщенный Func<>, компилятор их им подает. 
+
+Построение операций запросов LINQ является простым способом построения выражений LINQ, но можно применять еще другие подходы, более сложные. Преимущество использования операций запросов C# при построении выражений запросов заключается в том, что делегаты Func<> и вызовы методов Enumerable остаются вне поля зрения и внимание, так как выполнение трансляции возлагается на компилятор C#. Это наиболее распространенный и простой подход.
+
 
 
