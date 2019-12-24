@@ -45,7 +45,7 @@
 
 [Массивы (индексаторы)](./basic/indexArrs.md).
 
-[Исключения](./basic/indexExceptions.md).
+[Исключения (их свойства, специсключения, обработка, фильтрация)](./basic/indexExceptions.md).
 
 [Строки](./basic/indexStrings.md).
 
