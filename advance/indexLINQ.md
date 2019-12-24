@@ -402,8 +402,19 @@ foreach (var item in substr)
 }
 ```
 
-Можно совсем отказаться от использования синтаксиса лямбда-выражений и анонимных методов и напрямую создавать цели делегатов для каждого типа Func<>.
+Можно совсем отказаться от использования синтаксиса лямбда-выражений и анонимных методов и напрямую создавать цели делегатов для каждого типа Func<>, создавать низкоуровневые делегаты. Пример такого способа:
 
+```csharp
+    string[] names = { "Andrey", "Max", "Fedor 2", "1 Ivan", "Egor" };
+    Func<string, bool> filter = new Func<string, bool>(Filter);
+    Func<string, string> itemSel = new Func<string, string>(ProcIt);
+    var substr = names.Where(filter)
+        .OrderBy(itemSel)
+        .Select(itemSel);
+//Цели делегатов
+public static bool Filter(string name) { return name.Contains(" "); }
+public static string ProcIt(string name) { return name; }
+```
 
 
 
