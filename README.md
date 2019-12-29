@@ -13,6 +13,10 @@
 
 [Фичи C#](./welcome/features.md)
 
+## Алгоритмы C
+
+[Основы C](./algoritms/indexBasic.md).
+
 ## Платформа
 
 [Общее по платформе .NET](./platform/index.md). 
@@ -95,9 +99,6 @@
 
 [Самые стремные окна](./windows/indexEasy.md).
 
-## Алгоритмы C#
-
-[Основы](./algoritms/indexBasic.md).
 
 ## Xamarin
 
