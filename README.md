@@ -109,8 +109,6 @@
 
 [События](./advance/indexEvents.md).
 
-[Перегрузка операций](./advance/indexOverloads.md).
-
 [Небезопасный код](./advance/indexUnsafe.md).
 
 [LINQ](./advance/indexLINQ.md).
