@@ -33,7 +33,9 @@
 
 [Функции (аргументы и вертаемое значение)](./algoritms/indexCFuncs.md).
 
-[Указатели (массивы и массивы + указатели)](./algoritms/indexCPointers.md).
+[Массивы](./algoritms/indexCArrs.md).
+
+[Указатели (массивы + указатели)](./algoritms/indexCPointers.md).
 
 [Файлы (последовательная и произвольная работа с файлами)](./algoritms/indexCFiles.md).
 
