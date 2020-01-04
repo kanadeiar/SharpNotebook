@@ -21,6 +21,8 @@
 
 ## Основы
 
+[Математическая логика](./algoritms/indexMathLogic.md).
+
 [Основы (комменты, подключение других файлов)](./algoritms/indexCBasic.md).
 
 [Консоль (ввод/вывод через консоль)](./algoritms/indexCConsole.md).
