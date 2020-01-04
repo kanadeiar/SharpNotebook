@@ -301,6 +301,41 @@ string s = "Пример/строки";
 s.replace(s.find('/'), 1, " ");
 cout << "Строка: " << s << endl;
 ```
+Преобразование из строки в число. Функции stoi() и stof(). Функци останавливают преобразование на том символе, которые не соответствует типу данных.
+
+Пример:
+```c
+string s = "12.12ggg";
+int num = stoi( s ); //12
+float numFl = stof( s ); //12.12
+cout << "Числа: " << num << " & " << numFl << endl;
+```
+Преобразование из числа в строку - функция to_string():
+```c
+int n = 12;
+string sN = to_string( n ); //12
+float nF = 12.12;
+string sF = to_string( nF ); //12.120000
+cout << "Строки: " << sN << ' ' << sF << endl;
+```
+Преобразование происходит по умолчанию, если нужно форматированное преобразование - подключать библиотеку sstream.
+
+Пример использования:
+```c
+ostringstream sbuf; //вспомогательный выходной буферный поток символов
+int num = 123;
+sbuf << num;
+string sNum = sbuf.str(); // 123
+sbuf.str(""); //очистка
+float numF = 123.123456;
+sbuf << fixed << setprecision(2) << setw(8) << numF;
+string sFlt = sbuf.str(); //123.123
+sbuf.str(""); //очистка
+double numD = 0.0000232342;
+sbuf << scientific << setprecision(6) << setw(16) << numD;
+string sScientific = sbuf.str(); //2.323420e-05 - научный формат
+cout << "Числа: " << sNum << ' ' << sFlt << ' ' << sScientific << endl;
+```
 
 
 ## Функции работы со строками
