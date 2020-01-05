@@ -167,6 +167,36 @@ for (int element : arr)
     printf_s("%d \n", element);
 }
 ```
+Пример сортировки динамического массива на С++ методом выбора:
+```cpp
+srand(time(NULL));
+/////////////////////////////
+int * arr = new int [30];
+int * arr_last = &arr[29];
+for (int * pI = arr; pI <= arr_last; pI++)
+    *pI = rand() % 99;
+/////////////////////////////
+for (int * pI = arr; pI <= arr_last - 1; pI++)
+{
+    int * pMin = pI;
+    for (int * pJ = pI + 1; pJ <= arr_last; pJ++)
+    {
+        if (*pJ < *pMin)
+            pMin = pJ;
+    }
+    if (pMin != pI)
+    {
+        int temp = *pI;
+        *pI = *pMin;
+        *pMin = temp;
+    }
+}
+/////////////////////////////
+cout << "Массив:" << endl;
+for (int * pI = arr; pI <= arr_last; pI++)
+    cout << *pI << ' ';
+delete [] arr;
+```
 
 Процесс поиска элементов в отсортированном массиве будет быстрее, так как не нужно просматривать все элементы массива, а только до определенного значения и далее прекращать поиск.
 
@@ -217,6 +247,75 @@ else
 {
     printf_s("Такого элемента нет в массиве!");
 }
+```
+
+## Двумерные массивы
+
+Объявление массива двумерного и его заполнение пустыми значениями:
+```cpp
+const int N = 3, M = 4;
+int arr[N][M] = {};
+```
+	
+Заполнение массива:
+```cpp
+for (int i = 0; i < N; i++)
+    for (int j = 0; j < M; j++)
+        arr[i][j] = rand() % 61;
+```
+
+Вывод массива на экран:
+```cpp
+for (int i = 0; i < N; i++)
+{
+    for (int j = 0; j < M; j++)
+        cout << setw(4) << arr[i][j] << ' ';
+    cout << endl;
+}
+```
+Перебор значений диагонали в квардатном двумерном массиве:
+```cpp
+puts("\nГлавная диагональ:");
+for (int i = 0; i < N; i++)
+    cout << setw(4) << arr[i][i] << ' ';
+puts("\nПобочная диагональ:");
+for (int i = 0; i < N; i++)
+    cout << setw(4) << arr[i][N-i-1] << ' ';
+```
+Перебор всех элементов главной диагонали и под ней:
+```cpp
+puts("\nЭлементы под главной диагональю:");
+for (int i = 0; i < N; i++)
+{
+    for (int j = 0; j <= i; j++)
+        cout << setw(4) << arr[i][j] << ' ';
+    cout << endl;
+}
+```
+Работа указателями с массивом на С++:
+```cpp
+const int N = 4, M = 4;
+int mtx[N][M];
+int * mtx_end = mtx[N];
+srand(time(NULL));
+//////////////////////////////
+for (int *pI = &mtx[0][0]; pI < mtx_end; pI++)
+    *pI = rand() % 99;
+puts("Матрица:");
+for (int *pI = &mtx[0][0]; pI < mtx_end; pI++)
+{
+    cout << *pI << ' ';
+    if ( (pI - &mtx[0][0] + 1) % N == 0 )
+        cout << endl;
+}
+puts("\nМаксимальный элемент всей матрицы:");
+int * pMax = &mtx[0][0];
+for (int *pI = &mtx[0][0]; pI < mtx_end; pI++)
+    if (*pI > *pMax)
+        pMax = pI;
+int iMax = (pMax - &mtx[0][0]) / N;
+int jMax = (pMax - &mtx[0][0]) % N;
+cout << "mtx[" << iMax << "," << jMax << "]=" << *pMax;
 ```
 
 
