@@ -23,6 +23,8 @@
 
 [Математическая логика](./algoritms/indexMathLogic.md).
 
+[Числа](./algoritms/indexNumbers.md).
+
 [Основы (комменты, подключение других файлов)](./algoritms/indexCBasic.md).
 
 [Консоль (ввод/вывод через консоль)](./algoritms/indexCConsole.md).
@@ -35,7 +37,9 @@
 
 [Функции (аргументы и вертаемое значение)](./algoritms/indexCFuncs.md).
 
-[Указатели (массивы, массивы + указатели)](./algoritms/indexCPointers.md).
+[Массивы](./algoritms/indexCArrays.md).
+
+[Указатели (массивы + указатели)](./algoritms/indexCPointers.md).
 
 [Динамика (динамическая память и структуры)](./algoritms/indexCDynamic.md).
 
@@ -120,7 +124,6 @@
 ## Оконный C#
 
 [Самые стремные окна](./windows/indexEasy.md).
-
 
 ## Xamarin
 
