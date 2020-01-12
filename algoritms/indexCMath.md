@@ -145,4 +145,12 @@ float b = 99.1;
 float x = a + (b - a) * rand() / float(RAND_MAX);
 cout << x << endl;
 ```
+С целыми числами:
+```c
+srand(time(NULL));
+int a = 1;
+int b = 999;
+double rd = a + double(b - a) * rand() / RAND_MAX;
+printf_s("Res: %f\n", rd);
+```
 

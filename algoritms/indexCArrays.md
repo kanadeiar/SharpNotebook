@@ -62,7 +62,6 @@ for (int i = 0; i < _countof(ages); i++)
 }
 ```
 
-
 Пример вывода элементов из массива:
 ```c
 for (int i = 0; i < _countof(ages); i++)
@@ -75,11 +74,8 @@ for (int i = 0; i < _countof(ages); i++)
 Случайный массив на С++:
 ```cpp
 srand(time(NULL));
-int arr[5] = {};
 for (int i = 0; i < _countof(arr); i++)
     arr[i] = 10 + rand() % 80; // от 10 до 90
-for (int i = 0; i < _countof(arr); i++)
-    cout << setw(4) << arr[i] << ' '; //форматированный вывод на С++
 ```
 
 Пример заполнения элементов массива с консоли на С++:
@@ -91,6 +87,10 @@ for (int i = 0; i < _countof(arr); i++)
     cin >> arr[i];
  	getchar();
 }
+```
+
+Пример форматированного вывода на С++:
+```cpp
 for (int i = 0; i < _countof(arr); i++)
     cout << setw(4) << arr[i] << ' '; //форматированный вывод на С++
 ```
@@ -100,6 +100,7 @@ for (int i = 0; i < _countof(arr); i++)
 for (int i = 0; i < _countof(arr); i++)
     cout << setw(4) << arr[i] << ' '; //форматированный вывод на С++
 ```
+
 Изменение массива в С++ через оператор & и цикл foreach:
 ```cpp
 int arr[10] = {};
@@ -136,6 +137,38 @@ else
 {
     printf_s("Такого элемента нет в массиве!");
 }
+```
+Дополнительный пример поиска элементов в массиве:
+```c
+int arr[10] = {};
+int i = 10;
+for (auto &element : arr)
+    element = i++;
+int X = 11; //искомый элемент
+int nX = -1; //индекс найденного элемента
+for (i = 0; i<_countof(arr); i++)
+    if (arr[i] == X)
+    {
+        nX = i;
+        break;
+    }
+if (nX >= 0)
+    cout << "Найден элемент: " << arr[nX] << " индекс: " << nX << endl;
+else
+    cout << "Элемент не найден!" << endl;
+```
+
+Пример поиска максимального элемента в массиве:
+```c
+int arr[10] = {};
+int i = 10;
+for (auto &element : arr)
+    element = i++;
+int nMax = 0;
+for (i = 0; i<_countof(arr); i++)
+    if (arr[i] > arr[nMax])
+        nMax = i;
+cout << "arr[" << nMax << "]=" << arr[nMax] << endl;
 ```
 
 Пример сортировки массива методом пузырика:
@@ -247,6 +280,46 @@ else
 {
     printf_s("Такого элемента нет в массиве!");
 }
+```
+
+Реверс элементов массива:
+```cpp
+const int n = 10;
+int arr[n] = {};
+int i = 10;
+for (auto &element : arr)
+    element = i++;
+int temp;
+for (int i = 0; i < n/2; i++)
+{
+    temp = arr[i];
+    arr[i] = arr[n - 1 - i];
+    arr[n - 1 - i] = temp;
+}
+```
+
+
+Случайная перестановка массива:
+
+```cpp
+srand(time(NULL));
+const int n = 10;
+int abas[n] = {};
+int i = 1;
+for (int * pI = abas; pI < abas + n; pI++) // заполнение начального массива
+    *pI = i++;
+int countbas = n;
+int arr[n] = {}; //массив перестановленных элементов
+for (int * pI = arr; pI < arr + n; pI++) //перестановка
+{
+    int * rnd = abas + rand() % countbas;
+    *pI = *rnd;
+    *rnd = *(abas + countbas - 1);
+    countbas--;
+}
+cout << "Массив сформированный:";
+for (int * pI = arr; pI < arr + n; pI++)
+    cout << *pI << ' ';
 ```
 
 ## Двумерные массивы
