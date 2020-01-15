@@ -230,6 +230,81 @@ for (int * pI = arr; pI <= arr_last; pI++)
     cout << *pI << ' ';
 delete [] arr;
 ```
+Быстрая сортировка заточена под работу с большими массивами данных quicksort. Принцип работы. В данном массиве выбрать любой элемент массива X. На первом этапе расставить элементы массива так, чтоб ыслева от некоей границы находятся все числа, меньшие или равные X, а справа - большие или равные X. Далее достаточно отсорировать отдельно каждую часть массива.
+
+Это значение X нужно выбирать чтоб оно было средним значеникм по массиву. Если нельзя выбрать - то берется случайное значение из массива.
+
+Пример функции быстрой сортировки на С:
+```c
+int irand(int from, int to)
+{
+	return from + rand() % (to - from);
+}
+void quicksort( int arr[], int first, int last )
+{
+	int f = first, l = last;
+	int middle = arr[irand(f, l)];
+	while (f < l)
+	{
+		while ( arr[f] < middle ) f++;
+		while ( arr[l] > middle ) l--;
+		if ( f < l )
+		{
+			int t = arr[f];
+			arr[f] = arr[l];
+			arr[l] = t;
+		}
+		if ( f <= l )
+		{
+			f++;
+			l--;
+		}
+	}
+	if (first < l) quicksort( arr, first, l );
+	if (f < last) quicksort( arr, f, last );
+}
+```
+Использование:
+```c
+	srand(time(NULL));
+	int arr[SIZE];
+	for (int i = 0; i < SIZE; i++)
+		arr[i] = irand(0, 100);
+	quicksort(arr, 0, SIZE - 1);
+	for (int i = 0; i < SIZE; i++)
+		printf("%d ", arr[i]);
+	printf("\n");
+```
+Пример функции быстрой сортировки на указателях на С:
+```c
+void qpsort( int * first, int * last )
+{
+	int * f = first, * l = last;
+	int middle = *(f + irand(0, f - l));
+	while (f < l)
+	{
+		while (*f < middle) f++;
+		while (*l > middle) l--;
+		if (f < l)
+		{
+			int t = *f;
+			*f = *l;
+			*l = t;
+		}
+		if (f <= l)
+		{
+			f++;
+			l--;
+		}
+	}
+	if (first < l) qpsort( first, l );
+	if (f < last) qpsort( f, last );
+}
+```
+Использование:
+```c
+    qpsort(arr, arr + SIZE - 1);
+```
 
 Процесс поиска элементов в отсортированном массиве будет быстрее, так как не нужно просматривать все элементы массива, а только до определенного значения и далее прекращать поиск.
 
