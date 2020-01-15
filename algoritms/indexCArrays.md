@@ -308,53 +308,30 @@ void qpsort( int * first, int * last )
 
 Процесс поиска элементов в отсортированном массиве будет быстрее, так как не нужно просматривать все элементы массива, а только до определенного значения и далее прекращать поиск.
 
-Пример поиска в отсортированном массиве:
+Пример двоичного поиска в отсортированном массиве:
 ```c
-srand(time(NULL));
-int arr[10];
-for (int i = 0; i < _countof(arr); i++)
-    arr[i] = rand() % 100;
-printf_s("Элементы:\n");
-for (int element : arr)
+int find(int arr[], int length, int need)
 {
-    printf_s("%d \n", element);
-}	
-for (int outer = 0; outer < _countof(arr) - 1; outer++)
-{
-    for (int inner = outer + 1; inner < _countof(arr); inner++)
-    {
-        if (arr[inner] < arr[outer])
-        {
-            int temp = arr[inner];
-            arr[inner] = arr[outer];
-            arr[outer] = temp;
-        }
-    }
+	int f = 0, l = length;
+	while (f < l - 1)
+	{
+		int m = (f + l) / 2;
+		if (need < arr[m])
+			l = m;
+		else f = m;
+	}
+	if (arr[f] == need)
+		return f;
+	return -1;
 }
-printf_s("Введите номер для поиска:> ");
-int numSearch;
-scanf_s(" %d", &numSearch);
-int found = 0; //флаг найденного элемента
-for (int i = 0; i < _countof(arr); i++)
-{
-    if (*(arr + i) == numSearch)
-    {
-        found = 1;
-        break;
-    }
-    if (*(arr + i) > numSearch) //если далее элементы больше, то смысла искать нет
-    {
-        break;
-    }
-}
-if (found)
-{
-    printf_s("Такой элемент есть в массиве!");
-}
-else
-{
-    printf_s("Такого элемента нет в массиве!");
-}
+```
+Использование:
+```c
+	int f = find(arr, _countof(arr), 5);
+	if (f != -1)
+		printf("Элемент найден: %d = %d\n", f, arr[f]);
+	else
+		printf("Элемент не найден!");
 ```
 
 Реверс элементов массива:
