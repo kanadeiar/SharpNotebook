@@ -277,10 +277,14 @@ void quicksort( int arr[], int first, int last )
 ```
 Пример функции быстрой сортировки на указателях на С:
 ```c
+int irand(int from, int to)
+{
+	return from + rand() % (to - from);
+}
 void qpsort( int * first, int * last )
 {
 	int * f = first, * l = last;
-	int middle = *(f + irand(0, f - l));
+	int middle = *(f + irand(0, l - f));
 	while (f < l)
 	{
 		while (*f < middle) f++;
@@ -310,24 +314,25 @@ void qpsort( int * first, int * last )
 
 Пример двоичного поиска в отсортированном массиве:
 ```c
-int find(int arr[], int length, int need)
+int find(int arr[], int first, int last, int key)
 {
-	int f = 0, l = length;
-	while (f < l - 1)
+	int middle = 0;
+	while (first <= last)
 	{
-		int m = (f + l) / 2;
-		if (need < arr[m])
-			l = m;
-		else f = m;
+		middle = (first + last) / 2;
+		if (key < arr[middle])
+			last = middle - 1;
+		else if (key > arr[middle])
+			first = middle + 1;
+		else
+			return middle;
 	}
-	if (arr[f] == need)
-		return f;
 	return -1;
 }
 ```
 Использование:
 ```c
-	int f = find(arr, _countof(arr), 5);
+	int f = find(arr, 0, _countof(arr), num);
 	if (f != -1)
 		printf("Элемент найден: %d = %d\n", f, arr[f]);
 	else
