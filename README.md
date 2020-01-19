@@ -29,7 +29,7 @@
 
 [Консоль (ввод/вывод через консоль)](./algoritms/indexCConsole.md).
 
-[Переменные (типы, константы, приведение, строки)](./algoritms/indexCVariables.md).
+[Переменные (типы, константы, приведение, строки, сравнение строк)](./algoritms/indexCVariables.md).
 
 [Арифметика (операции и функции)](./algoritms/indexCMath.md).
 
