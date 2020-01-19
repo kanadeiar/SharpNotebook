@@ -16,16 +16,20 @@ FILE * f_pointer;
 
 В файлы этого типа данные можно записывать и считывать в разные участки этого файла. Пример работы с файлом:
 ```c
-FILE *fptr;
 int main(int argc, const char* argv[])
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+	FILE * fptr;
 	fopen_s(&fptr, "c:\\Temp\\test.txt", "w");
-	if (fptr == nullptr)
+	if (fptr)
 	{
-		printf_s("Не удалось открыть файл!");
-     	exit(1);
+		printf_s("Файл создан!");
+	}
+	else
+	{
+		printf("Не удалось создать файл!");
+		exit(1);
 	}
 	fclose(fptr);
 ```
@@ -62,9 +66,13 @@ int main(int argc, const char* argv[])
 		(books + i)->pages = 100 * i;
 	}	
 	fopen_s(&fptr, "c:\\Temp\\books.txt", "w");
-	if (fptr == nullptr)
+	if (fptr)
 	{
-		printf_s("Не удалось открыть файл!");
+		printf_s("Файл создан!");
+	}
+	else
+	{
+		printf("Не удалось создать файл!");
 		exit(1);
 	}
 	fputs("Коллекция книг:\n", fptr);
@@ -78,6 +86,8 @@ int main(int argc, const char* argv[])
 
 Для чтения информации из файла следует использовать функцию fgets(). Она требует указания длины массива, в который производится считывание данных. При работе с функцией нужно быть бдительным и проверять положение указателя, что он не в конце файла.
 
+Функция feof() - возвращает истинное значсение, если файловый курсор указывает на конец файла.
+
 Пример чтения строк из записанного ранее файла:
 ```c
 FILE * fptr;
@@ -87,7 +97,7 @@ int main(int argc, const char* argv[])
 	SetConsoleOutputCP(1251);
     char line[254]; //хранение вводимых строк
     fopen_s(&fptr, "c:\\Temp\\books.txt", "r");
-    if (fptr != 0)
+    if (fptr)
     {
         while (!feof(fptr))
         {
@@ -102,7 +112,32 @@ int main(int argc, const char* argv[])
     else
     {
         puts("Не удалось открыть файл для чтения!");
+        exit(1);
     }
+```
+Другой вариант чтение чисел РЕШНИЕ ОШИБКИ с учетом ошибки если в конце файла стоит символ перевода строки, то последнее число будет учтено дважды:
+```c
+FILE * fptr;
+char line[254]; //хранение вводимых строк
+fopen_s(&fptr, "c:\\Temp\\letters.txt", "r");
+if (fptr)
+{
+    int n;
+    int x;
+    while (1)
+    {
+        n = fscanf_s(fptr, "%d", &x);
+        if (n < 1)
+            break;
+        printf("%d\n", x);
+    }
+    fclose(fptr);
+}
+else
+{
+    puts("Не удалось открыть файл для чтения!");
+    exit(1);
+}
 ```
 
 Пример дозаписи строки в файл:
@@ -114,9 +149,13 @@ int main(int argc, const char* argv[])
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	fopen_s(&fptr, "c:\\Temp\\books.txt", "a");
-	if (fptr == 0)
+	if (fptr)
 	{
-		printf_s("Не удалось открыть файл!");
+		printf_s("Файл создан!");
+	}
+	else
+	{
+		printf("Не удалось создать файл!");
 		exit(1);
 	}
 	fputs("Нужно больше книг!:\n", fptr);
@@ -160,9 +199,13 @@ int main(int argc, const char* argv[])
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	fopen_s(&fptr, "c:\\Temp\\letters.txt", "w+");
-	if (fptr == 0)
+	if (fptr)
 	{
-		puts("Произошла ошибка при открытии файла.");
+		printf_s("Файл создан!");
+	}
+	else
+	{
+		printf("Не удалось создать файл!");
 		exit(1);
 	}
 	for (char lett = 'A'; lett <= 'Z'; lett++)
@@ -187,9 +230,13 @@ int main(int argc, const char* argv[])
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	fopen_s(&fptr, "c:\\Temp\\letters.txt", "r+");
-	if (fptr == 0)
+	if (fptr)
 	{
-		puts("Произошла ошибка при открытии файла.");
+		printf_s("Файл открыт!");
+	}
+	else
+	{
+		printf("Не удалось создать файл!");
 		exit(1);
 	}
 	printf_s("Какую букву заменить? (1-26)?:> ");
@@ -206,3 +253,57 @@ int main(int argc, const char* argv[])
 	fclose(fptr);
 ```
 
+## Файлы на языке С++
+
+На языке С++ работа с текстовыми файлами используются файловые потоки ввода-вывода, которые подключеются с помощью заголовочного файла fstream.
+
+Входной поток - чтение - ifstream, выходной поток - запись - ofstream. Для открытия файла метод open(), для закрытия - close(). В случае ошибки значение будет NULL. Функция eof() используется для определения конца файла.
+
+Пример:
+```cpp
+int a = 12345;
+int a1 = 54321;
+ofstream fout;
+fout.open("c:\\Temp\\letters.txt");
+if (fout)
+{
+    fout << a << endl << a1;
+}
+else
+    printf("Не удалось записать файл!");
+fout.close();
+ifstream fin;
+fin.open("c:\\Temp\\letters.txt");
+if (fin)
+{
+    int b;
+    while (!fin.eof())
+    {
+        fin >> b;
+        cout << b << endl;
+    }
+}
+else
+    printf("Не удалось записать файл!");
+fin.close();
+```
+Пример записи чисел:
+```cpp
+ofstream fout;
+fout.open("test.txt");
+for (int i = 0; i<n; i++)
+    fout << arr[i] << endl;
+fout.close();
+```
+
+Пример чтения строк:
+```cpp
+string s;
+ifstream fin;
+fin.open("c:\\Temp\\books.txt");
+while (getline(fin, s))
+{
+    cout << s << endl;
+}
+fin.close();
+```
