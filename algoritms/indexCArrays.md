@@ -447,4 +447,46 @@ int iMax = (pMax - &mtx[0][0]) / N;
 int jMax = (pMax - &mtx[0][0]) % N;
 cout << "mtx[" << iMax << "," << jMax << "]=" << *pMax;
 ```
+Работа с массивом из строк на С++:
+```cpp
+ifstream fin("text.txt");
+if (fin)
+{
+	int arrstr_count = 0;
+	string sbuf;
+	while (getline(fin, sbuf))
+		arrstr_count++;
+	fin.clear();
+	fin.seekg(0);
+	string * arrstr = new string[arrstr_count];
+	int i = 0;
+	while (getline(fin, sbuf))
+		arrstr[i++] = sbuf;
 
+	for (auto i = 0; i < arrstr_count - 1; i++)
+	{
+		int min = i;
+		for (auto j = i + 1; j < arrstr_count; j++)
+			if (arrstr[j] < arrstr[min])
+				min = j;
+		if (min != i)
+		{
+			string tmps = arrstr[i];
+			arrstr[i] = arrstr[min];
+			arrstr[min] = tmps;
+		}
+	}
+
+	cout << "Полученные и отсортированные из файла cтроки:" << endl;
+	for (auto i = 0; i < arrstr_count; i++)
+		cout << i << ") " << arrstr[i] << endl;
+	cout << endl;
+}
+else
+{
+	cout << "Не прочитать файл";
+	cin.get();
+	exit(1);
+}
+fin.close();
+```
