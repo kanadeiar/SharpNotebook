@@ -62,3 +62,17 @@ __asm
 }
 ``` 
 
+# Замер скорости выполнения кода в тактах процессора
+```c
+unsigned __int64 sta = __rdtsc();
+///// код для замера
+unsigned __int64 end = __rdtsc();
+printf("\nКоличество тиков процессора: %I64d\n", end - sta);
+```
+
+# Замер скорости выполнения кода в секундах
+```c
+time_t start = time(NULL);
+time_t end = time(NULL);
+printf("Время: %.16f", difftime(end, start));
+```

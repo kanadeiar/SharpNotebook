@@ -209,13 +209,17 @@ int * arr_last = &arr[29];
 for (int * pI = arr; pI <= arr_last; pI++)
     *pI = rand() % 99;
 /////////////////////////////
-for (int * pI = arr; pI <= arr_last - 1; pI++)
+int * last = arr + SIZE_ARR - 1;
+int * pI = arr;
+while (pI <= last - 1)
 {
     int * pMin = pI;
-    for (int * pJ = pI + 1; pJ <= arr_last; pJ++)
+    int * pJ = pI + 1;
+    while (pJ <= last)
     {
         if (*pJ < *pMin)
             pMin = pJ;
+        pJ++;
     }
     if (pMin != pI)
     {
@@ -223,6 +227,7 @@ for (int * pI = arr; pI <= arr_last - 1; pI++)
         *pI = *pMin;
         *pMin = temp;
     }
+    pI++;
 }
 /////////////////////////////
 cout << "Массив:" << endl;
@@ -230,6 +235,30 @@ for (int * pI = arr; pI <= arr_last; pI++)
     cout << *pI << ' ';
 delete [] arr;
 ```
+Пример сортировки массива методом вставки:
+```cpp
+void sortInsertNBinary(int arr[], int len, int * count)
+{
+	int key = 0;
+	for (int i = 0; i < len - 1; i++)
+	{
+		key = i + 1;
+		int temp = arr[key];
+		for (int j = i+1; j > 0; j--)
+		{
+			if (temp < arr[j - 1])
+			{
+				arr[j] = arr[j - 1];
+				key = j - 1;
+			}
+		}
+		arr[key] = temp;
+	}
+}
+//////////////////////////
+	sortInsertNBinary(arr, SIZE_ARR, &count);
+```
+
 Сортировка методом слияния двух заранее отсортированных массивов основана на пошаговом сравнении двух первых еще не использованных элементов массивов, добавляя в конец третьего массива наименьший из них. После этого хвост добавляется в конец третьего массива, который уже отсортирован.
 
 Алгоритм на языке С++:
