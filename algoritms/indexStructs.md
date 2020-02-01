@@ -1,5 +1,9 @@
 # Структуры простые
 
+## Односвязный список
+
+
+
 ## Стек
 
 Пример на массиве:
@@ -24,7 +28,7 @@ T pop()
 		printf("Стек пуст");
 }
 ```
-Пример на списках:
+Пример на списке:
 ```c
 struct TNode
 {
@@ -117,6 +121,73 @@ T dequeue()
 T peek()
 {
 	return Queue[front];
+}
+```
+Очередь на списке:
+```c
+#define TQ char
+
+struct TQNode
+{
+	TQ value;
+	struct TQNode * next;
+};
+typedef struct TQNode QNode;
+struct Queue
+{
+	QNode * head;
+	QNode * tail;
+	int size;
+	int maxSize;
+};
+struct Queue Queue;
+void Enqueue(TQ value)
+{
+	if (Queue.size >= Queue.maxSize)
+	{
+		puts("ѕереполнение очереди!");
+		return;
+	}
+	QNode * tmp = (QNode *)malloc(sizeof(QNode));
+	tmp->value = value;
+	tmp->next = NULL;
+	if (Queue.size == 0)
+	{
+		Queue.head = Queue.tail = tmp;
+	}
+	else
+	{
+		Queue.tail->next = tmp;
+		Queue.tail = tmp;
+	}
+	Queue.size++;
+}
+TQ Dequeue()
+{
+	if (Queue.size == 0)
+	{
+		puts("ќчередь пуста!");
+		return -1;
+	}
+	TQ temp = Queue.head->value;
+	QNode * delme = Queue.head;
+	Queue.head = Queue.head->next;
+	Queue.size--;
+	if (Queue.size == 0)
+	{
+		Queue.head = Queue.tail = NULL;
+	}
+	free(delme);
+	return temp;
+}
+TQ Peek()
+{
+	if (Queue.size == 0)
+	{
+		puts("ќчередь пуста!");
+		return -1;
+	}
+	return Queue.head->value;
 }
 ```
 
