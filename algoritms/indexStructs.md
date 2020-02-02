@@ -2,7 +2,13 @@
 
 ## Односвязный список
 
-
+```c
+typedef struct TNode
+{
+	T value;
+	struct TNode * next;
+} Node;
+```
 
 ## Стек
 
@@ -191,5 +197,5 @@ TQ Peek()
 }
 ```
 
-## Дек
+
 
