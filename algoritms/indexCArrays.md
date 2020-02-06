@@ -280,6 +280,7 @@ void merge(int arr[], int first, int mid, int last)
 		tarr[it++] = arr[i2++];
 	for (int i = first; i<=last; i++)
 		arr[i] = tarr[i-first];
+    delete [] tarr;
 }
 void mergeSort(int arr[], int first, int last)
 {
