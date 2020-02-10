@@ -3,7 +3,6 @@
 ## Простые числа
 
 Определение что число - простое.
-
 ```c
 bool isSimple( int n )
 {
@@ -12,6 +11,32 @@ bool isSimple( int n )
 		k++;
 	return ( k*k > n );
 }
+```
+Решето Эратосфена.
+```c
+int arr[N + 1];
+int i, k;
+for (i = 2; i<=N; i++)
+    arr[i] = 1;
+k = 2;
+while (k * k <= N)
+{
+    if (arr[k])
+    {
+        i = k*k;
+        while (i <= N)
+        {
+            arr[i] = 0;
+            i += k;
+        }
+    }
+    k++;
+}
+for (i = 2; i<=N; i++)
+    if (arr[i])
+    {
+        printf("%d ", i);
+    }
 ```
 
 ## НОД

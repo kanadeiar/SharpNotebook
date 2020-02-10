@@ -47,9 +47,9 @@
 
 [Алгоритмы простые](./algoritms/indexSimple.md).
 
-...
+[Струкруты простые](./algoritms/indexStructs.md).
 
-...
+[Деревья](./algoritms/indexTrees.md).
 
 ## Платформа
 
@@ -140,6 +140,8 @@
 [Базовый Git](./git/indexBasic.md).
 
 ## База данных SQL
+
+[База данных Access](./sql/indexAccess.md).
 
 [База данных SQL](./sql/indexSql.md).
 

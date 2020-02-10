@@ -76,3 +76,9 @@ time_t start = time(NULL);
 time_t end = time(NULL);
 printf("Время: %.16f", difftime(end, start));
 ```
+Еще:
+```c
+time_t start = clock();
+time_t end = clock();
+printf("time: %lf second\n", (double)(end - start) / CLOCKS_PER_SEC);
+```
