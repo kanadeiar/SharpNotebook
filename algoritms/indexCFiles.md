@@ -348,7 +348,36 @@ for (int i = 0; i < 10; i++)
     printf("%s %s %d\n", books2[i].author, books2[i].title, books2[i].count);
 fclose(fin);
 ```
-
+Запись в файл на С++:
+```cpp
+Book B;
+B.author = "Пупкин";
+B.title = "Стихи";
+B.count = 10;
+Book books[10];
+for (int i = 0; i < 10; i++)
+    books[i] = B;
+ofstream fout;
+fout.open("books.dat", ios::binary);
+fout.write( (char*)&B, sizeof(Book) );
+fout.write( (char*)books, sizeof(Book)*10 );
+fout.close();
+```
+Чтение из файла на С++:
+```cpp
+Book B2;
+Book books2[10];
+ifstream fin;
+fin.open("books.dat", ios::binary);
+fin.read( (char*)&B2, sizeof(Book) );
+fin.read( (char*)books2, sizeof(Book)*10 );
+fin.close();
+cout << "Книга: " << B2.author << " " << B2.title << " " << B2.count << endl;
+int M = fin.gcount() / sizeof(Book);
+cout << "Прочитано " << M << " книг:" << endl;
+for (auto it : books2)
+    cout << it.author << " " << it.title << " " << it.count << endl;
+```
 
 
 
