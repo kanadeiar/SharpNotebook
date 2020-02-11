@@ -341,7 +341,7 @@ void quicksort( int arr[], int first, int last )
 		printf("%d ", arr[i]);
 	printf("\n");
 ```
-Пример функции быстрой сортировки на указателях на С:
+Пример функции быстрой сортировки с использованием указателей на С:
 ```c
 int irand(int from, int to)
 {
@@ -375,6 +375,30 @@ void qpsort( int * first, int * last )
 ```c
     qpsort(arr, arr + SIZE - 1);
 ```
+Сотрировка с использованием массива указателей:
+```c
+char books[N][20] = {"ab", "bzs", "za", "xac", "z", "a", "dss", "dsy", "dd", "rew"};
+char *parr[N], *pt;
+for (int i = 0; i < N; i++)
+    parr[i] = &books[i];
+for (int i = 0; i < N-1; i++)
+    for (int j = N-2; j>=i; j--)
+    {
+        if ( strcmp(parr[j], parr[j+1]) > 0 )
+        {
+            pt = parr[j];
+            parr[j] = parr[j+1];
+            parr[j+1] = pt;
+        }
+    }
+for (int i = 0; i < 10; i++)
+    printf("%s ", books[i]);
+puts("Отсортированное:");
+for (int i = 0; i < 10; i++)
+    printf("%s ", parr[i]);
+```
+
+
 
 Процесс поиска элементов в отсортированном массиве будет быстрее, так как не нужно просматривать все элементы массива, а только до определенного значения и далее прекращать поиск.
 
