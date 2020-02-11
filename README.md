@@ -41,6 +41,8 @@
 
 [Указатели (массивы + указатели)](./algoritms/indexCPointers.md).
 
+[Структуры](./algoritms/indexCStructs.md).
+
 [Динамика (динамическая память и структуры)](./algoritms/indexCDynamic.md).
 
 [Файлы (последовательная и произвольная работа с файлами)](./algoritms/indexCFiles.md).

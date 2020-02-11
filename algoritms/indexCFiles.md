@@ -1,6 +1,6 @@
 # Файлы (последовательная и произвольная работа с файлами)
 
-## Последовательные файлы
+## Текстовые последовательные файлы
 
 В файлы этого типа можно считывать и записывать данные в порядке следования данных.
 
@@ -163,7 +163,7 @@ int main(int argc, const char* argv[])
 ```
 Нельзя производить чтение файла без использования функции feof(), так как возможно, уже прочитана последняя строка файла.
 
-## Файлы произвольного доступа
+## Текстовые файлы произвольного доступа
 
 Физическое размещение файла не определяет его тип. Можно создать файл последовательно, а затем читать и изменять его произвольно.
 
@@ -253,7 +253,7 @@ int main(int argc, const char* argv[])
 	fclose(fptr);
 ```
 
-## Файлы на языке С++
+## Текстовые файлы на языке С++
 
 На языке С++ работа с текстовыми файлами используются файловые потоки ввода-вывода, которые подключеются с помощью заголовочного файла fstream.
 
@@ -307,3 +307,49 @@ while (getline(fin, s))
 }
 fin.close();
 ```
+
+## Двоичные файлы
+
+Структура на С:
+```c
+typedef struct 
+{
+	char author[40];
+	char title[80];
+	int count;
+} Book;
+```
+Запись в файл одной записи и массива:
+```c
+FILE * fout;
+Book book;
+Book books[10];
+strcpy(book.author, "Пупкин А.И.");
+strcpy(book.title, "Стихи");
+book.count = 10;
+for (int i = 0; i < 10; i++)
+    books[i] = book;
+fout = fopen("books.dat", "wb");
+fwrite(&book, sizeof(Book), 1, fout);
+fwrite(&books[0], sizeof(Book), 10, fout);
+fclose(fout);
+```
+Чтение одной записи и массива:
+```c
+FILE * fin;
+Book book2;
+Book books2[10];
+fin = fopen("books.dat", "rb");
+fread(&book2, sizeof(Book), 1, fin);
+printf("Книга 1-я: %s %s %d\n", book2.author, book2.title, book2.count);
+int cou = fread(&books2, sizeof(Book), 10, fin);
+printf("Прочитано %d книг:\n", cou);
+for (int i = 0; i < 10; i++)
+    printf("%s %s %d\n", books2[i].author, books2[i].title, books2[i].count);
+fclose(fin);
+```
+
+
+
+
+
