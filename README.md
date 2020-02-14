@@ -51,7 +51,11 @@
 
 [Струкруты простые](./algoritms/indexStructs.md).
 
+[Связные списки](./algoritms/indexList.md).
+
 [Деревья](./algoritms/indexTrees.md).
+
+[Структуры С++](./algoritms/indexCppStructs.md).
 
 ## Платформа
 
