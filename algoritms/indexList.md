@@ -205,7 +205,27 @@ void DeleteHeadList(DList **h, DList **t, int x)
 	}
 }
 ```
-
+Использование:
+```c
+DList * head = NULL;
+DList * tail = NULL;
+InsertHeadDList(&head, &tail, 1);
+InsertHeadDList(&head, &tail, 2);
+InsertHeadDList(&head, &tail, 3);
+puts("Один элемент:");
+DList * s = SearchHeadDList(head, tail, 4);
+printf("%d\n", s->item);
+puts("Один элемент:");
+s = SearchTailDList(head, tail, 1);
+printf("%d\n", s->item);
+puts("Массив до удаления:");
+PrintHDList(head, tail);
+DeleteHeadList(&head, &tail, 1);
+DeleteHeadList(&head, &tail, 2);
+DeleteHeadList(&head, &tail, 3);
+puts("Массив после удаления:");
+PrintHDList(head, tail);
+```
 
 
 
