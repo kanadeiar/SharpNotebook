@@ -37,7 +37,7 @@
 
 [Функции (аргументы и вертаемое значение)](./algoritms/indexCFuncs.md).
 
-[Массивы](./algoritms/indexCArrays.md).
+[Массивы (обработка массивов)](./algoritms/indexCArrays.md).
 
 [Указатели (массивы + указатели)](./algoritms/indexCPointers.md).
 

@@ -1,4 +1,4 @@
-# Массивы
+# Массивы (обработка массивов)
 
 ## Массивы
 
@@ -112,7 +112,7 @@ for (auto& el : arr)
 
 
 
-## Работа с массивами
+## Обработка массивов
 
 Заполнять массивы данными можно первоначально присваиванием или в момент их объявления. Можно заполнять массивы данными, вводимиыми пользователями. Можно заполнять массивы из файлов, которые хранятся на диске.
 
@@ -186,13 +186,13 @@ for (int element : arr)
 }
 for (int outer = 0; outer < _countof(arr) - 1; outer++)
 {
-    for (int inner = outer + 1; inner < _countof(arr); inner++)
+    for (int inner = 0; inner < _countof(arr) - i - 1; inner++)
     {
-        if (arr[inner] < arr[outer])
+        if (arr[inner+1] > arr[inner])
         {
-            int temp = arr[inner];
-            arr[inner] = arr[outer];
-            arr[outer] = temp;
+            int temp = arr[inner+1];
+            arr[inner+1] = arr[inner];
+            arr[inner] = temp;
         }
     }
 }
