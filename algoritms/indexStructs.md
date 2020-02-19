@@ -1,15 +1,5 @@
 # Структуры простые
 
-## Односвязный список
-
-```c
-typedef struct TNode
-{
-	T value;
-	struct TNode * next;
-} Node;
-```
-
 ## Стек
 
 Пример на массиве:
@@ -34,6 +24,7 @@ T pop()
 		printf("Стек пуст");
 }
 ```
+
 Пример на списке:
 ```c
 struct TNode
@@ -93,6 +84,47 @@ int print_stack()
 	print_stack();
 ```
 
+Еще пример на С:
+```c
+typedef struct
+{
+	int * data;
+	int capacity;
+	int size;
+} MyStack;
+void MyPush(MyStack * pStack, int value)
+{
+	pStack->size++;
+	if (pStack->size > pStack->capacity)
+	{
+		pStack->capacity += 10;
+		pStack->data = (int *)realloc(pStack->data, sizeof(int) * pStack->capacity);
+	}
+	pStack->data[pStack->size-1] = value;
+}
+int MyPop(MyStack * pStack)
+{
+	if (pStack->size > 0)
+	{
+		pStack->size--;
+		return pStack->data[pStack->size];
+	}
+	return -1;
+}
+int MyInitStack(MyStack * pStack, int capacity)
+{
+	pStack->data = (int *)calloc(capacity, sizeof(int));
+	pStack->capacity = capacity;
+	pStack->size = 0;
+}
+////////использование:
+	MyStack stack;
+	MyInitStack(&stack, 10);
+	while (1 == fscanf(fin, "%d", &ibuf))
+		MyPush(&stack, ibuf);
+	while (stack.size > 0)
+		printf("%d\n", MyPop(&stack));
+```
 
 
 
@@ -129,6 +161,42 @@ T peek()
 	return Queue[front];
 }
 ```
+Еще пример на массиве:
+```c
+#define SIZE_Q 10
+typedef struct
+{
+	int data[SIZE_Q];
+	int size;
+} TQueue;
+void MQueueInit(TQueue * queue)
+{
+	queue->size = 0;
+};
+void MQueuePush(TQueue * queue, int value)
+{
+	queue->size++;
+	if (queue->size > SIZE_Q)
+	{
+		queue->size = SIZE_Q;
+		puts("Переполнение очереди!");
+	}
+	queue->data[queue->size-1] = value;
+}
+int MQueuePop(TQueue * queue)
+{
+	int tmp = queue->data[0];
+	queue->size--;
+	for (int i = 0; i < queue->size; i++)
+		queue->data[i] = queue->data[i+1];
+	return tmp;
+}
+int MQueueEmpty(TQueue queue)
+{
+	return queue.size == 0;
+}
+```
+
 Очередь на списке:
 ```c
 #define TQ char
@@ -151,7 +219,7 @@ void Enqueue(TQ value)
 {
 	if (Queue.size >= Queue.maxSize)
 	{
-		puts("ѕереполнение очереди!");
+		puts("Переполнение очереди!");
 		return;
 	}
 	QNode * tmp = (QNode *)malloc(sizeof(QNode));
@@ -172,7 +240,7 @@ TQ Dequeue()
 {
 	if (Queue.size == 0)
 	{
-		puts("ќчередь пуста!");
+		puts("Очередь пуста!");
 		return -1;
 	}
 	TQ temp = Queue.head->value;
@@ -190,7 +258,7 @@ TQ Peek()
 {
 	if (Queue.size == 0)
 	{
-		puts("ќчередь пуста!");
+		puts("Очередь пуста!");
 		return -1;
 	}
 	return Queue.head->value;

@@ -17,8 +17,11 @@ vector<int> arr;
 	cout << arr.size();
 	for (int i = 0; i<10; i++)
 		arr.push_back(i+1);
-	for (int i = 0; i<10; i++)
-		cout << arr[i] << " ";
+	for (auto &it : arr) //доступ для записи
+		it++; //увеличение значений всех элементов
+	vector<int>::iterator it;
+	for (it = arr.begin(); it != arr.end(); it++)
+		cout << *it;
 ```
 Пример работы с двумерным массивом на С++:
 ```cpp
@@ -73,5 +76,28 @@ map <int, int>::iterator it; //вывод результатата через и
 for (it = MapArr.begin(); it != MapArr.end(); it++)
     cout << it->first << " = " << it->second << endl;
 ```
+
+## Тип С++ stack
+
+Организация стандартного типа данных стек. Push - добавление элемента, pop - снятие, top - просмотр верхнего элемента, empty - истина если стек пуст и ложь если что то в нем есть.
+
+Объявление:
+```cpp
+#include <stack>
+stack <int> myStack;
+```
+Пример:
+```cpp
+stack<int> myStack;
+for (int i = 0; i<10; i++)
+    myStack.push(i+1);
+cout << "Результат:" << endl;
+while (!myStack.empty())
+{
+    cout << myStack.top() << endl;
+    myStack.pop();
+}
+```
+
 
 
