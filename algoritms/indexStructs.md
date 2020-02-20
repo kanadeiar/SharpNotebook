@@ -168,32 +168,45 @@ typedef struct
 {
 	int data[SIZE_Q];
 	int size;
+	int head;
+	int tail;
 } TQueue;
-void MQueueInit(TQueue * queue)
+void MQInit(TQueue * queue)
 {
 	queue->size = 0;
-};
-void MQueuePush(TQueue * queue, int value)
+	queue->head = 0;
+	queue->tail = -1;
+}
+void MQPush(TQueue * queue, int value)
 {
 	queue->size++;
 	if (queue->size > SIZE_Q)
 	{
-		queue->size = SIZE_Q;
 		puts("Переполнение очереди!");
+		return;
 	}
-	queue->data[queue->size-1] = value;
+	queue->tail++;
+	if (queue->tail >= SIZE_Q)
+		queue->tail = 0;
+	queue->data[queue->tail] = value;
 }
-int MQueuePop(TQueue * queue)
+int MQPop(TQueue * queue)
 {
-	int tmp = queue->data[0];
+	if (queue->size == 0)
+	{
+		puts("В очереди ничего нет!");
+		return -1;
+	}
 	queue->size--;
-	for (int i = 0; i < queue->size; i++)
-		queue->data[i] = queue->data[i+1];
+	int tmp = queue->data[queue->head];
+	queue->head++;
+	if (queue->head >= SIZE_Q)
+		queue->head = 0;
 	return tmp;
 }
-int MQueueEmpty(TQueue queue)
+int MQEmpty(TQueue * queue)
 {
-	return queue.size == 0;
+	return queue->size == 0;
 }
 ```
 
