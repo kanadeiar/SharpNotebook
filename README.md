@@ -55,6 +55,8 @@
 
 [Деревья](./algoritms/indexTrees.md).
 
+[Графы](./algoritms/indexGrafs.md).
+
 [Структуры С++](./algoritms/indexCppStructs.md).
 
 ## Платформа
