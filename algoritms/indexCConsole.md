@@ -38,7 +38,10 @@ int main(int argc, const char* argv[])
 }
 ``` 
 
-
+## Очистка консоли
+```c
+	system("cls");
+``` 
 
 
 ## Вывод текста на экран
