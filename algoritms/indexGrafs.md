@@ -144,6 +144,47 @@ for (int i=0; i<N; i++)
 }
 ```
 
+```c
+int Active[N]; //активные узлы, еще не просмотренные
+int Route[N]; //расстояние от вершины
+int Peak[N]; //вершины графа из которых можно попать в эту вершину
+int min, kMin = 0;
+for (int i=0; i<N; i++)
+{
+    Active[i] = 1;
+    Route[i] = W[0][i];
+    Peak[i] = -1;
+}
+Active[0] = 0;
+for (int i=0; i<N-1; i++)
+{
+    min = 999;
+    for (int j=0; j<N; j++)
+        if (Active[j]==1 && Route[j]<min)
+        {
+            min = Route[j];
+            kMin = j;
+        }
+    Active[kMin]=0;
+    for (int j=0; j<N; j++)
+        if (Active[j]==1 && Route[j]>Route[kMin]+W[j][kMin] && W[j][kMin]!=999)
+        {
+            Route[j] = Route[kMin]+W[j][kMin];
+            Peak[j]=kMin;
+        }
+}
+```
+Вывод кратчайшего пути из последней вершины в первую:
+```c
+int i = N-1;
+while (i!=-1)
+{
+    printf("%d ", i+1);
+    i=Peak[i];
+}
+printf("1\n");
+```
+
 
 
 
