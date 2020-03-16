@@ -59,6 +59,8 @@
 
 [Динамическое программирование](./algoritms/indexDynamic.md).
 
+[Основы ООП](./algoritms/indexObjects.md).
+
 [Структуры С++](./algoritms/indexCppStructs.md).
 
 ## Платформа
