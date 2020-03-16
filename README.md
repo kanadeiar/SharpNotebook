@@ -57,6 +57,8 @@
 
 [Графы](./algoritms/indexGrafs.md).
 
+[Динамическое программирование](./algoritms/indexDynamic.md).
+
 [Структуры С++](./algoritms/indexCppStructs.md).
 
 ## Платформа
