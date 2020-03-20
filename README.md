@@ -155,7 +155,9 @@
 
 [База данных Access](./sql/indexAccess.md).
 
-[База данных SQL](./sql/indexSql.md).
+[Основы базы данных MSSQL](./sql/indexSql.md).
+
+[Базовые команды MSSQL](./sql/indexBase.md).
 
 ## Использованные источники
 
