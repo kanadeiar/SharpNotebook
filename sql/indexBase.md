@@ -25,5 +25,58 @@ DROP TABLE Items;
 
 Добавление записей в таблицу:
 ```sql
-INSERT INTO Items (Name, ItemID) VALUES ('101.Давление на входе', 100)
+USE shop;
+INSERT INTO Items (Name, ItemID) VALUES ('Тест номер 1', 101), ('Тест номер 2', 102);
 ```
+
+Ограничение на выборку данных из таблицы:
+```sql
+SELECT * FROM Items;
+SELECT * FROM Items WHERE (ItemID>5) AND (ItemID<200);
+SELECT * FROM Items WHERE NOT (ItemID=100);
+SELECT * FROM Items WHERE ItemID IS NOT NULL;
+```
+Выборка части информации:
+```sql
+SELECT Name FROM Items;
+SELECT DISTINCT Name FROM Items; --уникальные имена выводить только
+SELECT * FROM Items ORDER BY Name ASC; --прямой порядок
+SELECT * FROM Items ORDER BY Name DESC; --обратный порядок
+SELECT * FROM Items WHERE ItemID != 0 ORDER BY Name DESC; --обратный порядок
+SELECT TOP 2 * FROM Items; --только 2 записи
+SELECT TOP 2 * FROM Items WHERE ItemID != 0; --только 2 записи с условием
+```
+
+Изменение записей в таблице:
+```sql
+UPDATE Items SET name='Изменное' WHERE ItemID=102
+UPDATE Items SET ItemID=105 WHERE ItemID=102 OR ItemID=101
+UPDATE Items SET ItemID=105 WHERE ItemID IN (100, 101);
+```
+
+Удаление записей из таблицы:
+```sql
+DELETE FROM Items WHERE ItemID > 100;
+```
+
+## Согласованность данных
+
+К примеру таблица содержащая значения из других таблиц:
+```sql
+CREATE TABLE Product
+(
+Id INT IDENTITY(1,1) NOT NULL,
+BrandID INT NOT NULL,
+GoodID INT NOT NULL,
+CategoryID INT NOT NULL,
+Price DECIMAL(10,2) NOT NULL,
+CONSTRAINT PK_IdProduct PRIMARY KEY (Id)
+)
+//добавление значений в нее
+INSERT INTO Product (BrandID, GoodID, CategoryID, Price)
+VALUES (1, 1, 1, 8999.9);
+```
+
+
+
+
