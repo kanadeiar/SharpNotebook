@@ -76,6 +76,44 @@ CONSTRAINT PK_IdProduct PRIMARY KEY (Id)
 INSERT INTO Product (BrandID, GoodID, CategoryID, Price)
 VALUES (1, 1, 1, 8999.9);
 ```
+Внешние ограничения (или ключи):
+```sql
+ALTER TABLE Product 
+ADD CONSTRAINT FK_ProductToBrand FOREIGN KEY (Id)
+	REFERENCES Brand (Id);
+ALTER TABLE Product 
+ADD CONSTRAINT FK_ProductToGood FOREIGN KEY (GoodId)
+	REFERENCES Good (Id);
+```
+Таблица с отношениями "многие ко многим":
+```sql
+CREATE TABLE "Order" --таблица с заказами
+(
+Id INT IDENTITY(1,1) NOT NULL,
+UserName VARCHAR(128) NOT NULL,
+Phone VARCHAR(32) NOT NULL,
+Datetime DATETIME NOT NULL,
+CONSTRAINT FK_IdOrder PRIMARY KEY(Id)
+)
+//таблица с продуктами каждого каказа, промежуточная таблица, со составным ключом
+CREATE TABLE OrderProducts
+(
+OrderID INT NOT NULL,
+ProductID INT NOT NULL,
+[Count] INT,
+CONSTRAINT PK_OrPrID PRIMARY KEY (OrderID, ProductID), --уникальность первых двух полей
+CONSTRAINT FK_OrPrOrderID FOREIGN KEY (OrderID) --внешний ключ 1
+	REFERENCES [Order] (Id),
+CONSTRAINT FK_OrPrProductID FOREIGN KEY (ProductID) --внешний ключ 2
+	REFERENCES [Product] (Id)
+)
+//добавление строк
+INSERT INTO OrderProducts (OrderID, ProductID, [Count])
+VALUES (1, 1, 1), (1, 2, 3);
+```
+
+## Объединение данных
+
 
 
 
