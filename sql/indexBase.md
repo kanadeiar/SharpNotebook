@@ -114,7 +114,107 @@ VALUES (1, 1, 1), (1, 2, 3);
 
 ## Объединение данных
 
+Объединение данных из нескольких таблиц. 
 
+Объединение путем пересечения нескольких множеств. В результирующий запрос попаюают только те строки, которые являются пересечением нескольких таблиц, которые существуют в обоих таблицах:
+```sql
+//полные таблицы
+SELECT * FROM Product
+INNER JOIN Category on Product.CategoryID = Category.Id
+//выборочные
+SELECT Product.BrandID, Product.GoodID, Category.Category, Product.Price, Category.Discount FROM Product
+INNER JOIN Category on Product.CategoryID = Category.Id
+//более компактно
+SELECT tp.BrandID, tp.GoodID, tc.Category, tp.Price, tc.Discount FROM Product tp
+INNER JOIN Category tc on tp.CategoryID = tc.Id
+//несколько таблиц
+SELECT * FROM Product
+	INNER JOIN Category ON Product.CategoryID=Category.Id
+	INNER JOIN Brand ON Product.BrandID=Brand.Id
+	INNER JOIN Good ON Product.GoodID=Good.Id
+//выборака полей из нескольких таблиц
+SELECT tp.Id, Brand.Brand, Category.Category, Good.Good, tp.Price FROM Product tp
+	INNER JOIN Category ON tp.CategoryID=Category.Id
+	INNER JOIN Brand ON tp.BrandID=Brand.Id
+	INNER JOIN Good ON tp.GoodID=Good.Id
+//еще пример - вторая таблица для отношения многие ко многим
+SELECT * FROM "Order"
+	INNER JOIN OrderProducts ON OrderProducts.OrderID="Order".Id
+	INNER JOIN Product ON OrderProducts.ProductID=Product.Id
+```
 
+Объединение левое - в результирующий запрос попаюают все строки, которые есть в множестве ловом и в пересечении с правым множеством. Недостающие строки заполняются значениями NULL:
+```sql
+//левое объединение
+SELECT * FROM Category
+	LEFT JOIN Product ON Product.CategoryID=Category.Id
+//из левой таблицы знаяения которым нет сопоставления в правой таблице
+SELECT * FROM Category
+	LEFT JOIN Product ON Product.CategoryID=Category.Id
+	WHERE Product.Id IS NULL;
+//только инфа из таблицы левой
+SELECT Category.* FROM Category
+	LEFT JOIN Product ON Product.CategoryID=Category.Id
+	WHERE Product.Id IS NULL;
+//правое объединение
+SELECT * FROM Category
+	RIGHT JOIN Product ON Product.CategoryID=Category.Id
+	WHERE Product.Id IS NULL;
+```
 
+Объединение полное - полное всех возможных вариатов строк.
+```sql
+//полное объединение
+SELECT * FROM "Order"
+	FULL OUTER JOIN OrderProducts ON OrderProducts.OrderID="Order".Id
+	FULL OUTER JOIN Product ON OrderProducts.ProductID=Product.Id
+//объединение через UNION
+SELECT * FROM Good WHERE Id=2
+UNION
+SELECT * FROM Good WHERE Id=1;
+```
+
+## Агрегация (группировка) данных
+
+Примеры простой агрегации:
+```sql
+//количество
+SELECT count(*) as Количество FROM Product
+//количество с условием
+SELECT count(*) as Количество FROM Product WHERE Price < 1000
+//сумма всех значений столбца, минимальное и максимальное
+SELECT sum(Price) as Summ, max(Price) as Minim, min(Price) as Minim FROM Product
+//подсчет суммы всех заказов для некоторых людей
+SELECT sum(Count * Price) as Сумма FROM "Order"
+	INNER JOIN OrderProducts ON "Order".Id=OrderProducts.OrderID
+	INNER JOIN Product ON OrderProducts.ProductID=Product.Id
+	WHERE "Order".UserName LIKE 'Гоша'
+```
+Группировка - в последнем разделе нужно указать по какому столбцу нужно группировать, а в первом - обязательно название этого столбца нужно указать и функцию агрегации с какими либо другими столбцами.
+```sql
+//группировка по имени пользователя
+SELECT "Order".UserName, sum(Count * Price) as Сумма FROM "Order"
+	INNER JOIN OrderProducts ON "Order".Id=OrderProducts.OrderID
+	INNER JOIN Product ON OrderProducts.ProductID=Product.Id
+	GROUP BY "Order".UserName
+//максимальное значение + количество
+SELECT "Order".UserName, max(Price) as Сумма, count(*) as Количество FROM "Order"
+	INNER JOIN OrderProducts ON "Order".Id=OrderProducts.OrderID
+	INNER JOIN Product ON OrderProducts.ProductID=Product.Id
+	GROUP BY "Order".UserName
+//запросы с условиями
+SELECT "Order".UserName, sum(Price * Count) as Сумма FROM "Order"
+	INNER JOIN OrderProducts ON "Order".Id=OrderProducts.OrderID
+	INNER JOIN Product ON OrderProducts.ProductID=Product.Id
+	WHERE "Order".UserName LIKE '%а%'
+	GROUP BY "Order".UserName
+```
+Условия в аггрегирующих функциях - HAVING:
+```sql
+SELECT "Order".UserName, count(Count) as count_ord FROM "Order"
+	INNER JOIN OrderProducts ON "Order".Id=OrderProducts.OrderID
+	INNER JOIN Product ON OrderProducts.ProductID=Product.Id
+	GROUP BY "Order".UserName
+	HAVING count(Count) >= 3
+```
 
