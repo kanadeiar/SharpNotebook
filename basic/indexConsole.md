@@ -104,6 +104,19 @@ Console.WriteLine("x format: {0:x}", 99999);
 string str = Console.ReadLine();
 ```
     
+## Интерполирование строк
+Указывается знак доллара - команда осуществления интерполяция строк.
+```csharp
+Console.WriteLine($"Имя: {person.Name}  Возраст: {person.Age}");
+string result = $"{x} + {y} = {x + y}";
+string output = $"{person?.Name??"Имя по умолчанию"}";
+Console.WriteLine($"{number:+# ### ### ## ##}");
+Console.WriteLine($"{number:F3,20}");
+Console.WriteLine($"Coin flip: {(rand.NextDouble() < 0.5 ? "heads" : "tails")}");
+string message = $"{date,20}{number,20:N3}";
+```
+
+
     
     
 

@@ -139,6 +139,11 @@
 
 [LINQ](./advance/indexLINQ.md).
 
+## Графическое приложение С#
+
+[Шаблон графического приложения](./graphicapp/indexTemplate.md).
+
+
 ## Оконный C#
 
 [Самые стремные окна](./windows/indexEasy.md).
