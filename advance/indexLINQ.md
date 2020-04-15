@@ -176,7 +176,7 @@ foreach (var item in m.GetNames()) //отложенная оценка выра�
     WriteLine(item);
 ```
 
-Результат запроса из класса вшеншему коду можно передать используя строго пизированный массив в качестве возвращаемого значения. Пример:
+Результат запроса из класса вшеншему коду можно передать используя строго тизированный массив в качестве возвращаемого значения. Пример:
 ```csharp
 class MyClass
 {
@@ -430,6 +430,10 @@ foreach (var el in concat)
 
 - Sum - сумма значений.
 
+- Take - первые значения.
+
+- Skip - пропуск значений.
+
 Примеры:
 ```csharp
 int[] arrInts = {2, -3, 4, 9, 0, 10};
@@ -437,7 +441,45 @@ WriteLine($"Max = {(from i in arrInts select i).Max()}");
 WriteLine($"Min = {(from i in arrInts select i).Min()}");
 WriteLine($"Average = {(from i in arrInts select i).Average()}");
 WriteLine($"Sum = {(from i in arrInts select i).Sum()}");
+var arr1=(from i in arrInts select i).Take(2);
+foreach (var el in arr1)
+    WriteLine($"{el}");
+var arr2=(from i in arrInts select i).Skip(2);
+foreach (var el in arr2)
+    WriteLine($"{el}");
 ```
+Группировка.
+
+Примеры:
+```csharp
+var groups = from user in users
+             group user by user.LastName;
+foreach (var g in groups)
+{
+    Console.Write($"{g.Key}: ");
+    foreach (var t in g)
+        Console.Write($"{t.FirstName} ");
+    Console.WriteLine();
+}
+```
+Еще пример:
+```csharp
+var group1 = users.GroupBy(p=>p.LastName)
+    .Select(g=>new
+    {
+        Family = g.Key,
+        Count = g.Count(),
+        Names = g.Select(p=>p),
+    });
+foreach (var el in group1)
+{
+    Console.Write($"{el.Family} {el.Count} шт.: ");
+    foreach (var t in el.Names)
+        Console.Write($"{t.FirstName} ");
+    Console.WriteLine();
+}
+```
+
 
 
 ## Внутренности операторов запросов LINQ.

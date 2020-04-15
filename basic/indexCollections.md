@@ -261,6 +261,22 @@ private static void UseDict()
     WriteLine($"two => {dicts["two"].X}");
 }
 ```
+Еще пример:
+```csharp
+var dict = new Dictionary<char, string>
+{
+    ['r']="Roman",
+    ['i']="Ivan",
+    ['v']="Victor",
+};
+//еще пример
+var dict = new Dictionary<char, string>
+{
+    {'r',"Roman"},
+    {'i',"Ivan"},
+    {'v',"Victor"},
+};
+```
 
 
 

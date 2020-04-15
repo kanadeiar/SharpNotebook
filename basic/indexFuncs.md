@@ -273,6 +273,55 @@ List<int> myInts = new List<int> { 10, 11, 12, 1, 5 };
 myInts.WriteNBeep();
 ReadKey();
 ```
+Пример расширения - добавление элементов в коллекцию:
+```csharp
+public static class MyExtensions
+{
+    public static T AddTo<T>(this T self, ICollection<T> coll)
+    {
+        coll.Add(self);
+        return self;
+    }
+}
+//использование
+    var list = new List<int>();
+    list.Add(1);
+    10.AddTo(list).AddTo(list);
+    foreach (var el in list)
+        Console.Write($"{el} ");
+```
+Пример - перевод строки в логический тип данных, если не сможет сконвертировать, то вернет ложь:
+```csharp
+public static class MyExtensions
+{
+    public static bool TryBool(this string self)
+    {
+        return Boolean.TryParse(self, out var res) && res;
+    }
+}
+//использование
+    bool b = "True".TryBool();
+    Console.WriteLine($"{b}");
+```
+Пример - проверка что существует элемент среди множества
+```csharp
+public static class MyExtensions
+{
+    public static bool IsOneOf<T>(this T self, params T[] elems)
+    {
+        return elems.Contains(self);
+    }
+}
+//использование
+    var arr = new[] {1,2,5,6};
+    bool b2 = 2.IsOneOf(arr);
+    Console.WriteLine($"{b2}");
+```
+
+
+
+
+
 
 
 ## Ссылочные локальные переменые и возвращаемые ссылочные значения
