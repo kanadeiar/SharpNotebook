@@ -143,10 +143,11 @@
 
 [Шаблон графического приложения](./graphicapp/indexTemplate.md).
 
-
 ## Оконный C#
 
 [Самые стремные окна](./windows/indexEasy.md).
+
+[Основы WPF](./windows/indexWPF.md).
 
 ## Xamarin
 
@@ -169,5 +170,7 @@
 [Интересные книги](./link/books.md). 
 
 [Интерактивный тур в git](https://githowto.com/ru).
+
+[Ссылки](./link/links.md). 
 
 
