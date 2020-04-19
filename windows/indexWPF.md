@@ -239,5 +239,65 @@ private void buttonClickMe_Click(object sender, RoutedEventArgs e)
     </StackPanel>
 </Window>
 ```
+Стили для окна:
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="600" Width="800">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="10">
+        <TextBlock>Заголовок окна</TextBlock>
+    </StackPanel>
+</Window>
+```
+
+Стили для всего приложения - файлы "App.xaml" & "MainWindow.xaml":
+```csharp
+<Application x:Class="WpfApp1HelloWPF.App"
+...
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+    </Application.Resources>
+</Application>
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="600" Width="800">
+    <StackPanel Margin="10">
+        <TextBlock>Заголовок окна</TextBlock>
+    </StackPanel>
+</Window>
+```
+
+Пример явного применения стилей - файлы "App.xaml" & "MainWindow.xaml":
+```csharp
+<Application x:Class="WpfApp1HelloWPF.App"
+...
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <Style TargetType="TextBlock" x:Key="HeaderStyle">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+    </Application.Resources>
+</Application>
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="600" Width="800">
+    <Window.Resources>
+    </Window.Resources>
+    <StackPanel Margin="10">
+        <TextBlock Style="{StaticResource HeaderStyle}">Заголовок окна</TextBlock>
+    </StackPanel>
+</Window>
+```
 
 
