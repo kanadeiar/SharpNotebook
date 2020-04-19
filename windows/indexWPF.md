@@ -186,7 +186,58 @@ private void buttonClickMe_Click(object sender, RoutedEventArgs e)
     lbResult.Items.Add(panelMain.FindResource("pnlStr").ToString());
 }
 ```
+Использование файла ресурсов. 
 
+Пример файл "Dictionary1.xaml" & "MainWindow.xaml":
+```csharp
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+...
+    <LinearGradientBrush x:Key="Brush">
+        <GradientStopCollection>
+            <GradientStop Color="White" Offset="0"/>
+            <GradientStop Color="Blue" Offset="1"/>
+        </GradientStopCollection>
+    </LinearGradientBrush>
+</ResourceDictionary>
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="600" Width="800">
+    <Window.Resources>
+        <ResourceDictionary Source="Dictionary1.xaml"/>
+    </Window.Resources>
+    <DockPanel Margin="10" Name="panelMain" Background="{StaticResource Brush}">       
+    </DockPanel>
+</Window>
+```
+# Стили
 
+Использование стилей.
+
+Пример использования стилей:
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="600" Width="800">
+    <Window.Resources>
+    </Window.Resources>
+    <StackPanel Margin="10">
+        <StackPanel.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="FontSize" Value="26"/>
+            </Style>
+        </StackPanel.Resources>
+        <TextBlock>Заголовок</TextBlock>
+        <TextBlock Foreground="Blue">Еще заголовок</TextBlock>
+        <TextBlock Text="Style Test">
+            <TextBlock.Style>
+                <Style>
+                    <Setter Property="TextBlock.FontSize" Value="40"/>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </StackPanel>
+</Window>
+```
 
 
