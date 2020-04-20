@@ -167,11 +167,58 @@ private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs 
 }
 ```
 
-
-
-
 ## Window
 
+Дочерние окна.
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Button Width="100" Height="30" Content="Дочернее окно" Click="Button_Click" Margin="10,10,200,10"/>
+        <Button Width="100" Height="30" Content="Цвет всех окон" Click="Button_Click_1" Margin="200,10,10,10"/>
+    </Grid>
+</Window>
+private void Button_Click(object sender, RoutedEventArgs e)
+{
+    ChildWindow childWindow = new ChildWindow();
+    childWindow.ViewModel = "Дчернее окно";
+    childWindow.Owner = this;
+    childWindow.Show();
+    childWindow.ShowViewModel();
+    foreach (Window win in this.OwnedWindows)
+    {
+        win.Background = new SolidColorBrush(Colors.Aquamarine);
+        if (win is ChildWindow)
+            win.Title = "Новый заголовок";
+    }
+}
+private void Button_Click_1(object sender, RoutedEventArgs e)
+{
+    foreach (Window win in App.Current.Windows)
+    {
+        win.Background = new SolidColorBrush(Colors.LightGreen);
+    }
+}
+//дочернее окно:
+<Window x:Class="WpfApp1HelloWPF.ChildWindow"
+...
+        Title="ChildWindow" Height="400" Width="600">
+    <Grid>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" FontSize="28"/>
+        <Button x:Name="myButton" Height="30" Width="100" VerticalAlignment="Top" Content="Кнопка" Click="myButton_Click"/>
+    </Grid>
+</Window>
+public string ViewModel {get;set;}
+public void ShowViewModel()
+{
+    textBlock.Text = ViewModel;
+}
+private void myButton_Click(object sender, RoutedEventArgs e)
+{
+    this.Owner.Title = "Измененный заголовок";
+}
+```
 
 
 
