@@ -151,6 +151,8 @@
 
 [Основы WPF Элементы управления](./windows/indexWPFComponents.md).
 
+[Основы WPF Привязки](./windows/indexWPFBinding.md).
+
 ## Xamarin
 
 [Базовый Xamarin](./xamarin/indexBasic.md).
