@@ -61,6 +61,52 @@
 ```
 Заметка: для лечения глюка - перевести тип проекта с х86 на х64 и пересобрать.
 
+Пример конвертирования значения:
+
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+    Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <local:YesNoToBooleanConverter x:Key="YesNoToBooleanConverter"/>
+    </Window.Resources>
+    <StackPanel Margin="10">
+        <TextBox x:Name="textBoxValue"/>
+        <WrapPanel>
+            <TextBlock Text="Текущее значение:" />
+            <TextBlock Text="{Binding ElementName=textBoxValue, Path=Text, Converter={StaticResource YesNoToBooleanConverter}}"></TextBlock>
+        </WrapPanel>
+        <CheckBox IsChecked="{Binding ElementName=textBoxValue, Path=Text, Converter={StaticResource YesNoToBooleanConverter}}" Content="Да"/>
+    </StackPanel>
+</Window>
+public class YesNoToBooleanConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        switch(value.ToString().ToLower())
+        {
+            case "yes":
+            case "true":
+                return true;
+            case "no":
+            case "false":
+                return false;
+        }
+        return false;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is bool)
+        {
+            if ((bool)value==true)
+                return "yes";
+            else
+                return "no";
+        }
+        return "no";
+    }
+}
+```
 
 
 
