@@ -220,8 +220,78 @@ private void myButton_Click(object sender, RoutedEventArgs e)
 }
 ```
 
+## ListView
 
+Компонент отображающий данные из списка:
 
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ListView Margin="10" Name="listViewEmployee">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Имя" Width="220" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Возраст" Width="80" DisplayMemberBinding="{Binding Age}"/>
+                    <GridViewColumn Header="Зарплата" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Salary}" Foreground="Blue" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
+public partial class MainWindow : Window
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+        List<Employee> items = new List<Employee>
+        {
+            new Employee {Name="Петя",Age=42,Salary=25000},
+            new Employee {Name="Толя",Age=12,Salary=9000},
+            new Employee {Name="Боря",Age=22,Salary=11000},
+        };
+        listViewEmployee.ItemsSource = items;
+    }
+}
+public class Employee
+{
+    public string Name {get;set;}
+    public int Age {get;set;}
+    public int Salary {get;set;}
+}
+```
 
+Виртуализация для ускорения работы компонента при больших данных. Пример:
+
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <ComboBox Name="comboBoxNames" Margin="10" VerticalAlignment="Top" VirtualizingStackPanel.IsVirtualizing="True">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel/>
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+    </Grid>
+</Window>
+public MainWindow()
+{
+    InitializeComponent();
+    List<string> names = new List<string>();
+    for (int i=1; i<3000; i++)
+        names.Add($"Имя {i-500}");
+    comboBoxNames.ItemsSource = names;
+}
+```
 
 

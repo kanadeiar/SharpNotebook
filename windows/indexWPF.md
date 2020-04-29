@@ -300,4 +300,36 @@ private void buttonClickMe_Click(object sender, RoutedEventArgs e)
 </Window>
 ```
 
+## Обработка исключений
+
+Пример перехвата глобальных исключений:
+```csharp
+//App.xaml
+<Application x:Class="WpfApp1HelloWPF.App"
+...
+             DispatcherUnhandledException="Application_DispatcherUnhandledException"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+    </Application.Resources>
+</Application>
+//App.xaml.cs
+private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+{
+    MessageBox.Show($"Исключение: {e.Exception.Message}", "Исключение", MessageBoxButton.OK,MessageBoxImage.Warning);
+}
+//MainWindow.xaml
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Button x:Name="buttonMy" Content="Моя кнопка" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Click="buttonMy_Click"/>
+    </Grid>
+</Window>
+private void buttonMy_Click(object sender, RoutedEventArgs e)
+{
+    string s = null;
+    int length = s.Length;
+}
+```
 

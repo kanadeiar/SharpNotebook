@@ -38,6 +38,7 @@
         textBlockInValue.SetBinding(TextBlock.TextProperty, binding);
     }
 ```
+
 ## Форматирование значений привязки
 
 Пример форматирования значений привязки с использованием статического ресурса:
@@ -107,8 +108,123 @@ public class YesNoToBooleanConverter : IValueConverter
     }
 }
 ```
+Привязка к свойствам окна:
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Window.Resources></Window.Resources>
+    <StackPanel Margin="10">
+        <WrapPanel>
+            <TextBlock Text="Заголовок: "/>
+            <TextBlock Text="{Binding Title}"/>
+        </WrapPanel>
+        <WrapPanel>
+            <TextBlock Text="Размеры: "/>
+            <TextBlock Text="{Binding Width}"/>
+            <TextBlock Text=" х "/>
+            <TextBlock Text="{Binding Height}"/>
+        </WrapPanel>
+    </StackPanel>
+</Window>
+    public MainWindow()
+    {
+        InitializeComponent();
+        this.DataContext = this;
+    }
+```
 
+## Связывание данных через наблюдаемые коллекции
 
+Пример связывания данных:
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Margin="10,0,0,0">
+            <Button Name="buttonAddUser" Click="buttonAddUser_Click">Добавить</Button>
+            <Button Name="buttonChangeUser" Click="buttonChangeUser_Click" Margin="0,5">Изменить</Button>
+            <Button Name="buttonDeleteUser" Click="buttonDeleteUser_Click">Удалить</Button>
+        </StackPanel>
+        <ListBox Name="listBoxUsers" DisplayMemberPath="Name"></ListBox>
+    </DockPanel>
+</Window>
+public partial class MainWindow : Window
+{
+    private ObservableCollection<User> users = new ObservableCollection<User>();
+    public MainWindow()
+    {
+        InitializeComponent();
+        users.Add(new User{Name = "Петя"});
+        users.Add(new User{Name = "Коля"});
+        listBoxUsers.ItemsSource = users;
+    }
+    private void buttonAddUser_Click(object sender, RoutedEventArgs e)
+    {
+        users.Add(new User{Name = "Вася"});
+    }
+    private void buttonChangeUser_Click(object sender, RoutedEventArgs e)
+    {
+        if (listBoxUsers.SelectedItem != null)
+            (listBoxUsers.SelectedItem as User).Name = "Иван";
+    }
+    private void buttonDeleteUser_Click(object sender, RoutedEventArgs e)
+    {
+        if (listBoxUsers.SelectedItem != null)
+            users.Remove(listBoxUsers.SelectedItem as User);
+    }
+}
+public class User : INotifyPropertyChanged
+{
+    private string name;
+    public string Name
+    {
+        get => name;
+        set
+        {
+            if (name != value)
+            {
+                name = value;
+                NotifyPropertyChanged("Name");
+            }
+        }
+    }
+    public event PropertyChangedEventHandler PropertyChanged;
+    public void NotifyPropertyChanged(string propName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    }
+}
+```
+
+Пример отладки ошибок связывания данных:
+
+```csharp
+<Window x:Class="WpfApp1HelloWPF.MainWindow"
+...
+        Title="Заголовок окна" Height="400" Width="600" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <local:DebugDummyConverter x:Key="DebugDummyConverter"/>
+    </Window.Resources>
+    <Grid Margin="10">
+        <TextBlock Text="{Binding Title, ElementName=wnd, Converter={StaticResource DebugDummyConverter}}"/>
+    </Grid>
+</Window>
+public class DebugDummyConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        Debugger.Break();
+        return value;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        Debugger.Break();
+        return value;
+    }
+}
+```
 
 
 

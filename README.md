@@ -153,6 +153,8 @@
 
 [Основы WPF Привязки](./windows/indexWPFBinding.md).
 
+[Основы WPF Триггеры](./windows/indexWPFTriggers.md).
+
 ## Xamarin
 
 [Базовый Xamarin](./xamarin/indexBasic.md).
