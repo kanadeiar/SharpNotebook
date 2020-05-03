@@ -68,5 +68,37 @@ public MainWindow()
 }
 ```
 
+ExecuteReader() - получение результата SQL-запроса или хранимой процедуры, возвращает полученное значение типа System.Data.SqlClient.SqlDataReader, допускающее построчное чтение результата.
+
+Пример чтения результата из таблицы базы данных:
+```csharp
+string sql = "SELECT * FROM People";
+public MainWindow()
+{
+    InitializeComponent();
+    string connectionString = @"data source = DESKTOP-Q5PLE8H\SQLEXPRESS; Initial Catalog = Lesson7; Integrated Security = True";
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        connection.Open();
+        SqlCommand command = new SqlCommand(sql, connection);
+        SqlDataReader reader = command.ExecuteReader(CommandBehavior.CloseConnection);
+        if (reader.HasRows)
+        {
+            while (reader.Read())
+            {
+                var id = Convert.ToInt32(reader.GetValue(0));
+                var fio = reader.GetString(1);
+                var birthday = reader.GetString(2);
+                var email = reader["Email"];
+                var phone = reader.GetString(reader.GetOrdinal("Phone"));
+                MessageBox.Show($"{id}\n{fio} {birthday}\n{email} {phone}");
+            }
+        }
+        reader.Close();
+        connection.Close();
+    }
+}
+```
+
 
 
