@@ -155,6 +155,8 @@
 
 [Основы WPF Триггеры](./windows/indexWPFTriggers.md).
 
+[Основы WPF Базы данных](./windows/indexWPFADO.md).
+
 ## Xamarin
 
 [Базовый Xamarin](./xamarin/indexBasic.md).
