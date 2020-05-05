@@ -132,5 +132,93 @@ public MainWindow()
 }
 ```
 
-## Отсоединенная работа от базы данных
+## Адаптер соединения с базой данных
+
+Передача данных из БД в DataSet и DataTable - метод Fill(). Сохранение изменений в БД из DataAdapter - метод Update().
+
+SelectCommand - управляет потоком данных из БД в DataTable или DataSet;
+
+Пример заполения таблицы данными из БД:
+```csharp
+string sql = "SELECT * FROM People";
+public MainWindow()
+{
+    InitializeComponent();
+    string connectionString = @"data source = DESKTOP-Q5PLE8H\SQLEXPRESS; Initial Catalog = Lesson7; Integrated Security = True";
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        adapter.SelectCommand = new SqlCommand(sql, connection);
+        DataTable dtable = new DataTable();
+        adapter.Fill(dtable);
+        foreach (DataRow el in dt.Rows)
+            MessageBox.Show($"{el["FIO"]} {el["Birthday"]} {el["Email"]}");
+    }
+}
+```
+Пример заполенения источника данных:
+```csharp
+string sql = "SELECT * FROM People";
+public MainWindow()
+{
+    InitializeComponent();
+    string connectionString = @"data source = DESKTOP-Q5PLE8H\SQLEXPRESS; Initial Catalog = Lesson7; Integrated Security = True";
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        adapter.SelectCommand = new SqlCommand(sql, connection);
+        DataSet ds = new DataSet();
+        adapter.Fill(ds);
+        foreach (DataRow el in ds.Tables[0].Rows)
+            MessageBox.Show($"{el["FIO"]} {el["Birthday"]} {el["Email"]}");
+    }
+}
+```
+Пример использования адаптера с вручную написанными запросами:
+```csharp
+public MainWindow()
+{
+    InitializeComponent();
+    string connectionString = @"data source = DESKTOP-Q5PLE8H\SQLEXPRESS; Initial Catalog = Lesson7; Integrated Security = True";
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        SqlDataAdapter adapter = new SqlDataAdapter();
+        SqlCommand selectCmd = new SqlCommand("SELECT * FROM People", connection);
+        adapter.SelectCommand = selectCmd;
+        SqlCommand insertCmd = new SqlCommand(@"INSERT INTO People (FIO,Birthday,Email,Phone) VALUES (@FIO,@Birthday,@Email,@Phone); SET @ID = @@IDENTITY;", connection);
+        insertCmd.Parameters.Add("@FIO", SqlDbType.VarChar,256,"FIO");
+        insertCmd.Parameters.Add("@Birthday", SqlDbType.VarChar,256,"Birthday");
+        insertCmd.Parameters.Add("@Email", SqlDbType.VarChar,100,"Email");
+        insertCmd.Parameters.Add("@Phone", SqlDbType.VarChar,100,"Phone");
+        SqlParameter insertParam = insertCmd.Parameters.Add("@ID",SqlDbType.Int,0,"ID");
+        insertParam.Direction = ParameterDirection.Output;
+        adapter.InsertCommand = insertCmd;
+        SqlCommand updateCmd = new SqlCommand(@"UPDATE People SET FIO = @FIO,Birthday = @Birthday,Email = @Email,Phone = @Phone WHERE ID = @ID", connection);
+        updateCmd.Parameters.Add("@FIO", SqlDbType.VarChar,256,"FIO");
+        updateCmd.Parameters.Add("@Birthday", SqlDbType.VarChar,256,"Birthday");
+        updateCmd.Parameters.Add("@Email", SqlDbType.VarChar,100,"Email");
+        updateCmd.Parameters.Add("@Phone", SqlDbType.VarChar,100,"Phone");
+        SqlParameter updateParam = updateCmd.Parameters.Add("@ID",SqlDbType.Int,0,"ID");
+        updateParam.SourceVersion = DataRowVersion.Original;
+        adapter.UpdateCommand = updateCmd;
+        SqlCommand deleteCmd = new SqlCommand("DELETE FROM People WHERE ID = @ID", connection);
+        SqlParameter deleteParam = deleteCmd.Parameters.Add("@ID",SqlDbType.Int,0,"ID");
+        deleteParam.SourceVersion = DataRowVersion.Original;
+        DataSet ds = new DataSet();
+        adapter.Fill(ds);
+        StringBuilder sb = new StringBuilder();
+        foreach (DataRow el in ds.Tables[0].Rows)
+            sb.AppendLine($"{el["FIO"]} {el["Birthday"]} {el["Email"]} {el["Phone"]}");
+        MessageBox.Show(sb.ToString());
+    }
+}
+```
+
+
+
+
+
+
+
+
 
