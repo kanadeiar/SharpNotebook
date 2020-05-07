@@ -265,7 +265,7 @@ public MainWindow()
 
 ## Приложение работы с базой данных
 
-Пример приложения работы с базой данных на ADO:
+Пример простого приложения работы с базой данных на ADO:
 
 Окно MainWindow.xaml:
 ```csharp
@@ -443,6 +443,7 @@ public partial class EditWindow : Window
     }
 }
 ```
+
 
 
 
