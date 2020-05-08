@@ -159,6 +159,8 @@
 
 [Основы WPF Приложение Базы данных](./windows/indexWPFADOApp.md).
 
+[Основы WPF Сервисы](./windows/indexWPFService.md).
+
 ## Xamarin
 
 [Базовый Xamarin](./xamarin/indexBasic.md).
