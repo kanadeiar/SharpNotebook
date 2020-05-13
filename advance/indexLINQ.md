@@ -324,7 +324,7 @@ foreach (var el in all)
 Проецирование новых типов данных из существующих источников данных:
 ```csharp
 Info[] infos = Info.GetTestArr();
-var all = from p in infos select new {p.Name, p.Desc};
+var all = from p in infos select new {p.Name, p.Desc}; //проецирование нового типа данных
 foreach (var el in all)
 {
     WriteLine(el.Name + " " + el.Desc);
@@ -334,7 +334,7 @@ foreach (var el in all)
 ```csharp
 static Array GetArray(Info[] infos)
 {
-    var all = from p in infos select new {p.Name, p.Desc};
+    var all = from p in infos select new {p.Name, p.Desc}; //проецирование нового типа данных
     return all.ToArray();
 }
 //использование
