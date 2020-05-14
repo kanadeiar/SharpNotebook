@@ -129,6 +129,8 @@
 
 [LINQ](./advance/indexLINQ.md).
 
+[Библиотеки классов](./advance/indexDll.md).
+
 ## Графическое приложение С#
 
 [Шаблон графического приложения](./graphicapp/indexTemplate.md).

@@ -283,6 +283,32 @@ bool bow = n1 > n2;
 bool men = n2 <= n1;
 ```
 
+## Ленивое создание объектов
+
+Для отложенного создания объектов применяется обобщенный класс Lazy<>.
+
+Полезно не только для уменьшения количества выделенной памяти под ненужные объекты, но и когда применяется затратный в плане ресурсов код, как вызов удаленного метода, обращение к базе данных.
+
+Внутренний тип данных создается с симпользованием стандартного конструктора.
+
+Пример ленивого создания объекта:
+```csharp
+class MyClass
+{
+    private Lazy<String> name = new Lazy<String>(() => "новая строка");
+    public String GetName()
+    {
+        return name.Value; //значение с отложенной инициализацией
+    }
+}
+public static void Main()
+{
+    MyClass my = new MyClass();
+    Console.WriteLine(my.GetName()); //здесь размещение объекта в памяти
+    Console.ReadLine();
+}
+```
+
 ## Сборка мусора
 
 Чем больше объект существует в куче, тем выше вероятность того, что он таб будет оставаться. Каждый объект может находиться в: поколении 0 - новый размещенный в памяти объект, который еще никода не помечался как подлежащий сборке мусора; поколение 1 - объект, который пережил одну сборку мусора; поколение 2 - объект, которому удалось пережить более одной очистки. Поколения 0 и 1 - эфемерные.
@@ -299,7 +325,63 @@ GetTotalMemory()    Оценочный объем памяти в байтах, 
 ```
 Пример применения:
 ```csharp
-
+public static void Main()
+{
+    Console.WriteLine($"Размер кучи в байтах: {GC.GetTotalMemory(false)}");
+    DataTable table = new DataTable();
+    Console.WriteLine($"Поколение объекта: {GC.GetGeneration(table)}");
+    GC.Collect(0,GCCollectionMode.Forced); //принудительно исследовать только поколение 0 и в немедленном режиме
+    GC.WaitForPendingFinalizers(); //ждать окончания сборки
+    Console.WriteLine($"Теперь поколение объекта: {GC.GetGeneration(table)}");
+    Console.WriteLine($"Количества по поколениям: 0-{GC.CollectionCount(0)} 1-{GC.CollectionCount(1)} 2-{GC.CollectionCount(2)}");
+    Console.ReadLine();
+}
+```
+Специальный метод Finalize(), выполняемый при каждом уничтожении объекта сборщиком мусора:
+```csharp
+class MyClass
+{
+    ~MyClass() => Console.Beep();
+}
+```
+Метод Dispose() для освобождения использовавшихся ресурсов:
+```csharp
+class MyClass : IDisposable
+{
+    public void Dispose()
+    {
+        Console.Beep();
+    }
+}
+public static void Main()
+{
+    MyClass my = new MyClass();
+    if (my is IDisposable)
+        my.Dispose();
+    Console.ReadLine();
+}
+```
+Тоже самое но более грамотно (должен реализовывать интерфейс IDisposable, при выходе из области using вызывается Dispose):
+```csharp
+public static void Main()
+{
+    using (MyClass my = new MyClass())
+    {
+        Console.WriteLine(my.ToString());
+    }
+    Console.ReadLine();
+}
+```
+Несколько объектов одного типа:
+```csharp
+public static void Main()
+{
+    using (MyClass my = new MyClass(), own = new MyClass())
+    {
+        Console.WriteLine(my.ToString());
+    }
+    Console.ReadLine();
+}
 ```
 
 
