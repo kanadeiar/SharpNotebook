@@ -46,6 +46,107 @@ namespace ConsoleApp1
 ...
 ```
 
+## Простая библиотека, закрытая сборка
+
+Проект "Библиотека классов (.NET Framework)"
+
+Добавить ссылку "System.Windows.Forms"
+
+Файл "Person.cs":
+```csharp
+namespace ClassLibrary1
+{
+    public enum State //текущее состояние работника
+    {
+        Work,
+        Free,
+    }
+    public abstract class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public int Salary { get; set; }
+        protected State state = State.Free;
+        public State CurrState => state;
+        public abstract void AddSalary();
+        public Person() { }
+        public Person(string name, int age, int salary)
+        {
+            Name = name;
+            Age = age;
+            Salary = salary;
+...
+```
+Файл "Persons.cs":
+```csharp
+using System.Windows.Forms;
+namespace ClassLibrary1
+{
+    public class Worker : Person //работник
+    {
+        public Worker() { }
+        public Worker(string name, int age, int salary) 
+            : base(name, age, salary) { }
+        public override void AddSalary() //прибавка зарплаты
+        {
+            Salary += 100;
+            MessageBox.Show($"Получение зарплаты {Salary}");
+        }
+    }
+    public class Manager : Person //менеджер
+    {
+        public Manager() { }
+        public Manager(string name, int age, int salary) 
+            : base(name, age, salary) { }
+        public override void AddSalary() //прибавка зарплаты
+        {
+            Salary += 10000;
+            MessageBox.Show($"Получение бонуса {Salary}!");
+...
+```
+
+Использование этой библиотеки:
+
+Добавить ссылку на "ClassLibrary1".
+```csharp
+using ClassLibrary1;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        public static void Main()
+        {
+            Worker worker = new Worker("Вася",18,5000);
+            worker.AddSalary();
+            Manager manager = new Manager("Петя",20,10000);
+            manager.AddSalary();
+            Console.WriteLine("Нажмите любую кнопку");
+            Console.ReadLine();
+...
+```
+
+Конфигурационный файл настройки закрытых сборок. Отредактированный файл "App.config" копируется в каталог "Debug", при этом изменяя имя на название исполняемого файла. 
+
+Файл "App.config":
+```csharp
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.1" />
+    </startup>
+    <runtime>
+        <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+          <probing privatePath="MyLibraries;MyLibraries\Test"/>
+        </assemblyBinding>
+    </runtime>
+</configuration>
+```
+
+С таким конфигфайлом можно копировать файлы dll в папку "MyLibraries", при запуске приложения среда CLR будет зондировать файл dll в этой новой папке.
+
+## Разделенная сборка
+
+С версии .NET 4.0 библиотеки разделяемых сборок размещаются в каталоге "C:\Windows\Microsoft.NET\assembly\GAC_MSIL". В этом месте библиотеки размещаются в виде имени отдельной библиотеки кода. Внутри еще один подкаталог именуемый по соглашению "v4.0_старшийНомер.младшийНомер.номерСборки.номерРеакции_значМаркераОткрытогоКлюча".
 
 
 
