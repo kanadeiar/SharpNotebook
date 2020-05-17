@@ -41,3 +41,49 @@ stopwatch.Stop();
 var elapsedTime = stopwatch.Elapsed; //результат работы
 ```
 
+## Цикличная задержка программы в асинхронном режиме
+```csharp
+public static void Main()
+{
+    Run();
+    Console.ReadLine();
+    async void Run()
+    {
+        while (true)
+        {
+            Console.WriteLine("+");
+            await Task.Delay(1000);
+        }
+    }
+}
+```
+
+
+## Конфигурационный XML файл сборки.
+Допустимо использовать набор типов из пространства имен System.Configuration для специальных настроек приложения.
+
+Файл "App.config":
+```csharp
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+...
+    <appSettings>
+      <add key="Str1" value="Green"/>
+      <add key="Number1" value="8"/>
+    </appSettings>
+</configuration>
+```
+Использование:
+```csharp
+using System.Configuration;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        public static void Main()
+        {
+            AppSettingsReader ar = new AppSettingsReader();
+            int numb1 = (int)ar.GetValue("Number1", typeof(int));
+            string str1 = (string) ar.GetValue("Str1", typeof(string));
+            Console.WriteLine($"Проверка: {str1} {numb1}");
+```

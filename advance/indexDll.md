@@ -191,13 +191,108 @@ C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools>gacutil
 
 Потребление разделяемой сборки:
 
-"Добавить ссылку"->"C:\Windows\Microsoft.NET\assembly\GAC_MSIL\ClassLibrary1\v4.0_1.0.0.0__2ebffce843c773fc"->файл dll
+"Добавить ссылку"->файл dll проекта
 
 Установить свойство ссылки "Копировать локально" в False
 
 Убедиться что рядом с файлом exe отустствует dll.
 
 Теперь при добавлении ссылки на сборку, манифест которой содержит значение publickey, среда VisualStudio считает, что такая строго именованная сборка будет развернута в GAC, и поэтому не копирует ее двоичный файл.
+
+## Обновление разделяемой сборки
+
+Пример обновления библиотеки:
+Файл "Persons.cs":
+```csharp
+using System.Windows.Forms;
+namespace ClassLibrary1
+{
+    public class Worker : Person //работник
+    {
+        public Worker() { }
+        public Worker(string name, int age, int salary) 
+            : base(name, age, salary) { }
+        public override void AddSalary() //прибавка зарплаты
+        {
+            Salary += 100;
+            MessageBox.Show($"Версия сборки 2.0!\nПолучение зарплаты {Salary}"); //обновление
+        }
+    }
+...
+```
+Необходимо изменить номер версии с 1.0.0.0 на 2.0.0.0 в окне "Версия сборки":
+
+Далее выполнить туже команду установки библиотеки в GAC:
+```csharp
+//установка библиотека в GAC
+C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools>gacutil.exe /i D:\Develop\cppGB\CppConsoleApplications\ClassLibrary1\bin\Debug\ClassLibrary1.dll
+//проверка что теперь там две версии
+C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools>gacutil.exe /l ClassLibrary1
+```
+
+Теперь требуется перенаправить сборку на специфическую версию разделяемой сборки. Файл "App.config":
+```csharp
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.1" />
+    </startup>
+    <runtime>
+        <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+          <assemblyIdentity name="ClassLibrary1"
+                            publicKeyToken="2EBFFCE843C773FC"
+                            culture="neutral"/>
+          <bindingRedirect oldVersion="1.0.0.0"
+                           newVersion="2.0.0.0"/>
+        </assemblyBinding>
+    </runtime>
+</configuration>
+```
+
+## Кодовые базы
+
+В конфиг файлах допустимо указывать кодовые базы с помощью <codeBase>, позволяющий инструктировать среду CLR о необходимости зондирования зависимых сборок, находящихся в произвольных местоположениях на машине за пределами клиенского каталога или в интернете.
+    
+Сборка будет загружатся по требованию в специальный каталог внутри GAC, который называется кэш загрузок.
+
+Пример со ссылкой на файл на другой машине:
+```csharp
+<configuration>
+...
+    <runtime>
+        <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+          <assemblyIdentity name="ClassLibrary1"
+                            publicKeyToken="2EBFFCE843C773FC"
+                            culture="neutral"/>
+          <bindingRedirect oldVersion="2.0.0.0"
+                            href="file:///C:/MyApp/ClassLibrary1.dll"/>
+        </assemblyBinding>
+    </runtime>
+</configuration>
+```
+
+Пример со ссылкой на файл в интернете:
+```csharp
+<configuration>
+...
+    <runtime>
+        <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+          <assemblyIdentity name="ClassLibrary1"
+                            publicKeyToken="2EBFFCE843C773FC"
+                            culture="neutral"/>
+          <bindingRedirect oldVersion="2.0.0.0"
+                            href="http://www.MySite.ru/Assemblies/ClassLibrary1.dll"/>
+        </assemblyBinding>
+    </runtime>
+</configuration>
+```
+
+
+
+
+
+
+
 
 
 
