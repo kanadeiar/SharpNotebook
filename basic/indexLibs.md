@@ -5,6 +5,12 @@
 Math.Pow(a,b); //возаращает а в степери b
 ```
 
+## Класс получения расположения исполняемой сборки приложения
+```csharp
+string initDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+Console.WriteLine(initDir);
+```
+
 ## Класс работы с массивом 
 Array
 ```csharp
@@ -31,7 +37,6 @@ DateTime finish=DateTime.Now;
 Console.WriteLine(finish-start);
 ```
 
-
 ## Замер скорости выполения кода:
 ```csharp
 Stopwatch stopwatch = new Stopwatch();
@@ -57,7 +62,6 @@ public static void Main()
     }
 }
 ```
-
 
 ## Конфигурационный XML файл сборки.
 Допустимо использовать набор типов из пространства имен System.Configuration для специальных настроек приложения.

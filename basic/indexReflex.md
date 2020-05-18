@@ -1,4 +1,4 @@
-# Рефлексия (динамическая загрузка сборок, позднее связывание)
+# Рефлексия (динамическая загрузка сборок, позднее связывание, атрибуты, расширяемое приложение)
 
 В процессе работы приложения может возникнуть потребность в выявлении типов во время выполнения приложения. Каждая сборка .NET содержит описание набора используемых классов, интерфесов, методов, свойств, и пр. 
 
@@ -396,7 +396,151 @@ namespace ConsoleApp1
 ...
 ```
 
+## Рефлексия атрибутов
+Пример с ранним связыванием:
+```csharp
+Type t = typeof(MyClass);
+var customAtts = t.GetCustomAttributes(false);
+foreach (var c in customAtts)
+    Console.WriteLine($"-> {(c as MyNewAttribute)?.Description}"); //вывод описания специального аттрибута
+```
 
+Пример с поздним связыванием:
+```csharp
+public static void Main()
+{
+    try
+    {
+        Assembly asm = Assembly.Load("ClassLibrary1");
+        Type myDesc = asm.GetType("ClassLibrary1.MyNewAttribute");
+        PropertyInfo prop1 = myDesc.GetProperty("Description");
+        var types = asm.GetTypes();
+        foreach (var t in types)
+        {
+            var objs = t.GetCustomAttributes(myDesc, false);
+            foreach (var o in objs)
+            {
+                Console.WriteLine($"-> {t.Name}: {prop1.GetValue(o, null)}");
+            }
+        }
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e.Message);
+    }
+    Console.ReadLine();
+}
+```
 
+## Расширяемое приложение
 
+Сборка определения типов, которые будут использоватся каждым объектом оснастки, на нее будет ссылаться расширяемое приложение:
 
+Файл "MySnappableTypes.dll":
+```csharp
+namespace MySnappableTypes
+{
+    public interface IAppFunctionality //интерфейс для всех остасток, которые могут потребляться расширяемым приложением
+    {
+        void DoIt();
+    }
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class MyInfoAttribute : Attribute //спец атрибут, который может применятся к любому классу, желающему подключится к контейнеру
+    {
+        public string CompanyName { get; set; }
+    }
+}
+```
+Оснастка, в которой задействованы типы из сборки выше (подключить ссылку на сборку выше):
+
+Файл "MySnapIn.dll":
+```csharp
+using MySnappableTypes;
+namespace MySnapIn
+{
+    [MyInfo(CompanyName = "MyTest")]
+    class MyModule : IAppFunctionality
+    {
+        public void DoIt()
+        {
+            Console.WriteLine("Успешное применение оснастки 'MyTest'!");
+        }
+    }
+}
+```
+Расширяемое консольное приложение, которое может быть расширено функциональностью каждой оснастки.
+
+Приложение (подключить ссылку на предидущую сборку):
+```csharp
+using MySnappableTypes;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        [STAThread]
+        public static void Main()
+        {
+            try
+            {
+                LoadSnapIn(); //загрузка оснастки
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            Console.ReadLine();
+        }
+        static void LoadSnapIn()
+        {
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                InitialDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                Filter = "Assemblies (*.dll)|*.dll|All files (*.*)|*.*",
+                FilterIndex = 1,
+            };
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                if (dlg.FileName.Contains("MySnappableTypes"))
+                    Console.WriteLine("В библиотеке нет оснасток!");
+                else if (!LoadExternalModule(dlg.FileName))
+                    Console.WriteLine("Не включает интерфейс IAppFunctionality");
+            }
+        }
+        //загрузка оснастки и ее тестирование
+        static bool LoadExternalModule(string path)
+        {
+            bool foundSnapIn = false;
+            Assembly asm = null;
+            try
+            {
+                asm = Assembly.LoadFrom(path);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Ошибка загрузки оснастки: {e.Message}");
+                return foundSnapIn;
+            }
+            var theClassTypes = asm.GetTypes()
+                .Where(t => t.IsClass && t.GetInterface("IAppFunctionality") != null)
+                .Select(t => t); //получить все классы совместимые с интерфейсом IAppFunctionality
+            foreach (var t in theClassTypes)
+            {
+                foundSnapIn = true;
+                var itfApp = asm.CreateInstance(t.FullName, true) as IAppFunctionality;
+                itfApp?.DoIt(); //выполнить метод из оснастки
+                DisplaySnapInfo(t); //отобразить информацию
+            }
+            return foundSnapIn;
+        }
+        //отображение информацию метаданных
+        private static void DisplaySnapInfo(Type tp)
+        {
+            var compInfo = tp.GetCustomAttributes(false).Where(t => t is MyInfoAttribute).Select(t => t); //получить данные
+            foreach (var c in compInfo)
+            {
+                Console.WriteLine($"Информация о сборке: {(c as MyInfoAttribute)?.CompanyName}"); //отобразить данные
+            }
+        }
+    }
+}
+```
