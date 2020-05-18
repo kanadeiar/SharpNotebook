@@ -1,4 +1,4 @@
-# Рефлексия
+# Рефлексия (динамическая загрузка сборок, позднее связывание)
 
 В процессе работы приложения может возникнуть потребность в выявлении типов во время выполнения приложения. Каждая сборка .NET содержит описание набора используемых классов, интерфесов, методов, свойств, и пр. 
 
@@ -26,20 +26,6 @@ GetType - статический метод возвращает экземпл�
 InvokeMember - выполнение "поздего связывания" для указанного элемента
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Получение типа
 ```csharp
 Type type = typeof(MyClass);
@@ -48,25 +34,369 @@ Type type = typeof(MyClass);
 Вертаемый тип - Type.
 
 ```csharp
+MyClass variable = new MyClass();
 Type type = variable.GetType();
 ```
 В роли аргумента здесь выступает экземпляр класса, результат будет такой-же.
 Вертаемый тип - Type.
 
-Пример использования:
+Еще пример использования:
 ```csharp
-Type type = typeof(int);
-Console.WriteLine(type);
-int i = 0;
-Type type2 = i.GetType();
-Console.WriteLine(type2);
-Console.WriteLine(i.GetType().Attributes);
-var types = typeof(int).GetFields();
-foreach (var v in types)
+//из внешней сборки
+Type t1 = Type.GetType("MyLib.Person, MyLib");
+//о типе вложенного в тип (+)
+Type t2 = Type.GetType("MyLib.Person+TypeWork");
+```
+
+## Просмотр метаданных
+
+Рефлексия методов:
+```csharp
+public static void Main()
 {
-    Console.WriteLine(v);
+    var t1 = typeof(int);
+    ListMethods(t1);
+    Console.ReadLine();
+}
+static void ListMethods(Type t)
+{
+    //MethodInfo[] mis = t.GetMethods();
+    var mis = t.GetMethods().Select(m => m.Name);
+    foreach (var m in mis)
+        Console.WriteLine($"->{m}");
 }
 ```
+Рефлексия полей и свойств:
+```csharp
+public static void Main()
+{
+    var t1 = typeof(string);
+    ListProps(t1);
+    Console.ReadLine();
+}
+static void ListProps(Type t)
+{
+    var propNames = t.GetProperties().Select(p => p.Name);
+    foreach (var p in propNames)
+        Console.WriteLine($"-> {p}");
+}
+```
+Рефлексия реализованных интерфейсов:
+```csharp
+public static void Main()
+{
+    var t1 = typeof(string);
+    ListInterfaces(t1);
+    Console.ReadLine();
+}
+static void ListInterfaces(Type t)
+{
+    var ifaces = t.GetInterfaces().Select(i => i.Name);
+    foreach (var i in ifaces)
+        Console.WriteLine(i);
+}
+```
+
+Рефлексия разнообразных деталей:
+```csharp
+public static void Main()
+{
+    var t1 = typeof(string);
+    Console.WriteLine($"Базовый класс: {t1.BaseType}");
+    Console.WriteLine($"Абстрактный класс: {t1.IsAbstract}");
+    Console.WriteLine($"Запечатанный класс: {t1.IsSealed}");
+    Console.WriteLine($"Обобщенный: {t1.IsGenericTypeDefinition}");
+    Console.WriteLine($"Класс: {t1.IsClass}");
+    Console.ReadLine();
+}
+```
+
+Пример приложения работы с рефлексией:
+```csharp
+public static void Main()
+{
+    while (true)
+    {
+        Console.WriteLine("Введите имя типа (q-выход):");
+        string typeName = Console.ReadLine();
+        if (typeName.Equals("Q", StringComparison.OrdinalIgnoreCase))
+            break;
+        var t = Type.GetType(typeName);
+        if (t == null)
+        {
+            Console.WriteLine("Не удается найти такой тип");
+            continue;
+        }
+        var mis = t.GetMethods().Select(m => m.Name);
+        foreach (var m in mis)
+            Console.WriteLine($"->{m}");
+        var propNames = t.GetProperties().Select(p => p.Name);
+        foreach (var p in propNames)
+            Console.WriteLine($"-> {p}");
+        var ifaces = t?.GetInterfaces().Select(i => i.Name);
+        foreach (var i in ifaces)
+            Console.WriteLine(i);
+    }
+    Console.ReadLine();
+}
+```
+
+Пример рефлексии обобщенных типов:
+```csharp
+public static void Main()
+{
+    Type t2 = Type.GetType("System.Collections.Generic.Dictionary`2");
+    var mis2 = t2.GetMethods().Select(m => m.Name);
+    foreach (var m in mis2)
+        Console.WriteLine($"->{m}");
+    Console.ReadLine();
+}
+```
+
+Рефлексия параметров и возвращаемого значения метода
+```csharp
+public static void Main()
+{
+    Type t2 = typeof(int);
+    MethodInfo[] mi = t2.GetMethods();
+    foreach (var m in mi)
+    {
+        string returnVal = m.ReturnType.FullName;
+        string paramInfo = "( ";
+        foreach (var pi in m.GetParameters())
+        {
+            paramInfo += $"{pi.ParameterType} {pi.Name} ";
+        }
+        paramInfo += " )";
+        Console.WriteLine($"->{returnVal} {m.Name} {paramInfo}");
+    }
+    Console.ReadLine();
+}
+```
+То-эе самое:
+```csharp
+public static void Main()
+{
+    Type t2 = typeof(int);
+    var methodName = t2.GetMethods().Select(n => n);
+    foreach (var m in methodName)
+        Console.WriteLine($"->{m}");
+    Console.ReadLine();
+}
+```
+
+## Динамическая загрузка сборок
+
+Пример загрузки сборки находящейся рядом с испольняемым файлом и его рефлексия:
+```csharp
+public static void Main()
+{
+    string asmName = "ClassLibrary1"; //дружественное имя сборки
+    try
+    {
+        Assembly asm = Assembly.Load(asmName);
+        Console.WriteLine($"->{asm.FullName}");
+        var types = asm.GetTypes();
+        foreach (var t in types)
+            Console.WriteLine($"Type: {t}");
+    }
+    catch
+    {
+        Console.WriteLine("Сборка не найдена");
+    }
+    Console.ReadLine();
+}
+```
+Есть возможность загружать сборку по абсолютному путю:
+```csharp
+public static void Main()
+{
+    string asmName = "ClassLibrary1.dll"; //абсолютный путь
+    try
+    {
+        Assembly asm = Assembly.LoadFrom(asmName);
+        Console.WriteLine($"->{asm.FullName}");
+        var types = asm.GetTypes();
+        foreach (var t in types)
+            Console.WriteLine($"Type: {t}");
+    }
+    catch
+    {
+        Console.WriteLine("Сборка не найдена");
+    }
+    Console.ReadLine();
+}
+```
+Пример загрузки разделяемой сборки и его рефлексия:
+```csharp
+public static void Main()
+{
+    try
+    {
+        string asmStr = @"ClassLibrary1,Version=1.0.0.0,PublicKeyToken=2ebffce843c773fc,Culture=""";
+        Assembly a = Assembly.Load(asmStr);
+        Console.WriteLine($"->{a.FullName}");
+        var types = a.GetTypes();
+        foreach (var t in types)
+            Console.WriteLine($"Type: {t}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Сборка не найдена" + ex.Message);
+    }
+    Console.ReadLine();
+}
+```
+Загрузка этой же сборки путем ООП:
+```csharp
+AssemblyName asmName = new AssemblyName();
+asmName.Name = "ClassLibrary1";
+asmName.Version = new Version("1.0.0.0");
+asmName.SetPublicKeyToken(new byte[] {0x2e,0xbf,0xfc,0xe8,0x43,0xc7,0x73,0xfc});
+asmName.CultureName = "";
+Assembly a = Assembly.Load(asmName);
+```
+
+## Позднее связывание
+
+Осуществляется использованием класса System.Activator и метода CreateInstance().
+
+Пример:
+
+```csharp
+public static void Main()
+{
+    Assembly a = null;
+    try
+    {
+        a = Assembly.Load("ClassLibrary1");
+    }
+    catch (FileNotFoundException e)
+    {
+        Console.WriteLine(e.Message); Console.ReadLine();
+        return;
+    }
+    if (a != null)
+    {
+        try
+        {
+            var myClass = a.GetType("ClassLibrary1.Class1");
+            var obj = Activator.CreateInstance(myClass);
+            Console.WriteLine($"Создано {obj} поздним связыванием.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message); Console.ReadLine();
+        }
+    }
+    Console.ReadLine();
+}
+```
+Вызов методов без параметров:
+```csharp
+public static void Main()
+{
+...
+    if (a != null)
+    {
+        try
+        {
+            var myClass = a.GetType("ClassLibrary1.Class1");
+            var obj = Activator.CreateInstance(myClass); //получение класса
+            var mi = myClass.GetMethod("GetSalary"); //получение метода
+            mi.Invoke(obj, null); //вызов
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message); Console.ReadLine();
+            return;
+        }
+    }
+    Console.ReadLine();
+}
+```
+Вызов методов с параметрами:
+```csharp
+public static void Main()
+{
+...
+    if (a != null)
+    {
+        try
+        {
+            var myClass = a.GetType("ClassLibrary1.Class1");
+            var obj = Activator.CreateInstance(myClass);
+            var mi = myClass.GetMethod("SetAge");
+            mi.Invoke(obj, new object[]{19});
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message); Console.ReadLine();
+            return;
+        }
+    }
+    Console.ReadLine();
+}
+```
+
+## Атрибуты
+
+Некоторые предопределенные атрибуты:
+```csharp
+[CLSCompliant]      Элемент будет соответствовать правилам CLS
+[DllImport]         Обращение кода .NET к любой неуправляемой библиотеке кода С или С++
+[Obsolete]          Помечает устаревший тип или член. Если другие прогеры попытаются использовать его, они получат предупреждение
+[Serializable]      Класс или структура будут помечены как сериализуемые
+[NonSerialized]     Указание что данное поле в классе или структ. не должно сохранятся в процессе сериализации
+[ServiceContract]   Пометка метода как контракт службы WCF
+```
+Примеры применения:
+```csharp
+[Serializable, Obsolete("Старый класс!")]
+public class Class1
+{
+...
+}
+[Serializable]
+[Obsolete("Старый класс!")]
+public class Class1
+{
+...
+}
+```
+## Специальные атрибуты
+
+Пример сконструированного атрибута:
+```csharp
+public sealed class MyAttribute : Attribute //должен бытьь завершенным - sealed
+{
+    public string Description { get; set; }
+    public MyAttribute(string description)
+        => Description = description;
+    public MyAttribute() {}
+}
+```
+Пример применения специальных атрибутов:
+```csharp
+[MyNew("текст для примера")]
+public class MyClass
+{
+    [MyNew("Новый")]
+    public void Go()
+    {}
+}
+```
+Пример наложения ограничения на применение сконструированного атрибута:
+
+## Атрибуты сборки
+```csharp
+[assembly:CLSCompliant(true)]
+namespace ConsoleApp1
+{
+...
+```
+
+
 
 
 

@@ -99,7 +99,7 @@
 
 [Файловая система](./basic/indexFileSys.md).
 
-[Рефлексия](./basic/indexReflex.md).
+[Рефлексия (динамическая загрузка сборок, позднее связывание)](./basic/indexReflex.md).
 
 [Сериализация и десериализация](./basic/indexSerialization.md).
 
