@@ -131,6 +131,10 @@
 
 [Библиотеки классов](./advance/indexDll.md).
 
+[Динамические типы и DLR (позднее связывание, COM)](./advance/indexDLR.md).
+
+[Домены приложений (процессы)](./advance/indexDomain.md).
+
 ## Графическое приложение С#
 
 [Шаблон графического приложения](./graphicapp/indexTemplate.md).
