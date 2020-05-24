@@ -53,7 +53,7 @@ static void Main()
         string msg = "Привет! Hello!"; //сообщение
         byte[] msgBytes = Encoding.Default.GetBytes(msg); //кодирование строки в виде масссива байтов
         fstream.Write(msgBytes,0,msgBytes.Length); //запись массива в файл
-        fstream.Flush(); //сбросить буфер в файл
+        fstream.Flush(); //вытолкнуть буфер в файл
         fstream.Position = 0; //позиция на начало
         Console.WriteLine("Сообщение в байтах:");
         byte[] bytesFromFile = new byte[msgBytes.Length];
@@ -85,10 +85,101 @@ while ((j = fileIn.ReadByte())!=-1)
 }
 ```
 
-## Работа с текстовыми файлами - символьный поток
-Поэтому для работы непосредственно с текстовыми файлами предназначены отдельные классы - StreamReader и StreamWriter из пространства имен System.IO. Классы StreamWriter и StreamReader, представляющие собой оболочки для FileStream и позволяющие преобразовывать байтовые потоки в символьные.
+## Символьный поток
 
-Использование: чтобы создать символьный поток, нужно поместить объект класса Stream (например, FileStream) «внутрь» объекта класса StreamWriter или объекта класса StreamReader. В этом случае байтовый поток будет автоматически преобразовываться в символьный. 
+Класс StreamWriter является производным от абстрактного класса TextWriter, предоставляющий производным типам записывать текстовые данные в текущий символьный поток. Оболочка для класса FileStream;
+
+Некоторые члены абстрактного класса TextWriter:
+```csharp
+Член                Описание
+Close()             Метод закрывает средство записи и освобождает все свои ресурсы, тотже Dispode()
+Flush()             Очищает все буферы средства записи и выталкивает все данные на лежащее в основе устройство, не закрывает средство записи
+NewLine             Задает константу новой строки для класса средства записи.
+Write()             Перегруженный метод записи данных в текстовый поток
+WriteLine()         Перегруженный метод записи данных в текстовый поток с добавленрием новой строки
+```
+Пример записи в текстовый файл:
+```csharp
+static void Main() 
+{
+    //using (StreamWriter writer = File.CreateText("text.txt"))
+    using (StreamWriter writer = new StreamWriter("text.txt"))
+    {
+        writer.WriteLine("Первая строка");
+        writer.WriteLine("Вторая строка");
+        writer.WriteLine("Номера:");
+        for (int i = 0; i < 10; i++)
+            writer.Write(i + " ");
+        writer.Write(writer.NewLine); //новая строка
+    }
+    Console.WriteLine("Нажмите любую кнопку для завершения");
+    Console.ReadKey();
+}
+```
+
+Класс ReadWriter является производным от абстрактного класса TextReader, предоставляющий производным типам читать текстовые данные из текущего символьного потока. Оболочка для класса FileStream;
+
+Некоторые члены абстрактного класса TextWriter:
+```csharp
+Член                Описание
+Peek()              Дает следующий доступный символ в виде целого числа, не изменяя текущей позиции средства чтения. Значение -1 указывает на конец файла.
+Read()              Читает данные из входного потока
+ReadBlock()         Читает указанное максимальное количество символов из потока и записывает данные в буфер, с текущего индекса
+ReadLine()          Читает строку символов из текущего потока и возвращает данные в виде строки (null - конец файла)
+ReadToEnd()         Читает все символы от текущей позиции до конца потока и вертает их в виде строки
+```
+Пример чтения текстового файла:
+```csharp
+static void Main() 
+{
+    Console.WriteLine("Прочитанные строки:");
+    //using (StreamReader reader = File.OpenText("text.txt"))
+    using (StreamReader reader = new StreamReader("text.txt"))
+    {
+        string input = null;
+        while ((input = reader.ReadLine()) != null)
+        {
+            Console.WriteLine(input);
+        }
+    }
+    Console.WriteLine("Нажмите любую кнопку для завершения");
+    Console.ReadKey();
+}
+```
+Классы StringWriter и StringReader можно использовать для трактовки текста как потока символов в памяти, в основе находится объект класса StringBuilder.
+
+Примеры использования:
+```csharp
+static void Main() 
+{
+    using (StringWriter stringWriter = new StringWriter())
+    {
+        stringWriter.Write("Пример текстовой строки");
+        Console.WriteLine($"Содержимое потока: \"{stringWriter}\"");
+        StringBuilder sb = stringWriter.GetStringBuilder();
+        sb.Insert(0, "Дополнительно! ");
+        Console.WriteLine($"StringBuilder: \"{sb.ToString()}\"");
+        Console.WriteLine($"Содержимое потока после добавления: \"{stringWriter}\"");
+        sb.Remove(0, "Дополнительно! ".Length);
+        Console.WriteLine($"Содержимое потока после удаления: \"{stringWriter}\"");
+        //читать данные из потока StringWriter
+        using (StringReader stringReader = new StringReader(stringWriter.ToString()))
+        {
+            Console.WriteLine("Поток StringReader:");
+            string input = null;
+            while ((input = stringReader.ReadLine()) != null)
+                Console.WriteLine(input);
+        }
+    }
+    Console.WriteLine("Нажмите любую кнопку для завершения");
+    Console.ReadKey();
+}
+```
+
+
+## Подробное использование символьного потока 
+
+Чтобы создать символьный поток, нужно поместить объект класса Stream (например, FileStream) «внутрь» объекта класса StreamWriter или объекта класса StreamReader. В этом случае байтовый поток будет автоматически преобразовываться в символьный. 
 ```csharp
 StreamWriter(Stream stream);
 ```
@@ -142,11 +233,58 @@ Array.ForEach(strs2, WriteLine); //вывод элементов массива 
 ```
 
 ## Двоичный поток
+
 Двоичные файлы хранят данные в том же виде, в котором они представлены в оперативной памяти, то есть во внутреннем представлении. Двоичные файлы не применяются для просмотра человеком, они используются только для программной обработки.
+
+Оба класса унаследованы прямо от System.Object.
 
 Двоичный поток открывается на основе базового потока (например, FileStream). При этом двоичный поток будет преобразовывать байтовый поток в значения int-, double-, short-  и т.д. Классы BinaryWriter и BinaryReader, представляющие собой оболочки для FileStream и позволяющие преобразовывать байтовые потоки в двоичные для работы с int-, double-, short-  и т. д.
 
-Пример:
+Некоторые члены класса BinaryWriter
+```csharp
+Член                Описание
+BaseSteam           Свойство для чтения дает доступ к лежащему в основе потоку
+Close()             Закрывает этот поток двоичный
+Flush()             Выталкивает буфер двоичного потока
+Seek()              Метод устанавливает позицию в текущем потоке
+Write()             Метод записывает значение в текущий поток
+```
+Некоторые члены класса BinaryReader
+```csharp
+Член                Описание
+BaseSteam           Свойство для чтения дает доступ к лежащему в основе потоку
+Close()             Закрывает этот поток двоичный
+PeekChar()          Метод возвращает следующий доступный символ без перемещения позиции потока
+Read()              Метод читает заданный набор байтов или символов и сохраняет их во входном массиве
+ReadXXX()           Методы чтения, которые извлекают из потока объекты различных типов
+```
+Пример записи и чтения нескольких типов данных в файл:
+```csharp
+static void Main()
+{
+    FileInfo fi = new FileInfo("test.dat");
+    using (BinaryWriter bw = new BinaryWriter(fi.OpenWrite()))
+    {
+        Console.WriteLine($"Базовый поток: {bw.BaseStream}");
+        double a1 = 1234.55;
+        int a2 = 12655;
+        string s1 = "A, B, C";
+        bw.Write(a1);
+        bw.Write(a2);
+        bw.Write(s1);
+    }
+    Console.WriteLine("Запись завершена!");
+    using (BinaryReader br = new BinaryReader(fi.OpenRead()))
+    {
+        Console.WriteLine(br.ReadDouble());
+        Console.WriteLine(br.ReadInt32());
+        Console.WriteLine(br.ReadString());
+    }
+    Console.WriteLine("Нажмите любую кнопку");
+    Console.ReadKey();
+}
+```
+Еще пример:
 ```csharp
 //запись
 using (FileStream f=new FileStream("data.bin",FileMode.Create))

@@ -1,4 +1,4 @@
-# Файловая система (Директории, файлы)
+# Файловая система (Директории, файлы, слежение)
 
 Пространство имен System.IO содержит классы службы файлового ввода и вывода и ввода и вывода в памяти.
 
@@ -226,7 +226,48 @@ static void Main()
 }
 ```
 
+## Слежение за файлами
 
+Класс FileSystemWatcher нужен для программного отслеживания файлов на предмет любых действий, которые содержатся в перечислении NotifyFilters - Attributes, CreationTime, FirectoryName, FileName, LastAccess, LastWrite, Security, Size.
+
+Пример слежения за файлом:
+```csharp
+static void Main()
+{
+    FileSystemWatcher watcher = new FileSystemWatcher();
+    try
+    {
+        watcher.Path = ".";
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return;
+    }
+    watcher.NotifyFilter = NotifyFilters.LastAccess |
+                           NotifyFilters.LastWrite |
+                           NotifyFilters.FileName |
+                           NotifyFilters.DirectoryName;
+    watcher.Filter = "*.txt"; //отслеживание только текстовых файлов
+    watcher.Changed += new FileSystemEventHandler(OnChanged);
+    watcher.Created += new FileSystemEventHandler(OnChanged);
+    watcher.Deleted += new FileSystemEventHandler(OnChanged);
+    watcher.Renamed += new RenamedEventHandler(OnRenamed);
+    watcher.EnableRaisingEvents = true;
+    Console.WriteLine("Нажмите кнопку 'q' для выхода");
+    while (Console.Read() != 'q')
+    { };
+    Console.ReadKey();
+}
+static void OnChanged(object source, FileSystemEventArgs e)
+{
+    Console.WriteLine($"Файл: {e.FullPath} {e.ChangeType}");
+}
+static void OnRenamed(object source, RenamedEventArgs e)
+{
+    Console.WriteLine($"Файл {e.OldFullPath} изменен на {e.FullPath}");
+}
+```
 
 
 

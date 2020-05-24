@@ -95,11 +95,11 @@
 
 [Коллекции](./basic/indexCollections.md).
 
-[Файловая система (Директории, файлы)](./basic/indexFileSys.md).
+[Файловая система (Директории, файлы, слежение)](./basic/indexFileSys.md).
 
 [Файлы (потоки)](./basic/indexFiles.md).
 
-[Сериализация](./basic/indexSerialization.md).
+[Сериализация (XML, настройка)](./basic/indexSerialization.md).
 
 [Рефлексия (динамическая загрузка сборок, позднее связывание, атрибуты, расширяемое приложение)](./basic/indexReflex.md).
 
@@ -143,21 +143,51 @@
 
 ## Оконный C#
 
-[Самые стремные окна](./windows/indexEasy.md).
+[WPF Введение](./windows/indexWPF.md).
 
-[Основы WPF](./windows/indexWPF.md).
+[WPF Элементы](./windows/indexWPFComponents.md).
 
-[Основы WPF Элементы управления](./windows/indexWPFComponents.md).
+[WPF Позиционирование](./windows/indexWPFPositions.md).
 
-[Основы WPF Привязки](./windows/indexWPFBinding.md).
+[WPF События](./windows/indexWPFEvents.md).
 
-[Основы WPF Триггеры](./windows/indexWPFTriggers.md).
+[WPF Привязки](./windows/indexWPFBindings.md).
 
-[Основы WPF Базы данных](./windows/indexWPFADO.md).
+[WPF Рисование](./windows/indexWPFCanvas.md).
 
-[Основы WPF Приложение Базы данных](./windows/indexWPFADOApp.md).
+[WPF Картинки](./windows/indexWPFImages.md).
 
-[Основы WPF Сервисы](./windows/indexWPFService.md).
+[WPF Ресурсы](./windows/indexWPFResouces.md).
+
+[WPF Анимация](./windows/indexWPFAnimations.md).
+
+[WPF Стили](./windows/indexWPFStyles.md).
+
+[WPF Шаблоны](./windows/indexWPFTemplates.md).
+
+[WPF MVVM Уведомления](./windows/indexWPFObserves.md).
+
+[WPF MVVM Валидация](./windows/indexWPFValidations.md).
+
+[WPF MVVM Команды](./windows/indexWPFComands.md).
+
+[WPF MVVM Порядок](./windows/indexWPFClean.md).
+
+[WPF MVVM Данные](./windows/indexWPFData.md).
+
+[Основы WPF](./windows/index0WPF.md).
+
+[Основы WPF Элементы управления](./windows/index0WPFComponents.md).
+
+[Основы WPF Привязки](./windows/index0WPFBinding.md).
+
+[Основы WPF Триггеры](./windows/index0WPFTriggers.md).
+
+[Основы WPF Базы данных](./windows/index0WPFADO.md).
+
+[Основы WPF Приложение Базы данных](./windows/index0WPFADOApp.md).
+
+[Основы WPF Сервисы](./windows/index0WPFService.md).
 
 ## Xamarin
 
