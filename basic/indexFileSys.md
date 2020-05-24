@@ -1,4 +1,4 @@
-# Файловая система
+# Файловая система (Директории, файлы)
 
 Пространство имен System.IO содержит классы службы файлового ввода и вывода и ввода и вывода в памяти.
 
@@ -57,7 +57,57 @@ dir2.Create(); //создание новой папки с хламом, т.к. 
 ```
 Пример получения информации о каталоге:
 ```csharp
-
+static void Main() 
+{
+    DirectoryInfo dir = new DirectoryInfo(@"c:\Windows");
+    Console.WriteLine($"Полное имя: {dir.FullName}");
+    Console.WriteLine($"Имя каталога: {dir.Name}");
+    Console.WriteLine($"Родительский: {dir.Parent}");
+    Console.WriteLine($"Время создания: {dir.CreationTime}");
+    Console.WriteLine($"Атрибуты: {dir.Attributes}");
+    Console.WriteLine("Нажмите любую кнопку ...");
+    Console.ReadKey();
+}
+```
+Пример работы с папками:
+```csharp
+static void Main() 
+{
+    DirectoryInfo dir = new DirectoryInfo(@"d:\");
+    dir.CreateSubdirectory("МояПапка");
+    dir.CreateSubdirectory(@"МояПапка\Тест");
+    dir = new DirectoryInfo("."); //место установки приложения
+    dir.CreateSubdirectory("МояПапка");
+    DirectoryInfo myDir = dir.CreateSubdirectory(@"МояПапка\Данные");
+    Console.WriteLine($"Новая папка: {myDir}");
+    Console.WriteLine("Нажмите любую кнопку для продолжения");
+    Console.ReadKey();
+    string[] drives = Directory.GetLogicalDrives();
+    Console.WriteLine("Названия дисков:");
+    foreach (var d in drives)
+        Console.WriteLine($"- {d}");
+    DriveInfo[] myDrives = DriveInfo.GetDrives();
+    foreach (var d in myDrives)
+    {
+        Console.WriteLine($"Название: {d.Name} и тип: {d.DriveType}");
+        if (d.IsReady)
+        {
+            Console.WriteLine($"Свободное место: {d.TotalFreeSpace} байт");
+            Console.WriteLine($"Формат: {d.DriveFormat}");
+            Console.WriteLine($"Метка: {d.VolumeLabel}");
+        }
+    }
+    try
+    {
+        Directory.Delete(@"d:\МояПапка",true); //true - удалить и внутренние каталоги
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+    Console.WriteLine("Нажмите любую кнопку для завершения");
+    Console.ReadKey();
+}
 ```
 
 ## Работа с файлами
@@ -75,12 +125,108 @@ Name                    Возвращает имя указанного фай�
 Некоторые методы класса FileInfo
 ```csharp
 Член                    Описание
+AppendText()            Создание объекта StreamWriter и добавляет текст в файл
 Create()                Создаёт новый файл и возвращает объект FileStream для взаимодействия с этим файлом
+CreateText()            Создает объект StreamWriter, записывающий в новый текстовый файл
 Delete()                Удаляет файл, которому соответствует объект FileInfo
+Directory               Экземпляр родительского каталога
+DirectoryName           Полный путь к родительскому каталогу
 Length                  Возвращает размер файла
 CopyTo()                Копирует уже существующий файл в новый 
-DirectoryName           Возвращает полный путь к данному файлу в файловой системе
+MoveTo()                Перемещает файл в новое расположение, с указание нового имени файла
+Name                    Получение имени файла
+Open()                  Открывает файл с разнообразными привилегиями чтения/записи
+OpenRead()              Создание объекта FileStream, только для чтения
+OpenText()              Создание объекта StreamReader, для чтения из существующего файла
+OpenWrite()             Создание объекта FileStream, только для записи
 ```
+Пример получения информации о файлах в каталоге:
+```csharp
+static void Main() 
+{
+    DirectoryInfo dir = new DirectoryInfo(@"C:\Windows\Web\Wallpaper");
+    FileInfo[] images = dir.GetFiles("*.jpg", SearchOption.AllDirectories);
+    Console.WriteLine($"Найдено {images.Length} файлов");
+    foreach (var i in images)
+        Console.WriteLine($"Файл:{i.Name} Размер:{i.Length} Время создания:{i.CreationTime} Атрибуты:{i.Attributes}");
+    Console.ReadKey();
+}
+```
+Пример работы с файлами:
+```csharp
+static void Main() 
+{
+    FileInfo f = new FileInfo(@"d:\Test.dat");
+    //FileStream fs = f.Create(); //создать новый файл
+    //fs.Close();
+    using (FileStream fs = f.Create()) //использование IDisposable
+    { //использовать }
+    //открыть или создать, чтение/запись, без совместного использования
+    using (FileStream fs2 = f.Open(FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None))
+    { }
+    FileInfo f1 = new FileInfo(@"d:\Test.dat");
+    using (FileStream readOnly = f1.OpenRead()) //открыть для чтения
+    { }
+    FileInfo f2 = new FileInfo(@"d:\Test.dat");
+    using (FileStream writeOnly = f2.OpenWrite()) //открыть для записи
+    { }
+    FileInfo f3 = new FileInfo(@"d:\test.ini");
+    using (StreamReader reader = f3.OpenText()) //открыть для чтения символьных данных
+    { }
+    FileInfo f4 = new FileInfo(@"d:\test.txt");
+    using (StreamWriter writer = f4.CreateText()) //новый тектовый файл для записи
+    { }
+    FileInfo f5 = new FileInfo(@"d:\text.txt");
+    using (StreamWriter writerAppend = f5.AppendText()) //добавление текста в файл
+    { }
+    Console.WriteLine("Нажмите любую кнопку для завершения");
+    Console.ReadKey();
+}
+```
+
+Класс File. В этом классе определено множество членов, идентичных функциональности FileInfo - AppendText(), Create(), CreateText(), Open(), OpenRead(), OpenWrite(), OpenText(). 
+
+Есть дополнительные еще в классе File:
+```csharp
+Член                    Описание
+ReadAllBytes()          Открывает файл, дает двоичные даннные массивом байт и закрывает файл
+ReadAllLines()          Открывает файл, дает символьные данные массивом строк и закрывает файл
+ReadAllText()           Открывает файл, дает символьные даные в виде String и закрывает
+WriteAllBytes()         Открывает файл, записывает в него массив байт и закрывает файл
+WriteAllLines()         Открывает файл, записывает в него массив строк и закрывает файл
+WriteAllText()          Открывает файл, записывает в него символьные данные из строки и закрывает файл
+```
+
+Еще пример работы с файлами:
+```csharp
+static void Main() 
+{
+    using (FileStream fs1 = File.Create(@"d:\test.dat")) //создание файла
+    { }
+    //открыть для чтения
+    using (FileStream fs3 = File.Open(@"d:\test.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+    { }
+    using (FileStream readOnlyStream = File.OpenRead(@"d:\test.dat")) //чтение
+    { }
+    using (FileStream writeOnlyStream = File.OpenWrite(@"d:\test.dat")) //запись
+    { }
+    using (StreamReader sreader = File.OpenText(@"d:\test.ini")) //только для чтения
+    { }
+    using (StreamWriter swriter = File.CreateText(@"d:\test.txt")) //только для записи
+    { }
+    using (StreamWriter swriterAppend = File.AppendText(@"d:\test.txt")) //для добавления
+    { }
+    //запись и чтение данных из файла
+    string[] myStrings = { "Тестовые данные", "Вызов чегонибудь", "Еще тестовые данные", "Дополнительная строка" };
+    File.WriteAllLines(@"text.txt", myStrings); //запись всех данных
+    foreach (var s in File.ReadAllLines(@"text.txt"))
+        Console.WriteLine($"строка: {s}");
+    Console.WriteLine("Нажмите любую кнопку для завершения");
+    Console.ReadKey();
+}
+```
+
+
 
 
 

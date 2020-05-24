@@ -95,11 +95,11 @@
 
 [Коллекции](./basic/indexCollections.md).
 
-[Файловая система](./basic/indexFileSys.md).
+[Файловая система (Директории, файлы)](./basic/indexFileSys.md).
 
-[Файловый ввод-вывод](./basic/indexFiles.md).
+[Файлы (потоки)](./basic/indexFiles.md).
 
-[Сериализация объектов](./basic/indexSerialization.md).
+[Сериализация](./basic/indexSerialization.md).
 
 [Рефлексия (динамическая загрузка сборок, позднее связывание, атрибуты, расширяемое приложение)](./basic/indexReflex.md).
 
@@ -131,7 +131,7 @@
 
 [Библиотеки классов](./advance/indexDll.md).
 
-[Динамические типы и DLR (позднее связывание, COM)](./advance/indexDLR.md).
+[Динамические типы и DLR (позднее связывание, COM, Excel)](./advance/indexDLR.md).
 
 [Домены приложений (процессы, контексты)](./advance/indexDomain.md).
 
