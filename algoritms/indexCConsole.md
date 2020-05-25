@@ -40,7 +40,7 @@ int main(int argc, const char* argv[])
 
 ## Очистка консоли
 ```c
-	system("cls");
+system("cls");
 ``` 
 
 

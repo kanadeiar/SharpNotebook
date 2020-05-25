@@ -165,15 +165,19 @@
 
 [WPF Шаблоны](./windows/indexWPFTemplates.md).
 
-[WPF MVVM Уведомления](./windows/indexWPFObserves.md).
+[WPF MVVM Уведомления](./windows/indexWPFMVVMObserves.md).
 
-[WPF MVVM Валидация](./windows/indexWPFValidations.md).
+[WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
 
-[WPF MVVM Команды](./windows/indexWPFComands.md).
+[WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-[WPF MVVM Порядок](./windows/indexWPFClean.md).
+[WPF MVVM Порядок](./windows/indexWPFMVVMClean.md).
 
-[WPF MVVM Данные](./windows/indexWPFData.md).
+[WPF MVVM Данные](./windows/indexWPFMVVMData.md).
+
+[WPF+ADO Приложение](./windows/indexWPFMVVMApp.md).
+
+[WPF+MVVM+EF Приложение](./windows/indexWPFMVVMApp.md).
 
 [Основы WPF](./windows/index0WPF.md).
 
