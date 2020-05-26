@@ -143,7 +143,7 @@
 
 ## Оконный C#
 
-[WPF Введение](./windows/indexWPF.md).
+[WPF WPF Введение (инфраструктура, разметка, строительство)](./windows/indexWPF.md).
 
 [WPF Элементы](./windows/indexWPFComponents.md).
 
@@ -179,9 +179,9 @@
 
 [WPF+MVVM+EF Приложение](./windows/indexWPFMVVMApp.md).
 
-[Основы WPF](./windows/index0WPF.md).
+[WPF Примеры](./windows/indexWPFSamples.md).
 
-[Основы WPF Элементы управления](./windows/index0WPFComponents.md).
+[Основы WPF](./windows/index0WPF.md).
 
 [Основы WPF Привязки](./windows/index0WPFBinding.md).
 
@@ -192,6 +192,8 @@
 [Основы WPF Приложение Базы данных](./windows/index0WPFADOApp.md).
 
 [Основы WPF Сервисы](./windows/index0WPFService.md).
+
+
 
 ## Xamarin
 

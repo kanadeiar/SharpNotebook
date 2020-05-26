@@ -1,4 +1,37 @@
-# Основы WPF Элементы управления
+# WPF Элементы
+
+Документация о конкретной функциональности заданного элемента управления дает документация .NET Framework 4.7 SDK - раздел ["Библиотека элементов управления"](https://docs.microsoft.com/ru-ru/dotnet/framework/wpf/controls/). справочной системы.
+
+Некоторые элементы управления WPF:
+```csharp
+Основные элементы управления для пользовательского ввода:
+Button, RatioButton, ComboBox, CheckBox, Calendar, DatePicker, Expander, DataGrid, ListBox, ListView, ToggleButton, TreeView, ContextMenu, ScrollBar, Slider, TabControl, TextBlock, TextBox, RepeatButton, RichTextBox, Label
+WPF предлагает полное семейство элементов управления, которые можно задействовать при построении пользовательских интерфейсов
+Боковые элементы окон и элементов управления:
+Menu, ToolBar, StatusBar, ToolTip, ProgressBar
+Элементы для декорирования рамки объекта Window компонентами для ввода и элементами информаирования пользователя
+Элементы управления мультимедиа:
+Image, MediaELement, SoundPlayerAction
+Элементы предоставляют поддержку воспроизведения аудио/видео и вывода изображений
+Элементы управления компоновкой:
+Border, Canvas, DockPanel, Grid, GridView, GridSplitter, GroupBox, Panel, TabControl, StackPanel, ViewBox, WrapPanel
+WPF предлагает множество элементво управления для группировки и организации других жлементов в целях управления компоновкой
+```
+
+WPF предоставляет элементы для работы с документами в стиле Adobe PDF, с применением типов из пространства имен System.Windows.Documents (PresentationFramework.dll), работающие с API-интерфейсом XML Paper Specification (XPS).
+
+WPF Предлагает несколько общих диалоговых окон, как OpenFilaDialog и SaveFileDialog, определенные в пространстве имен Windows.Win32 внутри PresentationFramework.dll.
+
+Пример диалогового окна:
+```csharp
+private void MyButton_OnClick(object sender, RoutedEventArgs e)
+{
+    SaveFileDialog saveDlg = new SaveFileDialog();
+    saveDlg.ShowDialog();
+}
+```
+
+
 
 ## TextBlock
 ```csharp
@@ -293,5 +326,12 @@ public MainWindow()
     comboBoxNames.ItemsSource = names;
 }
 ```
+
+
+
+
+
+
+
 
 
