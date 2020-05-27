@@ -240,7 +240,44 @@ private void MenuItemExit_OnClick(object sender, RoutedEventArgs e)
     <Button Content="Проверка" MouseEnter="UIElement_OnMouseEnter1" MouseLeave="UIElement_OnMouseLeave" Click="MenuItem_Click"/>
 </ToolBar>
 ```
-
+Еще пример:
+```csharp
+<ToolBar x:Name="inkToolBar" Height="60" Background="LightGreen">
+    <Border VerticalAlignment="Center">
+        <WrapPanel>
+            <RadioButton x:Name="inkRadio" Margin="5,10" Content="InkMode" IsChecked="True" Click="inkRadio_Click"/>
+            <RadioButton x:Name="eraseRadio" Margin="5,10" Content="Erase Mode" Click="inkRadio_Click"/>
+            <RadioButton x:Name="selectRadio" Margin="5,10" Content="SelectMode" Click="inkRadio_Click"/>
+        </WrapPanel>
+    </Border>
+    <Separator/>
+    <ComboBox x:Name="comboColors" Width="100" SelectionChanged="comboColors_SelectionChanged">
+        <ComboBoxItem Content="Красный"/>
+        <ComboBoxItem Content="Зеленый"/>
+        <ComboBoxItem Content="Желтый"/>
+    </ComboBox>
+    <Separator/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" x:Name="buttonSave" Height="30" Width="70" Margin="2" Content="Сохранить"/>
+        <Button Grid.Column="1" x:Name="buttonLoad" Height="30" Width="70" Margin="2" Content="Загрузить"/>
+        <Button Grid.Column="2" x:Name="buttonClear" Height="30" Width="70" Margin="2" Content="Очистить"/>
+    </Grid>
+    <Separator/>
+</ToolBar>
+private void RadioButton_Click(object sender, RoutedEventArgs e)
+{
+    MessageBox.Show("1");
+}
+private void comboColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
+{
+    MessageBox.Show("2");
+}
+```
 
 ## Строка состояния StatusBar.
 
@@ -255,6 +292,24 @@ private void MenuItemExit_OnClick(object sender, RoutedEventArgs e)
 </StatusBar>
 ```
 
+## Виджет вкладок TabControl.
+
+Виджет TabControl содержит набор вкладок TabItem, на каждой вкладке можно расставять свои элементы пользовательского интерфейса.
+
+Пример виджета TabControl:
+```csharp
+<TabControl x:Name="myTabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <TabItem Header="Ink API">
+        <Grid Background="AntiqueWhite"/>
+    </TabItem>
+    <TabItem Header="Data Binding">
+        <Grid Background="LightGoldenrodYellow"/>
+    </TabItem>
+    <TabItem Header="DataGrid">
+        <Grid Background="Azure"/>
+    </TabItem>
+</TabControl>
+```
 
 
 

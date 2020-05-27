@@ -145,13 +145,13 @@
 
 [WPF WPF Введение (инфраструктура, разметка, строительство)](./windows/indexWPF.md).
 
-[WPF Элементы](./windows/indexWPFComponents.md).
+[WPF Элементы (примеры элементов)](./windows/indexWPFComponents.md).
 
 [WPF Позиционирование (панели, прокрутка, меню, строка состояния)](./windows/indexWPFPositions.md).
 
-[WPF События](./windows/indexWPFEvents.md).
+[WPF События (команды, маршрутизация)](./windows/indexWPFEvents.md).
 
-[WPF Привязки](./windows/indexWPFBindings.md).
+[WPF Привязки (свойства зависимости)](./windows/indexWPFBindings.md).
 
 [WPF Рисование](./windows/indexWPFCanvas.md).
 

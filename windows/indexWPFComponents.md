@@ -1,4 +1,4 @@
-# WPF Элементы
+# WPF Элементы (примеры элементов)
 
 Документация о конкретной функциональности заданного элемента управления дает документация .NET Framework 4.7 SDK - раздел ["Библиотека элементов управления"](https://docs.microsoft.com/ru-ru/dotnet/framework/wpf/controls/). справочной системы.
 
@@ -327,7 +327,81 @@ public MainWindow()
 }
 ```
 
+## InkCanvas
 
+Компонент рисования в окне:
+```csharp
+    <WrapPanel>
+        <RadioButton x:Name="inkRadio" Margin="5,10" Content="InkMode" IsChecked="True" Click="RadioButton_Click"/>
+        <RadioButton x:Name="eraseRadio" Margin="5,10" Content="Erase Mode" Click="RadioButton_Click"/>
+        <RadioButton x:Name="selectRadio" Margin="5,10" Content="SelectMode" Click="RadioButton_Click"/>
+    </WrapPanel>
+...
+<ComboBox x:Name="comboColors" Width="100" SelectionChanged="comboColors_SelectionChanged" Height="30">
+    <StackPanel Orientation="Horizontal" Tag="Red">
+        <Ellipse Fill="Red" Height="20" Width="20"/>
+        <Label Content="Красный"/>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Tag="Green">
+        <Ellipse Fill="Green" Height="20" Width="20"/>
+        <Label Content="Зеленый"/>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Tag="Blue">
+        <Ellipse Fill="Blue" Height="20" Width="20"/>
+        <Label Content="Синий"/>
+    </StackPanel>
+...
+    <Button Grid.Column="0" x:Name="buttonSave" Height="30" Width="70" Margin="2" Content="Сохранить" Click="buttonSave_Click"/>
+    <Button Grid.Column="1" x:Name="buttonLoad" Height="30" Width="70" Margin="2" Content="Загрузить" Click="buttonLoad_Click"/>
+    <Button Grid.Column="2" x:Name="buttonClear" Height="30" Width="70" Margin="2" Content="Очистить" Click="buttonClear_Click"/>
+...
+public MainWindow()
+{
+    InitializeComponent();
+    myInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+    inkRadio.IsChecked = true;
+    this.comboColors.SelectedIndex = 0;
+}
+private void RadioButton_Click(object sender, RoutedEventArgs e)
+{
+    switch ((sender as RadioButton)?.Name)
+    {
+        case "inkRadio":
+            myInkCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            break;
+        case "eraseRadio":
+            myInkCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+            break;
+        case "selectRadio":
+            myInkCanvas.EditingMode = InkCanvasEditingMode.Select;
+            break;
+    }
+}
+private void comboColors_SelectionChanged(object sender, SelectionChangedEventArgs e)
+{
+    string color = (comboColors.SelectedItem as StackPanel)?.Tag.ToString();
+    myInkCanvas.DefaultDrawingAttributes.Color = (Color)ColorConverter.ConvertFromString(color);
+}
+private void buttonSave_Click(object sender, RoutedEventArgs e)
+{
+    using (FileStream stream = new FileStream("Stroke.bin",FileMode.Create,FileAccess.Write))
+    {
+        myInkCanvas.Strokes.Save(stream);
+    }
+}
+private void buttonLoad_Click(object sender, RoutedEventArgs e)
+{
+    using (FileStream stream = new FileStream("Stroke.bin",FileMode.Open,FileAccess.Read))
+    {
+        var strokes = new StrokeCollection(stream);
+        myInkCanvas.Strokes = strokes;
+    }
+}
+private void buttonClear_Click(object sender, RoutedEventArgs e)
+{
+    myInkCanvas.Strokes.Clear();
+}
+```
 
 
 

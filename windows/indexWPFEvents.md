@@ -1,4 +1,4 @@
-# WPF События
+# WPF События (команды, маршрутизация)
 
 ## Команды 
 
@@ -130,8 +130,78 @@ private void HelpExecuted(object sender, ExecutedRoutedEventArgs e)
             </MenuItem>
 ```
 
+## Маршрутизация событий
+
 Модель марштуризируемых событий является усовершенствованием стандартной модели CLR и сделана для того, чтоб дать возможность обработки событий в манере, подходящей описанию XAML дерева объекта. Марштуризируемые события WPF автоматически вызывают единственный обработчик события компонента интерфейса WPF приложения, вне зависимости от того, на какой части компонента был произведен щелчок.
 
 Если событие перемещается от точки возникновения вверх к другим элементам по дереву объектов, то оно - пузырьковое событие. Если перемещается от самого внешнего вниз к точке возникновения - туннельное событие. Если событие инициируется и обрабатывается только этим элементом - это прямое событие.
+
+Пример пузырькового события:
+```csharp
+<Button x:Name="helpButton" Click="HelpButton_OnClick" Height="30">
+    <StackPanel Orientation="Horizontal">
+        <Label Height="30">Кнопка</Label>
+        <Ellipse Name="ellipse" Fill="Green" Height="25" Width="25"/>
+    </StackPanel>
+</Button>
+private void HelpButton_OnClick(object sender, RoutedEventArgs e)
+{
+    MessageBox.Show("Кнопка нажата");
+}
+```
+Пример прекращения распространения пузырькового события:
+```csharp
+<Button x:Name="helpButton" Click="HelpButton_OnClick" Height="30">
+    <StackPanel Orientation="Horizontal">
+        <Label Height="30">Кнопка</Label>
+        <Ellipse Name="ellipse" Fill="Green" Height="25" Width="25" MouseDown="Ellipse_OnMouseDown"/>
+    </StackPanel>
+</Button>
+private void HelpButton_OnClick(object sender, RoutedEventArgs e)
+{
+    MessageBox.Show("Кнопка нажата");
+}
+private void Ellipse_OnMouseDown(object sender, MouseButtonEventArgs e)
+{
+    this.Title += " Эллипс!";
+    e.Handled = true; //остановить распространение
+}
+```
+Туннельное событие (имена начинаются с Preview) спускаются с самого верхнего элемента до внутренних областей дерева объектов. Перед возникновением пузырькового события MouseDown сначала инициируется туннельное событие PreviewMouseDown.
+```csharp
+<Button x:Name="helpButton" Click="HelpButton_OnClick" Height="30">
+    <StackPanel Orientation="Horizontal">
+        <Label Height="30">Кнопка</Label>
+        <Ellipse Name="ellipse" Cursor="Hand" Fill="Green" Height="25" Width="25" MouseDown="Ellipse_OnMouseDown" PreviewMouseDown="Ellipse_OnPreviewMouseDown"/>
+    </StackPanel>
+</Button>
+private string mouseActivity = string.Empty;
+private void AddEventInfo(object sender, RoutedEventArgs e)
+{
+    mouseActivity += $"{sender} посылает {e.RoutedEvent.RoutingStrategy} событие с названием {e.RoutedEvent.Name}\n";
+}
+private void HelpButton_OnClick(object sender, RoutedEventArgs e)
+{
+    AddEventInfo(sender,e);
+    MessageBox.Show(mouseActivity,"Кнопка нажата");
+    mouseActivity = "";
+}
+private void Ellipse_OnMouseDown(object sender, MouseButtonEventArgs e)
+{
+    AddEventInfo(sender,e);
+}
+private void Ellipse_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+{
+    AddEventInfo(sender,e);
+}
+```
+
+
+
+
+
+
+
+
 
 
