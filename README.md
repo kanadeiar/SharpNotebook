@@ -147,7 +147,7 @@
 
 [WPF Элементы](./windows/indexWPFComponents.md).
 
-[WPF Позиционирование](./windows/indexWPFPositions.md).
+[WPF Позиционирование (панели, прокрутка, меню, строка состояния)](./windows/indexWPFPositions.md).
 
 [WPF События](./windows/indexWPFEvents.md).
 
