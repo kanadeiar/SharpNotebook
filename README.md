@@ -153,9 +153,9 @@
 
 [WPF Привязки (свойства зависимости)](./windows/indexWPFBindings.md).
 
-[WPF Фигуры](./windows/indexWPFShapes.md).
+[WPF Фигуры (трансформации)](./windows/indexWPFShapes.md).
 
-[WPF Рисунки](./windows/indexWPFDrawing.md).
+[WPF Рисунки (кисти, векторные изображения)](./windows/indexWPFDrawing.md).
 
 [WPF Визуализация](./windows/indexWPFVisual.md).
 
