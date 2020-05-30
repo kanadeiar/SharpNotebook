@@ -61,6 +61,7 @@ public MainWindow()
 ...
 <Label x:Name="labelThumb" Height="30" BorderBrush="Blue" BorderThickness="2" Content="{Binding Path=Value,Converter={StaticResource MyConverter}}"/>
 <Button Content="Нажми меня" Height="300" FontSize="{Binding Path=Value,Converter={StaticResource MyConverter}}"/>
+[ValueConversion(typeof(double),typeof(int))]
 class MyConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
