@@ -82,7 +82,43 @@ ControlTemplate myTemplate = new ControlTemplate();
 myButton.Template = myTemplate;
 ```
 
-
+Пример просмотра стандартного шаблона элемента управления:
+```csharp
+<StackPanel>
+    <Label Content="Введите имя WPF компонента" Width="300" FontWeight="DemiBold"/>
+    <TextBox x:Name="textFullName" Width="300" BorderBrush="Green" Background="BlanchedAlmond" Height="22" Text="System.Windows.Controls.Button"/>
+    <Button x:Name="buttonTemplate" Content="Просмотреть шаблон" BorderBrush="Green" Height="30" Width="150" Margin="5" HorizontalAlignment="Left" Click="ButtonTemplate_OnClick"/>
+    <Border BorderBrush="DarkGreen" BorderThickness="2" Height="280" Width="280" Margin="10" Background="LightGreen">
+        <StackPanel x:Name="panelTemplate"></StackPanel>
+    </Border>
+</StackPanel>
+private Control controlToShow = null;
+private void ButtonTemplate_OnClick(object sender, RoutedEventArgs e)
+{
+    string dataToShow = "";
+    if (controlToShow != null) //удалить элемент в области просмотра
+        panelTemplate.Children.Remove(controlToShow);
+    try
+    {
+        Assembly asm = Assembly.Load("PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" );
+        controlToShow = (Control) asm.CreateInstance(textFullName.Text);
+        controlToShow.Height = 200;
+        controlToShow.Width = 200;
+        controlToShow.Margin = new Thickness(5);
+        panelTemplate.Children.Add(controlToShow);
+        var xmlSettings = new XmlWriterSettings {Indent = true};
+        var strBuilder = new StringBuilder();
+        var xWriter = XmlWriter.Create(strBuilder, xmlSettings);
+        XamlWriter.Save(controlToShow, xWriter);
+        dataToShow = strBuilder.ToString();
+    }
+    catch (Exception ex)
+    {
+        dataToShow = ex.Message;
+    }
+    textBoxDisplayArea.Text = dataToShow;
+}
+```
 
 
 
