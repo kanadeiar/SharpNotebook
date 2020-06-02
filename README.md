@@ -47,6 +47,8 @@
 
 [Графы](./algoritms/indexGrafs.md).
 
+[Сложности алгоритмов](./algoritms/indexSpeeds.md).
+
 [Динамическое программирование](./algoritms/indexDynamic.md).
 
 [Основы ООП](./algoritms/indexObjects.md).

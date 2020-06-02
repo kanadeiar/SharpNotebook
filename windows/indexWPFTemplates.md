@@ -120,6 +120,8 @@ private void ButtonTemplate_OnClick(object sender, RoutedEventArgs e)
 }
 ```
 
+## Построение шаблона
+
 
 
 
