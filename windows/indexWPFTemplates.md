@@ -70,6 +70,28 @@ void BuildVisualTree(int depth, DependencyObject obj)
 
 ## Стандартные шаблоны
 
+Любой шаблон может быть представлен как экземпляр класса ControlTemplate. Стандартный шаблон можно получить через свойство Templete элемента управления:
+```csharp
+Button myButton = new Button();
+ControlTemplate template = myButton.Template; 
+```
+Можно и сделать обратное - установить шаблон в коде элементу управления:
+```csharp
+Button myButton = new Button();
+ControlTemplate myTemplate = new ControlTemplate();
+myButton.Template = myTemplate;
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
