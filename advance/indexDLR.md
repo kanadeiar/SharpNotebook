@@ -110,7 +110,7 @@ class Program
 
 Многие методы COM проектировались так, чтоб принимать и возвращать специфический тип данных Variant, во многом похожий на dynamic. Когда свойство EmbedInteropTypes установлено, все COM-типы Variant отображаются на динамические данные. Это сильно упрощает работу с COM.
 
-Пример использования COM-библиотеки в приложении:
+Пример использования COM-библиотеки в приложении для создания нового файла Excel:
 ```csharp
 using Excel = Microsoft.Office.Interop.Excel;
 namespace ConsoleApp1
@@ -134,6 +134,31 @@ namespace ConsoleApp1
             excelApp.Visible = true;
             worksheet.SaveAs($@"{Environment.CurrentDirectory}\Test.xlsx");
             //excelApp.Quit();
+            Console.ReadLine();
+        }
+    }
+}
+```
+Пример использования COM-библиотеки в приложении для открытия файла Excel и записи в него:
+```csharp
+using Excel = Microsoft.Office.Interop.Excel;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        public static void Main()
+        {
+            Excel.Application application = new Excel.Application();
+            var workbook = application.Workbooks.Open(toPath, 0, true, 5, "", "", false);
+            Excel.Worksheet worksheet = (Excel.Worksheet)workbook.Sheets[1];
+            string Date = DateTime.Now.ToString();
+            string Power = "11,21";
+            worksheet.Cells[currentLine, 1] = Date;
+            worksheet.Cells[currentLine, 2] = Power.Replace(',','.');
+            application.Visible = true;
+            application.UserControl = true;
+            //workbook.Save();
+            //workbook.Close();
             Console.ReadLine();
         }
     }
