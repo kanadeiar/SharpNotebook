@@ -139,10 +139,6 @@
 
 [Асинхронное, параллельное, многопоточние программирование, TPL, Timer, PLINQ](./advance/indexAsync.md).
 
-## Графическое приложение С#
-
-[Шаблон графического приложения](./graphicapp/indexTemplate.md).
-
 ## Оконный C#
 
 [WPF WPF Введение (инфраструктура, разметка, строительство)](./windows/indexWPF.md).
@@ -169,21 +165,21 @@
 
 [WPF Шаблоны](./windows/indexWPFTemplates.md).
 
-[WPF MVVM Уведомления](./windows/indexWPFMVVMObserves.md).
+x [WPF MVVM Уведомления](./windows/indexWPFMVVMObserves.md).
 
-[WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
+x [WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
 
-[WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
+x [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-[WPF MVVM Порядок](./windows/indexWPFMVVMClean.md).
+x [WPF MVVM Порядок](./windows/indexWPFMVVMClean.md).
 
-[WPF MVVM Данные](./windows/indexWPFMVVMData.md).
+x [WPF MVVM Данные](./windows/indexWPFMVVMData.md).
 
-[WPF+ADO Приложение](./windows/indexWPFMVVMApp.md).
+x [WPF MVVM ADO Приложение](./windows/indexWPFMVVMApp.md).
 
-[WPF+MVVM+EF Приложение](./windows/indexWPFMVVMApp.md).
+x [WPF MVVM EF Приложение](./windows/indexWPFMVVMApp.md).
 
-[WPF Примеры](./windows/indexWPFSamples.md).
+x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [Основы WPF](./windows/index0WPF.md).
 
@@ -197,23 +193,31 @@
 
 [Основы WPF Сервисы](./windows/index0WPFService.md).
 
-
-
-## Xamarin
-
-[Базовый Xamarin](./xamarin/indexBasic.md).
-
-## Система контроля версий
-
-[Базовый Git](./git/indexBasic.md).
-
-## База данных SQL
+## База данных
 
 [База данных Access](./sql/indexAccess.md).
 
 [Основы базы данных MSSQL](./sql/indexSql.md).
 
-[Базовые команды MSSQL](./sql/indexBase.md).
+[База языка SQL MSSQL](./sql/indexBase.md).
+
+x [ADO.NET](./sql/indexADO.md).
+
+x [Entity Framework 6](./sql/indexEF6.md).
+
+## Графическое приложение С#
+
+[Шаблон графического приложения](./graphicapp/indexTemplate.md).
+
+## Xamarin
+
+x [Базовый Xamarin](./xamarin/indexBasic.md).
+
+## Система контроля версий
+
+x [Базовый Git](./git/indexBasic.md).
+
+
 
 ## Использованные источники
 
