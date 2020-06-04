@@ -164,3 +164,43 @@ namespace ConsoleApp1
     }
 }
 ```
+Пример использования COM-библиотеки в приложении для открытия файла Excel и быстрой записи большого объема информации в него:
+```csharp
+using Excel = Microsoft.Office.Interop.Excel;
+...
+string[] strs =
+{
+    "25.05.2020 0:00:55;42,9799995422363;25.05.2020 0:00:55;44,4000015258789;25.05.2020 0:00:55;54;25.05.2020 0:00:55;527;25.05.2020 0:00:55;82,2799987792969",
+    "25.05.2020 0:01:55; 43,1800003051758; 25.05.2020 0:01:55; 44,4000015258789; 25.05.2020 0:01:55; 54; 25.05.2020 0:01:55; 528; 25.05.2020 0:01:55; 82,879997253418",
+    "25.05.2020 0:00:55;42,9799995422363;25.05.2020 0:00:55;44,4000015258789;25.05.2020 0:00:55;54;25.05.2020 0:00:55;527;25.05.2020 0:00:55;82,2799987792969",
+};
+Excel.Application application = new Excel.Application();
+var workbook = application.Workbooks.Open("excel.xslx", 0, true, 5, "", "", false);
+Excel.Worksheet worksheet = (Excel.Worksheet)workbook.Sheets[1];
+int currLine = 0;
+
+int rowCount = strs.Length;
+int colCount = 6;
+object[,] cells = new object[rowCount, colCount];
+foreach (var el in strs)
+{
+    var split = el.Split(';');
+    string Date = split[0].Remove(split[0].LastIndexOf(':'));
+    string Power = split[1];
+    string Frenq = split[3];
+    string Temp = split[5];
+    string Voltage = split[7];
+    string Currency = split[9];
+    cells[currLine, 0] = Date;
+    cells[currLine, 1] = Power.Replace(',', '.');
+    cells[currLine, 2] = Frenq.Replace(',', '.');
+    cells[currLine, 3] = Temp.Replace(',', '.');
+    cells[currLine, 4] = Voltage.Replace(',', '.');
+    cells[currLine, 5] = Currency.Replace(',', '.');
+    currLine++;
+}            worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(worksheet.Cells[2, 1]), (Microsoft.Office.Interop.Excel.Range)(worksheet.Cells[rowCount + 1 + 5, colCount])).Value = cells;            ((Excel.Worksheet)workbook.Sheets[2]).Activate();
+application.Visible = true;
+application.UserControl = true;
+//workbook.Save();
+//workbook.Close();
+```
