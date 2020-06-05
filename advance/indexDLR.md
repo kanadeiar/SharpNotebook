@@ -198,9 +198,31 @@ foreach (var el in strs)
     cells[currLine, 4] = Voltage.Replace(',', '.');
     cells[currLine, 5] = Currency.Replace(',', '.');
     currLine++;
-}            worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(worksheet.Cells[2, 1]), (Microsoft.Office.Interop.Excel.Range)(worksheet.Cells[rowCount + 1 + 5, colCount])).Value = cells;            ((Excel.Worksheet)workbook.Sheets[2]).Activate();
+}            
+worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(worksheet.Cells[2, 1]), (Microsoft.Office.Interop.Excel.Range)(worksheet.Cells[rowCount + 1 + 5, colCount])).Value = cells;  //быстрая запись массива ячеек в лист эксель
+((Excel.Worksheet)workbook.Sheets[2]).Activate();
 application.Visible = true;
 application.UserControl = true;
 //workbook.Save();
 //workbook.Close();
+```
+Пример использования COM-библиотеки в приложении для формирования письма Outlook:
+```csharp
+using COutlook = Microsoft.Office.Interop.Outlook;
+...
+AppSettingsReader ar = new AppSettingsReader();
+COutlook.Application app = new COutlook.Application();
+COutlook.MailItem mailItem = app.CreateItem(COutlook.OlItemType.olMailItem);
+mailItem.Subject = "Тема";
+mailItem.To = "exsample@ex.ru";
+mailItem.Body = "Просто тестовое письмо";
+if (attachments != null)
+{
+    foreach (var a in attachments)
+    {
+        mailItem.Attachments.Add(a);
+    }
+}
+mailItem.Importance = COutlook.OlImportance.olImportanceNormal;
+mailItem.Display(false);
 ```
