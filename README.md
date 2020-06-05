@@ -165,7 +165,9 @@
 
 [WPF Шаблоны](./windows/indexWPFTemplates.md).
 
-x [WPF MVVM Уведомления](./windows/indexWPFMVVMObserves.md).
+[WPF MVVM Основа](./windows/indexWPFMVVM.md).
+
+[WPF MVVM Уведомления](./windows/indexWPFMVVMNotify.md).
 
 x [WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
 
