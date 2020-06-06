@@ -171,15 +171,9 @@
 
 [WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
 
-x [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
-
-x [WPF MVVM Порядок](./windows/indexWPFMVVMClean.md).
+[WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
 x [WPF MVVM Данные](./windows/indexWPFMVVMData.md).
-
-x [WPF MVVM ADO Приложение](./windows/indexWPFMVVMApp.md).
-
-x [WPF MVVM EF Приложение](./windows/indexWPFMVVMApp.md).
 
 x [WPF Примеры](./windows/indexWPFSamples.md).
 
