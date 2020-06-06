@@ -169,7 +169,7 @@
 
 [WPF MVVM Уведомления](./windows/indexWPFMVVMNotify.md).
 
-x [WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
+[WPF MVVM Валидация](./windows/indexWPFMVVMValidations.md).
 
 x [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
