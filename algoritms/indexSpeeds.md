@@ -1,25 +1,28 @@
 # Сложности алгоритмов
 
 Сравнение времени выполнения операций нас различными структурами данных, сложность алгоритмов. Времення и объемная (сколько памяти потребуется) сложность.
-```csharp
-Структура данных     Временная сложность 	                                                                        Объемная сложность
-	                 Среднее 	                                    Наихудшее 	                                    Наихудшее
-	                 Access 	Search 	    Insertion 	Deletion 	Access 	    Search 	    Insertion 	Deletion 	
-Array 	             Θ(1) 	    Θ(n) 	    Θ(n) 	    Θ(n) 	    O(1) 	    O(n) 	    O(n) 	    O(n) 	    O(n)
-Stack 	             Θ(n) 	    Θ(n) 	    Θ(1) 	    Θ(1) 	    O(n) 	    O(n) 	    O(1) 	    O(1) 	    O(n)
-Queue 	             Θ(n) 	    Θ(n) 	    Θ(1) 	    Θ(1) 	    O(n) 	    O(n) 	    O(1) 	    O(1) 	    O(n)
-Singly-Linked List 	 Θ(n) 	    Θ(n) 	    Θ(1) 	    Θ(1) 	    O(n) 	    O(n) 	    O(1) 	    O(1) 	    O(n)
-Doubly-Linked List 	 Θ(n) 	    Θ(n) 	    Θ(1) 	    Θ(1) 	    O(n) 	    O(n) 	    O(1) 	    O(1) 	    O(n)
-Skip List 	         Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	O(n) 	    O(n) 	    O(n) 	    O(n) 	    O(n log(n))
-Hash Table 	         N/A 	    Θ(1) 	    Θ(1) 	    Θ(1) 	    N/A 	    O(n) 	    O(n) 	    O(n) 	    O(n)
-Binary Search Tree 	 Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	O(n) 	    O(n) 	    O(n) 	    O(n) 	    O(n)
-Cartesian Tree 	     N/A 	    Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	N/A 	    O(n) 	    O(n) 	    O(n) 	    O(n)
-B-Tree 	             Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	O(log(n)) 	O(log(n)) 	O(log(n)) 	O(log(n)) 	O(n)
-Red-Black Tree 	     Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	O(log(n)) 	O(log(n)) 	O(log(n)) 	O(log(n)) 	O(n)
-Splay Tree 	         N/A 	    Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	N/A 	    O(log(n)) 	O(log(n)) 	O(log(n)) 	O(n)
-AVL Tree 	         Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	O(log(n)) 	O(log(n)) 	O(log(n)) 	O(log(n)) 	O(n)
-KD Tree 	         Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	Θ(log(n)) 	O(n) 	    O(n) 	    O(n) 	    O(n) 	    O(n)
-```
+
+Структура данных | Временная сложность - 8 колонок  | Объемная сложность
+---------------- | ------------------------------------ | ---------------------
+
+Структура          | Среднее |Среднее |Среднее  |Среднее   | Наихудшее |Наихудшее |Наихудшее |Наихудшее | Наихудшее
+-------------------|---------|--------|---------|----------|-----------|----------|----------|----------|----------
+Название           |Access   |Search  |Insertion|Deletion  |Access     |Search    |Insertion |Deletion  | Объемной
+Array              | Θ(1)    | Θ(n)   |Θ(n)     |Θ(n)      |O(1)       |O(n)      |O(n)      |O(n)      |O(n)
+Stack              |Θ(n)     |Θ(n)    |Θ(1)     |Θ(1)      |O(n)       |O(n)      |O(1)      |O(1)      |O(n)    
+Queue              |Θ(n)     |Θ(n)    |Θ(1)     |Θ(1)      |O(n)       |O(n)      |O(1)      |O(1)      |O(n)    
+Single-Linked List |Θ(n)     |Θ(n)    |Θ(1)     |Θ(1)      |O(n)       |O(n)      |O(1)      |O(1)      |O(n)   
+Double-Linked List |Θ(n)     |Θ(n)    |Θ(1)     |Θ(1)      |O(n)       |O(n)      |O(1)      |O(1)      |O(n)   
+Skip List	   |Θ(log(n))|Θ(log(n))|Θ(log(n))|Θ(log(n))|O(n)       |O(n)      |O(n)      |O(n)      |O(n log(n))   
+Hash Table	   |N/A      |Θ(1)    |Θ(1)     |Θ(1)      |N/A        |O(n)      |O(n)      |O(n)      |O(n)   
+Binary Search Tree |Θ(log(n))|Θ(log(n))|Θ(log(n))|Θ(log(n))|O(n)       |O(n)      |O(n)      |O(n)      |O(n)   
+Castesian Tree     |N/A      |Θ(log(n))|Θ(log(n))|Θ(log(n))|N/A        |O(n)      |O(n)      |O(n)      |O(n)   
+B-Tree		   |Θ(log(n))|Θ(log(n))|Θ(log(n))|Θ(log(n))|O(log(n))  |O(log(n)) |O(log(n)) |O(log(n)) |O(n)   
+Red-Black Tree     |Θ(log(n))|Θ(log(n))|Θ(log(n))|Θ(log(n))|O(log(n))  |O(log(n)) |O(log(n)) |O(log(n)) |O(n)   
+Splay Tree         |N/A      |Θ(log(n))|Θ(log(n))|Θ(log(n))|N/A        |O(log(n)) |O(log(n)) |O(log(n)) |O(n)   
+AVL Tree           |Θ(log(n))|Θ(log(n))|Θ(log(n))|Θ(log(n))|O(log(n))  |O(log(n)) |O(log(n)) |O(log(n)) |O(n)   
+KD Tree            |Θ(log(n))|Θ(log(n))|Θ(log(n))|Θ(log(n))|O(n)       |O(n)      |O(n)      |O(n)      |O(n)   
+
 Алгоритмы сортировки - временная и объемная (сколько памяти потребуется) сложность.
 ```csharp
 Алгоритм 	    Временная сложность 	                        Объемная сложность
@@ -39,5 +42,5 @@ Counting Sort 	Ω(n+k) 	        Θ(n+k) 	        O(n+k) 	        O(k)
 Cubesort 	    Ω(n) 	        Θ(n log(n)) 	O(n log(n)) 	O(n)
 ```
 
-Источник: [Большой О-лист](https://www.bigocheatsheet.com/).
+Источник: [Большой алгоритмический О-лист](https://www.bigocheatsheet.com/).
 
