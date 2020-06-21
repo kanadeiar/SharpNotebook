@@ -503,6 +503,13 @@ class MyData
 }
 ```
 
+# JSON сериализация
+
+Пример сериализации в json формат файла:
+```csharp
+System.IO.File.WriteAllText("data.json", JsonConvert.SerializeObject(workers));
+List<Worker> list = JsonConvert.DeserializeObject<List<Worker>>(System.IO.File.ReadAllText("data.json"));
+```
 
 
 

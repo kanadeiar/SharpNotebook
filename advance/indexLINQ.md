@@ -536,5 +536,50 @@ public static bool Filter(string name) { return name.Contains(" "); }
 public static string ProcIt(string name) { return name; }
 ```
 
+## Чтения файла и LINQ
 
+Пример (функции):
+```csharp
+var sum = File.ReadAllText("data.txt")
+          .Split(' ')
+          .Select(ConvetrStringToInt)
+          .Where(Search)
+          .ToArray()
+          .Sum();
+...
+static bool Search(int Item)
+{
+    return Item % 2 == 0;
+}
+
+static int ConvetrStringToInt(string Str)
+{
+    return Convert.ToInt32(Str);
+}
+```
+Еще пример (делегаты):
+```csharp
+var sum = File.ReadAllText("data.txt")
+          .Split(' ')
+          .Select(delegate (string Str)
+          {
+              return Convert.ToInt32(Str);
+          })
+          .Where(delegate (int Item)
+          {
+              return Item % 2 == 0;
+          })
+          .ToArray()
+          .Sum();
+```
+Еще пример (лямбды):
+```csharp
+var sum = System.IO
+              .File.ReadAllText("data.txt")
+              .Split(' ')
+              .Select(int.Parse)
+              .Where(e => e % 2 == 0)
+              .ToArray()
+              .Sum();
+```
 
