@@ -114,6 +114,52 @@ public MainWindow()
     };
     listViewPerson.ItemsSource = list;
 ```
+Пример привязки к xml файлу:
+
+Файл "MyXMLFile.xml":
+```csharp
+<?xml version="1.0" encoding="utf-8" ?>
+<persons>
+  <person>
+    <id>1</id>
+    <fam>Иванов</fam>
+    <name>Иван</name>
+    <age>20</age>
+  </person>
+  <person>
+    <id>2</id>
+    <fam>Петров</fam>
+    <name>Петя</name>
+    <age>18</age>
+  </person>
+  <person>
+    <id>3</id>
+    <fam>Генадиев</fam>
+    <name>Гена</name>
+    <age>30</age>
+  </person>
+</persons>
+```
+Код xaml:
+```csharp
+<Window.Resources>
+    <XmlDataProvider x:Key="personsXMLData" Source="MyXMLFile.xml" XPath="persons"/>
+</Window.Resources>
+<Grid>
+    <ListBox ItemsSource="{Binding Source={StaticResource personsXMLData}, XPath=person}">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding XPath=fam}" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding XPath=name}" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding XPath=age}" Margin="0,0,5,0"/>
+                    <TextBlock Text="лет"/>
+                </StackPanel>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+</Grid>
+```
 
 ## Свойства зависимости
 
