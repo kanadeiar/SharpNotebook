@@ -136,6 +136,22 @@ for (int i = 0; i < 10; i++)
 
 >Индексаторы являются еще одной формой "синтаксического сахара", учитывая, что ту же самую функциональность можно получить и с помощью старых открытых методов.
 
+## Новый функционал работы с массивами
+
+Пример:
+```csharp
+var arr = Array.CreateInstance(typeof(int), 10);
+for (int i = 0; i < arr.Length; i++)
+{
+    arr.SetValue(arr.Length - i, i);
+}
+int elem = (int)arr.GetValue(0);
+foreach (var el in arr)
+    Console.Write($"{el} ");
+Console.WriteLine();
+```
+
+
 
 
 # Продвинутое

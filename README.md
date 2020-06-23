@@ -105,7 +105,7 @@
 
 [Рефлексия (динамическая загрузка сборок, позднее связывание, атрибуты, расширяемое приложение)](./basic/indexReflex.md).
 
-[Библиотека классов](./basic/indexLibs.md).
+[Библиотека полезностей](./basic/indexLibs.md).
 
 ## Классический C#
 
@@ -197,7 +197,7 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [База языка SQL MSSQL](./sql/indexBase.md).
 
-x [ADO.NET](./sql/indexADO.md).
+[ADO.NET](./sql/indexADO.md).
 
 x [Entity Framework 6](./sql/indexEF6.md).
 

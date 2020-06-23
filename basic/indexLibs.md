@@ -1,4 +1,4 @@
-# Библиотека классов
+# Библиотека полезностей
 
 ## Класс математических операций
 ```csharp
@@ -10,6 +10,37 @@ Math.Pow(a,b); //возаращает а в степери b
 string initDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 Console.WriteLine(initDir);
 ```
+
+## Получение сведений о текущей среде выполнения и платформе
+```csharp
+Console.WriteLine(Environment.CommandLine);
+Console.WriteLine(Environment.CurrentDirectory);
+Console.WriteLine(Environment.CurrentManagedThreadId);
+Console.WriteLine(Environment.ExitCode);
+Console.WriteLine(Environment.HasShutdownStarted);
+Console.WriteLine(Environment.Is64BitOperatingSystem);
+Console.WriteLine(Environment.Is64BitProcess);
+Console.WriteLine(Environment.MachineName);
+Console.WriteLine(Environment.NewLine);
+Console.WriteLine(Environment.OSVersion);
+Console.WriteLine(Environment.ProcessorCount);
+Console.WriteLine(Environment.StackTrace);
+Console.WriteLine(Environment.SystemDirectory);
+Console.WriteLine(Environment.SystemPageSize);
+Console.WriteLine(Environment.TickCount);
+Console.WriteLine(Environment.UserDomainName);
+Console.WriteLine("--");
+Console.WriteLine(Environment.UserInteractive);
+Console.WriteLine(Environment.UserName);
+Console.WriteLine(Environment.Version);
+Console.WriteLine(Environment.WorkingSet);
+Console.WriteLine("--получение аргументов строки запуска приложения");
+foreach (var item in Environment.GetCommandLineArgs())
+{
+    Console.WriteLine(item);
+}
+```
+
 
 ## Класс работы с массивом 
 Array
@@ -75,7 +106,6 @@ public static void Main()
       <add key="Str1" value="Green"/>
       <add key="Number1" value="8"/>
     </appSettings>
-</configuration>
 ```
 Использование:
 ```csharp
@@ -90,4 +120,22 @@ namespace ConsoleApp1
             int numb1 = (int)ar.GetValue("Number1", typeof(int));
             string str1 = (string) ar.GetValue("Str1", typeof(string));
             Console.WriteLine($"Проверка: {str1} {numb1}");
+```
+
+Пример сохранения конфигурации соединения:
+
+Файл "App.config":
+```csharp
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+...
+  <connectionStrings>
+    <add name="DefaultConnection" 
+         connectionString="Data Source=(localdb)\MSSQLLocalDB;
+                          Initial Catalog=demo06022020;
+                          Integrated Security=True;"/>
+```
+Использование:
+```csharp
+var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 ```

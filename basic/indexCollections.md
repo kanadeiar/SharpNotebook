@@ -53,6 +53,13 @@ list.Sort();
 foreach (var v in list) 
     Console.WriteLine(v);
 ```
+
+Элементы класса c реализованным интерфейсом IEnumerator<T>, могут быть перебраны без foreach, напрямую методами:
+```csharp
+IEnumerator<int> inum=posNums.GetEnumerator();
+while (inum.MoveNext()) Console.WriteLine(inum.Current);
+```
+
 >Такие коллекции следует ограниченно применять в приложениях, так как состоят из ссылки на объекты общего для всех типа object и за типом содержахися элементов в списке приходится ОЧЕНЬ БДИТЕЛЬНО следить программисту.
 
 ## Специальные коллекции System.Collection.Specialized
@@ -277,7 +284,6 @@ var dict = new Dictionary<char, string>
     {'v',"Victor"},
 };
 ```
-
 
 
 
