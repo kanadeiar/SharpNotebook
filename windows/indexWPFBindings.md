@@ -158,6 +158,66 @@ public MainWindow()
     };
     listViewPerson.ItemsSource = list;
 ```
+Пример привязки к объекту в памяти через установку контекста:
+```csharp
+class MyClass : INotifyPropertyChanged
+{
+    private bool flag;
+    public bool Flag
+    {
+        get => flag;
+        set
+        {
+            if (flag == value) return;
+            flag = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Flag)));
+        }
+    }
+    public ObservableCollection<int> Ints { get; set; }
+
+    public MyClass()
+    {
+        flag = true;
+        Ints = new ObservableCollection<int> {1, 2, 4, 8, 9};
+    }
+    public event PropertyChangedEventHandler PropertyChanged;
+}
+<Grid x:Name="GridMain">
+    <StackPanel>
+        <ListBox ItemsSource="{Binding Ints}" Height="200">
+        </ListBox>
+        <CheckBox Content="Выбери меня" IsChecked="{Binding Flag}"/>
+        <RadioButton Content="Выбери меня" IsChecked="{Binding Flag}"/>
+        <TextBlock Text="{Binding Flag}"/>
+        <Button x:Name="ButtonEdit" Content="Изменить" Click="ButtonEdit_OnClick"/>
+        <Button x:Name="ButtonAdd" Content="Добавить" Click="ButtonAdd_OnClick"/>
+        <Button x:Name="ButtonEditInts" Content="Изменить массив" Click="ButtonEditInts_OnClick"/>
+    </StackPanel>
+</Grid>
+public partial class MainWindow : Window
+{
+    private MyClass myClass;
+    public MainWindow()
+    {
+        InitializeComponent();
+        myClass = new MyClass();
+        GridMain.DataContext = myClass; //установка контекста
+    }
+    private void ButtonEdit_OnClick(object sender, RoutedEventArgs e)
+    {
+        myClass.Flag = !myClass.Flag;
+    }
+    private void ButtonAdd_OnClick(object sender, RoutedEventArgs e)
+    {
+        myClass.Ints.Add(99);
+    }
+    private void ButtonEditInts_OnClick(object sender, RoutedEventArgs e)
+    {
+        myClass.Ints[0]++;
+    }
+}
+```
+
 Пример привязки к xml файлу:
 
 Файл "MyXMLFile.xml":
@@ -236,6 +296,10 @@ labelMyNumber.SetBinding(Label.ContentProperty, b);
 При регистрации свойства зависимости нужно использовать делегат ValidateValueCallbac для указания на метод, который выполняет проверку достоверности данных.
 
 
+Еще пример класса со свойствами зависимостями и работа с ним:
+```csharp
+
+```
 
 
 
