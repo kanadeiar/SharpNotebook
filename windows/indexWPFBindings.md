@@ -31,6 +31,37 @@ public MainWindow()
     labelThumb.SetBinding(Label.ContentProperty, binding);
 }
 ```
+Еще пример привязки в разметке:
+```csharp
+<TextBox Name="txtValue" FontSize="20" />            
+<WrapPanel Margin="0,10">
+    <TextBlock Text="Текст: " FontSize="20" FontWeight="Bold" />
+    <TextBlock x:Name="mirrorTextBlock"
+               Text="{Binding ElementName=txtValue, Path=Text, Mode=OneWay}"   
+               FontSize="20"/>
+</WrapPanel>
+```
+Еще пример установки привязки в коде C#:
+```csharp
+<TextBox Name="txtValue" FontSize="20" />
+<WrapPanel Margin="0,10">
+    <TextBlock Text="Текст: " FontSize="20" FontWeight="Bold" />
+    <TextBlock x:Name="mirrorTextBlock"
+               Text="{Binding ElementName=txtValue, Path=Text, Mode=OneWay}"   
+               FontSize="20"/>
+</WrapPanel>
+// Text = "{Binding ElementName=txtValue, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+Binding binding = new Binding
+{
+    ElementName = nameof(txtValue),
+    //// элемент-источник
+    Path = new PropertyPath(nameof(txtValue.Text)),
+    Mode = BindingMode.TwoWay,
+    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+};
+mirrorTextBlock.SetBinding(TextBlock.TextProperty, binding);
+```
+
 В XAML для определения привязки данных можно использовать альтернативный формати, разбивающий значения, указанные расширенной разметкой {Bunding}, путем установки свойства DataContext. Пример:
 ```csharp
 <Label x:Name="labelThumb" Height="30" BorderBrush="Blue" BorderThickness="2" DataContext="{Binding ElementName=myScrollBar}" Content="{Binding Path=Value}"/>
@@ -86,6 +117,19 @@ Binding b = new Binding
 labelThumb.SetBinding(Label.ContentProperty, b);
 buttonOK.SetBinding(Button.FontSizeProperty, b);
 ```
+Еще пример привязки к элементу, объявленному в разметке:
+```csharp
+...
+<Window.Resources>
+    <local:Employee x:Key="worker" Name="Петя" Age="30" Salary="25000" />
+</Window.Resources>
+<Grid x:Name="mainGrid">
+    <StackPanel Margin="10" >
+        <TextBlock Text="{Binding Source={StaticResource worker}, Path=Salary}" Margin="5" FontSize="20"/>
+        <TextBlock FontSize="20" Margin="5" Text="{Binding Source={StaticResource worker}, Path=Salary, StringFormat = Зарплата составляет {0} ₽}" />
+        <TextBlock x:Name="txtView" Margin="5" FontSize="20" Text="{Binding Source={StaticResource worker}, Path=Name}"/>
+```
+
 Допускается привязывать данные из файлов XML, базы данных и объектов в памяти.
 
 Пример привязки коллекции из памяти:
