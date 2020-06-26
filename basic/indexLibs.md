@@ -139,3 +139,5 @@ namespace ConsoleApp1
 ```csharp
 var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 ```
+
+

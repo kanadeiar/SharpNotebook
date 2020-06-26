@@ -82,7 +82,7 @@ mirrorTextBlock.SetBinding(TextBlock.TextProperty, binding);
 ```
 Допускается в XAML не только форматировать, но еще преобразовывать данные между источником и целью. Для этого нужно создать класс, реализующий интерфейс IValueConverter. Такой класс можно применять для уточнения процесса привязки данных. Метод Convert() вызывается при передаче значения от источника к цели. Метод ConvertBack() будет вызываться, когда значение передается от цели к источнику - когда включен двунаправленный режим привязки.
 
-Пример такого класса и добавления конвертирования значения с использованием рекурса:
+Пример такого класса и добавления конвертирования значения с использованием ресурса:
 ```csharp
 ...
     WindowStartupLocation="CenterScreen">
@@ -264,6 +264,77 @@ public partial class MainWindow : Window
     </ListBox>
 </Grid>
 ```
+
+
+Пример использования привязки к коллекции из родительского окна в дочернем окне:
+```csharp
+public class Person
+{
+    public string Fam { get; set; }
+    public string Name { get; set; }
+}
+<StackPanel>
+    <ListBox x:Name="ListBoxPersons" Height="400" MouseDoubleClick="ListBoxPersons_MouseDoubleClick">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path=Fam}"/>
+                    <TextBlock Text="{Binding Path=Name}"/>
+                </StackPanel>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+    <Button Height="40" Width="200" Content="Добавить" Click="ButtonAdd_Click"/>
+</StackPanel>
+public Person Select { get; set; }
+ObservableCollection<Person> items;
+public MainWindow()
+{
+    InitializeComponent();
+    items = new ObservableCollection<Person>
+    {
+        new Person {Fam = "Иванов", Name = "Иван"},
+        new Person {Fam = "Петров", Name = "Петр"},
+    };
+    ListBoxPersons.ItemsSource = items;
+}
+private void ButtonAdd_Click(object sender, RoutedEventArgs e)
+{
+    items.Add(new Person {Fam = "Тестов", Name = "Тест"});
+}
+private void ListBoxPersons_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+{
+    Select = ListBoxPersons.SelectedItem as Person;
+    DetailsWindow detailsWindow = new DetailsWindow(Select);
+    detailsWindow.ShowDialog();
+}
+//дочернее окно
+<StackPanel x:Name="StackPanelDetails">
+    <TextBox Text="{Binding Path=Fam}" Margin="5"/>
+    <TextBox Text="{Binding Path=Name}" Margin="5"/>
+    <Button Content="OK" Margin="5" Click="Button_Click"/>
+</StackPanel>
+public DetailsWindow()
+{
+    InitializeComponent();
+}
+public DetailsWindow(Person person) : this()
+{
+    StackPanelDetails.DataContext = person;
+}
+private void Button_Click(object sender, RoutedEventArgs e)
+{
+    DialogResult = true;
+}
+```
+
+Пример работы с двумя связанными по связи "один ко многим" моделями:
+
+```csharp
+
+```
+
+
 
 ## Свойства зависимости
 
