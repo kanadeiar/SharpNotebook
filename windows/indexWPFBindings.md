@@ -329,9 +329,212 @@ private void Button_Click(object sender, RoutedEventArgs e)
 ```
 
 Пример работы с двумя связанными по связи "один ко многим" моделями:
-
 ```csharp
-
+//модели:
+class Department : INotifyPropertyChanged
+{
+    #region Поля
+    private string _name;
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (value == _name) return;
+            _name = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Name)));
+        }
+    }
+    #endregion
+    private ObservableCollection<Employee> _employees; //ссылка на всех сотрудников
+    private ObservableCollection<Employee> _linkedEmployees;
+    public ObservableCollection<Employee> LinkedEmployees
+    {
+        get
+        {
+            if (_linkedEmployees != null) return _linkedEmployees;
+            _linkedEmployees = new ObservableCollection<Employee>();
+            LinkedEmployeesUpdate();
+            return _linkedEmployees;
+        }
+    } //сотрудники этого отдела
+    public void LinkedEmployeesUpdate() //обновление сорудников отдела
+    {
+        var emp = _employees.Where(e => e.Department == this);
+        LinkedEmployees.Clear();
+        foreach (var el in emp)
+            LinkedEmployees.Add(el);
+    }
+    public Department(string name)
+    {
+        Name = name;
+    }
+    public Department(string name, ObservableCollection<Employee> employees) : this (name)
+    {
+        //_linkedEmployees = new ObservableCollection<Employee>();
+        _employees = employees;
+    }
+    public event PropertyChangedEventHandler PropertyChanged;
+}
+class Employee : INotifyPropertyChanged
+{
+    #region Поля
+    private string _fam;
+    public string Fam
+    {
+        get => _fam;
+        set
+        {
+            if (value == _fam) return;
+            _fam = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Fam)));
+        }
+    }
+    private string _name;
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (value == _name) return;
+            _name = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Name)));
+        }
+    }
+    private Department _department;
+    public Department Department
+    {
+        get => _department;
+        set
+        {
+            if (value == _department) return;
+            Department old = _department;
+            _department = value;
+            old?.LinkedEmployeesUpdate(); //обновление сотрудников у отдела старого
+            _department.LinkedEmployeesUpdate(); //обновление сотрудников у отдела нового
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Department)));
+        }
+    }
+    #endregion
+    public Employee(string fam, string name)
+    {
+        Fam = fam;
+        Name = name;
+    }
+    public Employee(string fam, string name, Department dep) : this(fam, name)
+    {
+        _department = dep;
+    }
+    public event PropertyChangedEventHandler PropertyChanged;
+}
+class Company
+{
+    public ObservableCollection<Department> Departments { get; set; }
+    public ObservableCollection<Employee> Employees { get; set; }
+    Random rnd = new Random();
+    public Company(int countDeps, int countEmps)
+    {
+        Departments = new ObservableCollection<Department>();
+        Employees = new ObservableCollection<Employee>();
+        for (int i = 0; i < countDeps; i++)
+            Departments.Add(new Department($"Отдел {i+1}", Employees));
+        for (int i = 0; i < countEmps; i++)
+            Employees.Add(new Employee($"Тестов {i+1}", $"Тест {i+1}", Departments[rnd.Next(countDeps)]));
+        //foreach (var el in Departments)
+        //    el.LinkedEmployeesUpdate();
+    }
+    public void AddEmployee(Employee newEmp)
+    {
+        if (newEmp == null) return;
+        Employees.Add(newEmp);
+        if (newEmp.Department is Department dep)
+            dep.LinkedEmployeesUpdate();
+    }
+    public void DelEmployee(Employee delEmp)
+    {
+        if (delEmp == null) return;
+        Employees.Remove(delEmp);
+        if (delEmp.Department is Department dep)
+            dep.LinkedEmployeesUpdate();
+    }
+}
+//окно:
+<Grid x:Name="GridMain">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="2*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="3*"/>
+        <RowDefinition/>
+    </Grid.RowDefinitions>
+    <ListBox x:Name="ListBoxDeps" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Path=Departments}" Margin="5" VirtualizingStackPanel.IsVirtualizing="True">
+        <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel/>
+            </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Path=Name}"/>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+    <ListBox x:Name="ListBoxEmps" Grid.Column="1" ItemsSource="{Binding ElementName=ListBoxDeps, Path=SelectedValue.LinkedEmployees}" Margin="5" VirtualizingStackPanel.IsVirtualizing="True">
+        <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel/>
+            </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat=" {0} | {1}">
+                            <Binding Path="Fam"/>
+                            <Binding Path="Name"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+    <WrapPanel Grid.Row="1" Grid.Column="1">
+        <StackPanel Orientation="Horizontal" Margin="3">
+            <TextBlock Text="Фамилия: "/>
+            <TextBox Text="{Binding ElementName=ListBoxEmps, Path=SelectedValue.Fam, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="3">
+            <TextBlock Text=" Имя: "/>
+            <TextBox Text="{Binding ElementName=ListBoxEmps, Path=SelectedValue.Name, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="3">
+            <TextBlock Text=" Отдел: "/>
+            <ComboBox ItemsSource="{Binding Path=Departments}" DisplayMemberPath="Name" SelectedItem="{Binding ElementName=ListBoxEmps, Path=SelectedValue.Department}" Width="100" VirtualizingStackPanel.IsVirtualizing="True">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+        </StackPanel>
+        <Button x:Name="ButtonAddEmp" Content="Добавить тестового" Margin="3"/>
+        <Button x:Name="ButtonDelEmp" Content="Удалить выбранного" Margin="3"/>
+    </WrapPanel>
+</Grid>
+private void Window_Loaded(object sender, RoutedEventArgs e)
+{
+    Company company = new Company(1000, 100000);
+    GridMain.DataContext = company;
+    ButtonAddEmp.Click += delegate 
+    {
+        company.AddEmployee(new Employee("Тестов", "Тест", (Department)ListBoxDeps.SelectedValue));
+    };
+    ButtonDelEmp.Click += delegate
+    {
+        company.DelEmployee((Employee)ListBoxEmps.SelectedValue);
+    };
+}
 ```
 
 
@@ -367,10 +570,7 @@ labelMyNumber.SetBinding(Label.ContentProperty, b);
 При регистрации свойства зависимости нужно использовать делегат ValidateValueCallbac для указания на метод, который выполняет проверку достоверности данных.
 
 
-Еще пример класса со свойствами зависимостями и работа с ним:
-```csharp
 
-```
 
 
 
