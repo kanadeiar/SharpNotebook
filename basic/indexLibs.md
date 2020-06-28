@@ -129,7 +129,7 @@ namespace ConsoleApp1
             Console.WriteLine($"Проверка: {str1} {numb1}");
 ```
 
-Пример сохранения конфигурации соединения:
+Пример получения конфигурации соединения:
 
 Файл "App.config":
 ```csharp
@@ -145,6 +145,38 @@ namespace ConsoleApp1
 Использование:
 ```csharp
 var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+```
+
+Пример чтения конфигурации в переменную-перечисление:
+
+Файл "App.config":
+```csharp
+...
+    <appSettings>
+      <add key="MySetting" value="Test1"/>
+    </appSettings>
+```
+Использование:
+```csharp
+enum MyEnum
+{
+    Test1,
+    Test2,
+}
+private MyEnum _setting;
+public MainWindow()
+{
+    InitializeComponent();
+}
+private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+{
+    string str = ConfigurationManager.AppSettings["MySetting"];
+    if (Enum.IsDefined(typeof(MyEnum), str))
+    {
+        _setting = (MyEnum)Enum.Parse(typeof(MyEnum), str);
+    }
+    MessageBox.Show($"Настрока: {_setting.ToString()}");
+}
 ```
 
 

@@ -48,9 +48,9 @@ SELECT id,fam,name FROM Person;
     <Button Content="Редактировать" Margin="5" Click="ButtonEdit_OnClick"/>
     <Button Content="Удалить" Margin="5" Click="ButtonDelete_OnClick"/>
 </WrapPanel>
-private SqlConnection _connection;
-private SqlDataAdapter _adapter;
-private DataTable _table;
+private IDbConnection _connection;
+private IDbDataAdapter _adapter;
+private DataSet _dataSet;
 public MainWindow()
 {
     InitializeComponent();
@@ -65,11 +65,11 @@ private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
     _connection = new SqlConnection(connectionStringBuilder.ConnectionString);
     _adapter = new SqlDataAdapter();
     //select
-    SqlCommand command = new SqlCommand("SELECT id,fam,name FROM Person", _connection);
+    SqlCommand command = new SqlCommand("SELECT id,fam,name FROM Person", (SqlConnection) _connection);
     _adapter.SelectCommand = command;
     //insert
     command = new SqlCommand(@"INSERT INTO Person (fam, name)
-                                    VALUES (@fam, @name); SET @id = @@IDENTITY;",_connection);
+                            VALUES (@fam, @name); SET @id = @@IDENTITY;",(SqlConnection) _connection);
     command.Parameters.Add("@fam", SqlDbType.NVarChar, -1, "fam");
     command.Parameters.Add("@name", SqlDbType.NVarChar, -1, "name");
     SqlParameter parameter = command.Parameters.Add("@id", SqlDbType.Int, 0, "id");
@@ -77,32 +77,32 @@ private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
     _adapter.InsertCommand = command;
     //update
     command = new SqlCommand(@"UPDATE Person SET fam = @fam,
-                                                        name = @name
-                                                        WHERE (id = @id)", _connection);
+                                                name = @name
+                                                WHERE (id = @id)", (SqlConnection) _connection);
     command.Parameters.Add("@fam", SqlDbType.NVarChar, -1, "fam");
     command.Parameters.Add("@name", SqlDbType.NVarChar, -1, "name");
     parameter = command.Parameters.Add("@id", SqlDbType.Int, 0, "id");
     parameter.SourceVersion = DataRowVersion.Original;
     _adapter.UpdateCommand = command;
     //delete
-    command = new SqlCommand(@"DELETE FROM Person WHERE id = @id", _connection);
+    command = new SqlCommand(@"DELETE FROM Person WHERE id = @id", (SqlConnection) _connection);
     parameter = command.Parameters.Add("@id", SqlDbType.Int, 0, "id");
     parameter.SourceVersion = DataRowVersion.Original;
     _adapter.DeleteCommand = command;
     //set source
-    _table = new DataTable();
-    _adapter.Fill(_table);
-    DataGridDataBase.DataContext = _table.DefaultView;
+    _dataSet = new DataSet();
+    _adapter.Fill(_dataSet);
+    DataGridDataBase.DataContext = _dataSet.Tables[0].DefaultView;
 }
 private void ButtonAdd_OnClick(object sender, RoutedEventArgs e)
 {
-    DataRow newRow = _table.NewRow();
+    DataRow newRow = _dataSet.Tables[0].NewRow();
     EditWindow editWindow = new EditWindow(newRow);
     editWindow.ShowDialog();
     if (editWindow.DialogResult.HasValue && editWindow.DialogResult.Value)
     {
-        _table.Rows.Add(newRow);
-        _adapter.Update(_table);
+        _dataSet.Tables[0].Rows.Add(newRow);
+        _adapter.Update(_dataSet);
     }
 }
 private void ButtonEdit_OnClick(object sender, RoutedEventArgs e)
@@ -116,7 +116,7 @@ private void ButtonEdit_OnClick(object sender, RoutedEventArgs e)
     if (editWindow.DialogResult.HasValue && editWindow.DialogResult.Value)
     {
         editRow.EndEdit();
-        _adapter.Update(_table);
+        _adapter.Update(_dataSet);
     }
     else
     {
@@ -129,7 +129,7 @@ private void ButtonDelete_OnClick(object sender, RoutedEventArgs e)
     if (delRow == null)
         return;
     delRow.Row.Delete();
-    _adapter.Update(_table);
+    _adapter.Update(_dataSet);
 }
 //дочернее окно:
 <Grid.RowDefinitions>
@@ -175,12 +175,12 @@ private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
     _connection = new SqlConnection(connectionStringBuilder.ConnectionString);
     _adapter = new SqlDataAdapter();
     //select
-    SqlCommand command = new SqlCommand("SELECT id,fam,name FROM Person", _connection);
+    SqlCommand command = new SqlCommand("SELECT id,fam,name FROM Person", (SqlConnection) _connection);
     _adapter.SelectCommand = command;
     //set source
-    _table = new DataTable();
-    _adapter.Fill(_table);
-    DataGridDataBase.DataContext = _table.DefaultView;
+    _dataSet = new DataSet();
+    _adapter.Fill(_dataSet);
+    DataGridDataBase.DataContext = _dataSet.Tables[0].DefaultView;
 }
 private void UpdateTable()
 {
@@ -195,7 +195,7 @@ private void ButtonAdd_OnClick(object sender, RoutedEventArgs e)
     if (editWindow.DialogResult.HasValue && editWindow.DialogResult.Value)
     {
         _table.Rows.Add(newRow);
-        var _ = new SqlCommandBuilder(_adapter);
+        var _ = new SqlCommandBuilder((SqlDataAdapter) _adapter);
         _adapter.Update(_table);
     }
     UpdateTable();
@@ -211,7 +211,7 @@ private void ButtonEdit_OnClick(object sender, RoutedEventArgs e)
     if (editWindow.DialogResult.HasValue && editWindow.DialogResult.Value)
     {
         editRow.EndEdit();
-        var _ = new SqlCommandBuilder(_adapter);
+        var _ = new SqlCommandBuilder((SqlDataAdapter) _adapter);
         _adapter.Update(_table);
     }
     else
@@ -226,7 +226,7 @@ private void ButtonDelete_OnClick(object sender, RoutedEventArgs e)
     if (delRow == null)
         return;
     delRow.Row.Delete();
-    var _ = new SqlCommandBuilder(_adapter);
+    var _ = new SqlCommandBuilder((SqlDataAdapter) _adapter);
     _adapter.Update(_table);
     UpdateTable();
 }
