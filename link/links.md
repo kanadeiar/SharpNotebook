@@ -2,4 +2,6 @@
 
 1. [Интерактивные курсы по прогерству](https://https://ulearn.me/).
 
-1. [Задачи по программированию](http://www.itmathrepetitor.ru/zadachi-po-programmirovaniyu/).
+2. [Задачи по программированию](http://www.itmathrepetitor.ru/zadachi-po-programmirovaniyu/).
+
+3. [Пробный облачный сервис на 1 час]https://azure.microsoft.com/ru-ru/try/app-service/

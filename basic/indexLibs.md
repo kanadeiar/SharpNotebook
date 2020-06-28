@@ -60,14 +60,6 @@ Random rnd = new Random();
 int variable = rnd.Next(0, 100);
 ```
 
-## Получение прошедшего времени
-```csharp
-DateTime start=DateTime.Now;
-System.Threading.Thread.Sleep(20);// делаем паузу
-DateTime finish=DateTime.Now;
-Console.WriteLine(finish-start);
-```
-
 ## Замер скорости выполения кода:
 ```csharp
 Stopwatch stopwatch = new Stopwatch();
@@ -76,6 +68,21 @@ stopwatch.Start();
 stopwatch.Stop();
 var elapsedTime = stopwatch.Elapsed; //результат работы
 ```
+Получение прошедшего времени:
+```csharp
+DateTime start=DateTime.Now;
+System.Threading.Thread.Sleep(20);// делаем паузу
+DateTime finish=DateTime.Now;
+Console.WriteLine(finish-start);
+```
+Еще пример получения прошедшего времени:
+```csharp
+var start = DateTime.Now;
+/////////код для замера
+var res = (DateTime.Now - start).TotalMilliseconds;
+Console.WriteLine("время - {0} мс",res);
+```
+
 
 ## Цикличная задержка программы в асинхронном режиме
 ```csharp
