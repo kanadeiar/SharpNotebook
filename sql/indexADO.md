@@ -99,7 +99,7 @@ var connectionStringBuilder = new SqlConnectionStringBuilder
 
 ## Фабрика поставщика данных
 
-Модель фабрики поставщиков данных .NET DbProviderFactory позволяет строить единую кодовую базу на основе обобщенных типов доступа к данным.
+Модель фабрики поставщиков данных .NET DbProviderFactory позволяет строить единую кодовую базу на основе обобщенных типов доступа к данным. Модель фабрики поставщиков данных ADO.NET позволяет строить единествунную кодовую базу, потребляющую разные типы поставщиков данных.
 
 Пример получения определенного поставщика данных SQL:
 ```csharp
@@ -107,7 +107,43 @@ DbProviderFactory sqlFactory = DbProviderFactories.GetFactory("System.Data.SqlCl
 ```
 Пример применения фабрики поставщика данных:
 ```csharp
-
+//конфиг файл:
+...
+  <appSettings>
+    <add key="provider" value="System.Data.SqlClient"/>
+    <add key="connectionString" value="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=autolot;Integrated Security=True"/>
+  </appSettings>
+//приложение:
+string dataProvider = ConfigurationManager.AppSettings["provider"];
+string connectionString = ConfigurationManager.AppSettings["connectionString"];
+DbProviderFactory factory = DbProviderFactories.GetFactory(dataProvider);
+using (DbConnection connection = factory.CreateConnection())
+{
+    if (connection == null)
+    {
+        WriteLine("Ошибка создания объекта Connection");
+        ReadKey();
+        return;
+    }
+    connection.ConnectionString = connectionString;
+    connection.Open();
+    DbCommand command = factory.CreateCommand();
+    if (command == null)
+    {
+        WriteLine("Ошибка создания объекта Command");
+        ReadKey();
+        return;
+    }
+    command.Connection = connection;
+    command.CommandText = "SELECT * FROM Inventory";
+    using (DbDataReader dataReader = command.ExecuteReader())
+    {
+        WriteLine("Таблица Inventory:");
+        while (dataReader.Read())
+            WriteLine($"-> Автомобиль {dataReader["CarId"]} это {dataReader["Make"]}.");
+    }
+}
+ReadKey();
 ```
 
 
