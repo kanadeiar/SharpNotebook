@@ -1,5 +1,26 @@
 # ADO.NET Примеры
 
+## Чтение данных
+
+```csharp
+using (SqlConnection connection = new SqlConnection())
+{
+    connection.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=autolot;Integrated Security=True";
+    connection.Open();
+    string sql = "SELECT * FROM Inventory";
+    SqlCommand command = new SqlCommand(sql, connection);
+    using (SqlDataReader reader = command.ExecuteReader())
+    {
+        int make = reader.GetOrdinal("Make");
+        int name = reader.GetOrdinal("Name");
+        int color = reader.GetOrdinal("Color");
+        while (reader.Read())
+        {
+            WriteLine($"-> Марка: {reader[make]} Название: {reader[name]} Цвет: {reader[color]}");
+        }
+    }
+}
+```
 
 
 ## Простое приложение работы с базой данных
