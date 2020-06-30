@@ -40,9 +40,21 @@ IDataParameter  | Поведение объекта параметра
 IDataReader  | Поведение объекта чтения данных
 IDbCommand  | ПОведение команды
 IDbDataAdapter | Расширяет интерфейс IDataAdapter в целях дополнительной функциональности
-IDbTransaction | Поведение объекта транзакции
+IDbTransaction |  Поведение объекта транзакции
 
->метод IsDBNull(int i) позволяет определить, установлено ли указанное поле в null. 
+>метод IsDBNull(int i) объекта DataTable позволяет определить, установлено ли указанное поле в null. 
+
+Некторые члены типа DbConnection:
+
+Член                     | Описание
+-------------------------|-------------------------
+BeginTransaction()       | Метод начинающий транзакцию базы данных
+ChangeDatabase()         | Изменение базы данных, связанной с открытым подключением
+ConnectionTimeout        | Свойство только для чтения вертающее промежуток времени, в течении которого ожидается установка соединения, прежде чем будет сгенерирована ошибка (стандарт - 15 секунд)
+Database                 | Свойство только для чтения вертающее имя базы данных
+DataSource               | Свойство только для чтения вертающее местоположение базы данных
+GetSchema()              | Вертает объект DataTable с информацией по схеме источника данных
+Satate                   | Свойство только для чтения вертает текущее состояние подключения (enum ConnectionState)
 
 ## Подключение к базе данных
 
@@ -144,6 +156,78 @@ using (DbConnection connection = factory.CreateConnection())
     }
 }
 ReadKey();
+```
+
+## Объект постоитель строки подключения
+
+Позволяет устанавливать пары "имя-значение" строки подключения к базе данных с примененеием строго типизированных свойств.
+
+Пример:
+```csharp
+SqlConnectionStringBuilder sqlStringBuilder = new SqlConnectionStringBuilder
+{
+    InitialCatalog = "autolot",
+    DataSource = @"PNZASUTP\SQLEXPRESS",
+    ConnectTimeout = 30,
+    IntegratedSecurity = true,
+};
+using (SqlConnection connection = new SqlConnection())
+{
+    connection.ConnectionString = sqlStringBuilder.ConnectionString;
+    connection.Open();
+    Console.WriteLine($"Состояние соединения: {connection.State}");
+}
+string connectStr = @"Data Source=PNZASUTP\SQLEXPRESS;Initial Catalog=AutoLot;Integrated Security=True";
+SqlConnectionStringBuilder sqlStringBuilder2 = new SqlConnectionStringBuilder(connectStr);
+sqlStringBuilder2.ConnectTimeout = 5;
+```
+
+## Объект - команда
+
+Производный от DbCommand тип является объектно-ориентированным представлением SQL-запроса, имени таблицы или хранимой процедуры. Тип устанавливается свойством CommandType - StoredProcedure, TableDirect, Text (значение по умолчанию). Еще команде обязательно нужно указать подключение к базе данных.
+
+Некторые члены типа DbCommand:
+
+Член                     | Описание
+-------------------------|-------------------------
+CommandTimeout           | Установка время ожидания, пока не завершится попытка выполнить команду и сгенерится ошибка. Стандарт - 30.
+Connection               | Установка объекта DbConnection, применяемый текущим объектом-командой
+Parameters               | Коллекция типов DbParameter для параметризированного запроса
+Cancel()                 | Отменяет выполнение команды
+ExecuteReader()          | Выполняет запрос и вертает объект поставщика данных DbDataReader, допускающий только для чтения доступ к результату запроса в одном направлении
+ExecuteNonQuery()        | Выполняет оператор SQL.
+ExecuteScalar()          | Легковесная верия ExecuteReader() для одноэлементных запросов
+Prepare()                | Подготовленная версия команды для источника данных. Такая команда-запрос будет выполняться быстрее, особенно для команды, выполняемой многократно с разными параметрами.
+
+## Чтение данных
+
+Самый быстрый и простой способ получения информации из базы данных - тип DBDataReader. Полезен когда базе данных отправляются только запросы с операторами выборки данных. Очень полезен, когда нужно быстрой пройтись по большому объему в базе без необходимости хранить в памяти. Важной особенностью является то, что объект чтения данных удерживает подключения к источнику данных открырым до тех пор, пока оно явным образом не будет закрыто.
+
+Пример простого чтения данных:
+```csharp
+...
+using (SqlConnection connection = new SqlConnection())
+{
+    connection.ConnectionString = sqlStringBuilder.ConnectionString;
+    connection.Open();
+    Console.WriteLine($"Состояние соединения: {connection.State}");
+    SqlCommand command = new SqlCommand("SELECT * FROM Inventory", connection);
+    using (SqlDataReader reader = command.ExecuteReader())
+    {
+        while (reader.Read())
+        {
+            Console.WriteLine($"-> Марка: {reader["Make"]} Цвет: {reader["Color"]}");
+        }
+    }
+}
+```
+
+## Добавление, изменение и удаление данных
+
+Инфраструктура доступа к данным полностью поддерживает функциональность создания, чтения, обновления и удаления (create, read, update, delete - CRUD).
+
+```csharp
+
 ```
 
 

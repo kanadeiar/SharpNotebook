@@ -201,7 +201,9 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [ADO.NET Примеры](./sql/indexADOSamples.md).
 
-x [Entity Framework 6](./sql/indexEF6.md).
+x [Введение EF 6](./sql/indexEF6.md).
+
+x [EF 6 Примеры](./sql/indexEF6Samples.md).
 
 ## Веб
 

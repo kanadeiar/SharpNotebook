@@ -2,6 +2,7 @@
 
 ## Чтение данных
 
+Простой пример:
 ```csharp
 using (SqlConnection connection = new SqlConnection())
 {
@@ -21,7 +22,25 @@ using (SqlConnection connection = new SqlConnection())
     }
 }
 ```
-
+Пример чтения данных - всех столбцов таблицы:
+```csharp
+using (SqlConnection connection = new SqlConnection())
+{
+    connection.ConnectionString = sqlStringBuilder.ConnectionString;
+    connection.Open();
+    SqlCommand command = new SqlCommand("SELECT * FROM Inventory", connection);
+    using (SqlDataReader reader = command.ExecuteReader())
+    {
+        while (reader.Read())
+        {
+            Console.WriteLine("Запись:");
+            for (int i = 0; i < reader.FieldCount; i++)
+                Console.WriteLine($"{reader.GetName(i)} = {reader.GetValue(i)}");
+            Console.WriteLine();
+        }
+    }
+}
+```
 
 ## Простое приложение работы с базой данных
 
