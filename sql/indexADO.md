@@ -238,7 +238,156 @@ using (SqlConnection connection = new SqlConnection())
 
 Пример применения транзакции базы данных:
 ```csharp
+public void ProcessCreditRisk(int custId)
+{
+    OpenConnection();
+    string fName;
+    string lName;
+    var cmdSelect = new SqlCommand($"SELECT * FROM Customers WHERE CustId = @id", _sqlConnection);
+    cmdSelect.Parameters.Add("@id", SqlDbType.Int, -1).Value = custId;
+    using (var reader = cmdSelect.ExecuteReader())
+    {
+        if (reader.HasRows)
+        {
+            reader.Read();
+            fName = (string) reader["FirstName"];
+            lName = (string) reader["LastName"];
+        }
+        else
+        {
+            CloseConnection();
+            return;
+        }
+    }
+    var cmdRemove = new SqlCommand($"DELETE FROM Customers WHERE CustId = @id", _sqlConnection);
+    cmdRemove.Parameters.Add("@id", SqlDbType.Int, -1).Value = custId;
+    var cmdInsert = new SqlCommand($"INSERT INTO CreditRisks (FirstName,LastName) VALUES (@fname, @lname)", _sqlConnection);
+    cmdInsert.Parameters.Add("@fname", SqlDbType.NVarChar, -1).Value = fName;
+    cmdInsert.Parameters.Add("@lname", SqlDbType.NVarChar, -1).Value = lName;
+    SqlTransaction tx = null;
+    try
+    {
+        tx = _sqlConnection.BeginTransaction(); //сама транзакция
+        cmdInsert.Transaction = tx;
+        cmdRemove.Transaction = tx;
+        cmdInsert.ExecuteNonQuery();
+        cmdRemove.ExecuteNonQuery();
+        tx.Commit(); //фиксация обоих шагов транзакции
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        tx?.Rollback(); //откат транзакции
+    }
+    finally
+    {
+        CloseConnection();
+    }
+}
+//применение метода:
+inventory.ProcessCreditRisk(1);
+```
 
+## Массовое копирование
+
+Специально для загружки множества данных в ADO.NET предусмотрен класс SqlBulkCopy. Класс имеет метод WriteToServer(), обрабатывающий список записей более эффективно, чем insert. Может принимать в параметрах объект DataTable, объект DataReader, массив DataRow.
+
+Пример применения массового копирования:
+```csharp
+//интерфейс класса чтения данных
+interface IMyDataReader<T> : IDataReader
+{
+    List<T> Records { get; set; }
+}
+/// <summary> Класс чтения данных </summary>
+public class MyDataReader<T> : IMyDataReader<T>
+{
+    private int _currentIndex = -1;
+    public bool Read()
+    {
+        if ((_currentIndex + 1) >= Records.Count)
+            return false;
+        _currentIndex++;
+        return true;
+    }
+    private readonly PropertyInfo[] _propertyInfos;
+    private readonly Dictionary<string, int> _nameDictionary;
+    public MyDataReader()
+    {
+        _propertyInfos = typeof(T).GetProperties();
+        _nameDictionary = _propertyInfos
+            .Select((x, index) => new {x.Name, index})
+            .ToDictionary(p => p.Name, p => p.index);
+    }
+    public int FieldCount => _propertyInfos.Length;
+    public string GetName(int i)
+    {
+        return i >= 0 && i < FieldCount ? _propertyInfos[i].Name : string.Empty;
+    }
+    public int GetOrdinal(string name)
+    {
+        return _nameDictionary.ContainsKey(name) ? _nameDictionary[name] : -1;
+    }
+    public object GetValue(int i)
+    {
+        return _propertyInfos[i].GetValue(Records[_currentIndex]);
+    }
+...
+//класс массового копирования
+public static class ProcessBulkCopy
+{
+    private static readonly string _connectionString =
+        @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=AutoLot;Integrated Security=True";
+    private static SqlConnection _sqlConnection = null;
+    private static void OpenConnection()
+    {
+        _sqlConnection = new SqlConnection { ConnectionString = _connectionString };
+        _sqlConnection.Open();
+    }
+    private static void CloseConnection()
+    {
+        if (_sqlConnection?.State != ConnectionState.Closed)
+            _sqlConnection.Close();
+    }
+    public static void ExecuteBulkCopy<T>(IEnumerable<T> records, string tableName)
+    {
+        OpenConnection();
+        using (SqlConnection conn = _sqlConnection)
+        {
+            SqlBulkCopy bc = new SqlBulkCopy(conn)
+            {
+                DestinationTableName = tableName
+            };
+            var reader = new MyDataReader<T> {Records = records.ToList()};
+            try
+            {
+                bc.WriteToServer(reader);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка!\n" + ex.Message);
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+    }
+}
+//использование
+var cars = new List<Car>()
+{
+    new Car {Make = "Honda", Color = "Black", Name = "One"},
+    new Car {Make = "Volvo", Color = "Yellow", Name = "Lang"},
+    new Car {Make = "VW", Color = "White", Name = "Three"},
+    new Car {Make = "Toyota", Color = "Green", Name = "Five"},
+};
+ProcessBulkCopy.ExecuteBulkCopy(cars, "Inventory");
+Console.WriteLine("После добавления:");
+list = inventory.GetAllInventory(); 
+Console.WriteLine("Ид\tМарка\tЦвет\tНазвание");
+foreach(var el in list)
+    Console.WriteLine($"{el.CarId}\t{el.Make}\t{el.Color}\t{el.Name}");
 ```
 
 ## Отслеживание изменения состояния соеднинения
