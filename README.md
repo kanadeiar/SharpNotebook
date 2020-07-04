@@ -197,7 +197,7 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [База языка SQL MSSQL](./sql/indexBase.md).
 
-[Введение ADO.NET](./sql/indexADO.md).
+[Введение ADO.NET, фабрика поставщика, построитель, команды, чтение, транзакции, массовое копирование, отслеживание состояния](./sql/indexADO.md).
 
 [ADO.NET Примеры](./sql/indexADOSamples.md).
 
