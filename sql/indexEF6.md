@@ -135,6 +135,161 @@ public partial class Inventory
 
 ## Использование этой модели
 
+### Выборка записей
+
+Способов получения записей из базы данных с использованием EF существует множество. 
+
+Достоинство инфраструктуры EF в том, что запросы выборки не выполняются до тех пор, пока не начнется проход по результирующей коллекции или при вызове на нем методов ToList() или ToArray().
+
+Простейший способ - проход по коллекции DBSet<Inventory>:
+```csharp
+private static void PrintAllInventory()
+{
+    using (var context = new AutoLotEntities())
+    {
+        foreach (var el in context.Inventories)
+            Console.WriteLine(el);
+    }
+}
+```
+    
+Посложнее способ - извлечение сущностей из базы через встраиваемый запрос SQL (данный способ требует дополнительного сопровождения при изменениях базы данных):
+```csharp
+private static void SqlPrintAllInventory()
+{
+    using (var context = new AutoLotEntities())
+    {
+        foreach (var el in context.Inventories.SqlQuery("SELECT CarId, Make, Color, Name FROM Inventory WHERE Make=@p0", "BMW"))
+            Console.WriteLine(el);
+    }
+}
+```
+
+Гибкий способ - использование метда SqlQuery() на свойстве Database для заполнения сущностей EF и объектов, не являющихся частью модели.
+```csharp
+public class ShortCar
+{
+    public int CarId { get; set; }
+    public string Make { get; set; }
+    public override string ToString() => $"{this.Make} с Ид {this.CarId}";
+}
+private static void ShortPrintAllInventory()
+{
+    using (var context = new AutoLotEntities())
+    {
+        foreach (var el in context.Database.SqlQuery(typeof(ShortCar),"SELECT CarId, Make FROM Inventory"))
+            Console.WriteLine(el);
+    }
+}
+```
+
+Мощный способ - объединение EF и LINQ. В этом способе оператор LINQ транслируется в один запрос SQL. Примеры:
+```csharp
+private static void LINQPrintAllInventory()
+{
+    using (var context = new AutoLotEntities())
+    {
+        foreach (var el in context.Inventories.Where(i => i.Make == "BMW"))
+            Console.WriteLine(el);
+        Console.WriteLine("новые данные:");
+        var colorMakes = context.Inventories.Select(i => new {i.Color, i.Make});
+        foreach (var el in colorMakes)
+            Console.WriteLine(el);
+        var colorBlack = context.Inventories.Where(i => i.Color == "Black");
+        foreach (var el in colorBlack)
+            Console.WriteLine(el);
+    }
+}
+```
+
+Еще способ - нахождение сущности Find(). Этот метод сначало ищет сущность в DbChangesTracker, и только в случае ее отсутствия, запрашивает из базы данных. Ищет только по первичному ключу (простому или сложному).
+
+Пример:
+```csharp
+using (var context = new AutoLotEntities())
+{
+    Console.WriteLine(context.Inventories.Find(9));
+}
+```
+
+### Навигационные свойства
+
+Навигационные свойства позволяют находить связанные данные в других сущностях без необходимости в написании запросов JOIN. EF учитывает отношения между таблицами SQL Server как внешние ключи. 
+
+В EF каждый класс в модели содержит виртуальные свойства, которые соединяют вместе классы. У одного класса это свойство может иметь как ноль, так и множество записей другой сущности. А у другого класса - свойство имеющее отношение "один-к-одному". 
+```csharp
+//Inventory
+public virtual ICollection<Order> Orders { get; set; }
+//Order
+public virtual Inventory Inventory { get; set; }
+```
+По соглашению, когда EF находит свойство по имени <Класс>Id, оно будет применяться в качестве внешнего ключа для навигационного свойства <Класс>.
+
+Загрузка данных из БД в сущностные классы может производится тремя разными способами:
+
+Ленивая загрузка:
+
+Инфраструктура EF загружаает затребованный непосредственный объект, но заменяет навигационные свойства посредниками. Когда запрашивается свойство на навигационном свойстве virtual, EF создает новое обращение к базе данных, выполняет его и заполняет детали объекта.
+
+Пример:
+```csharp
+using (var context = new AutoLotEntities())
+{
+    var inv = context.Inventories.First();
+    foreach (var el in inv.Orders)
+    {
+        Console.WriteLine($"{inv.Name} - id: {el.OrderId}");
+    }
+}
+```
+
+Энергичная загрузка:
+
+Когда нужно загрузить связанные записи, множество запросов к базе данных будет неэффективным, здесь нужно написать один запрос, утилизирующий соединения SQL. Метод Include() из LINQ информирует EF о надобности создания оператора SQL, соединяющий таблицы вместе (JOIN). В результате все объекты и связанные с ним зависимые объекты извлекаются за одно обращение к базе данных.
+
+Пример:
+```csharp
+using (var context = new AutoLotEntities())
+{
+    foreach (var inv in context.Inventories.Include(c => c.Orders))
+    {
+        foreach (var el in inv.Orders)
+        {
+            Console.WriteLine($"{inv.Name} - id: {el.OrderId}");
+        }
+    }
+}
+```
+
+Явная загрузка:
+
+Это способ явной загрузки коллекции или класса в конец навигационного свойства. Методы Collection() для коллекций или Property() для одиночных объектов контекста, и метод Load().
+
+Пример:
+```csharp
+using (var context = new AutoLotEntities())
+{
+    context.Configuration.LazyLoadingEnabled = false;
+    foreach (var inv in context.Inventories)
+    {
+        context.Entry(inv).Collection(x => x.Orders).Load();
+        foreach (var el in inv.Orders)
+        {
+            Console.WriteLine($"{inv.Name} - id: {el.OrderId}");
+        }
+    }
+    Console.WriteLine("Orders:");
+    foreach (var el in context.Orders)
+    {
+        context.Entry(el).Reference(x => x.Inventory).Load();
+        Console.WriteLine($"id: {el.OrderId} {el.Inventory.Make} {el.Inventory.Color}");
+    }
+}
+```
+
+
+### Добавление записей
+
 Добавление новой записи сводится к добавлению записей в DbSet<T> и вызову SaveChanges(). 
     
 Пример:
@@ -177,4 +332,93 @@ Inventory[] inventories =
 };
 AddNewRecords(inventories);
 ```
+
+### Обновление записей
+
+Для обновления нужно определить местоположение объекта, установить новые значения для свойств сущности и сохранить изменения.
+
+Пример:
+```csharp
+private static void UpdateRecord(int carId)
+{
+    using (var context = new AutoLotEntities())
+    {
+        var upd = context.Inventories.Find(carId);
+        if (upd != null)
+        {
+            upd.Name = "Blue";
+            context.SaveChanges();
+        }
+    }
+}
+```
+
+### Удаление записей
+
+Удаление может быть реализовано нескольким способами:
+
+Удаление одной записи:
+
+Процесс удаления - определение элемента в DbSet<T> и вызов метода DbSet<T>.Remove() с передачей экземпляра удаляемого объекта в параметре. Приводит к удалению элемента из коллекции и установке EntityState в Deleted. Удаление из БД - SaveChanges(). Подлежащий удалению элемент должен быть отслеживаемым.
+    
+Пример:
+```csharp
+private static void RemoveInventory(int id)
+{
+    using (var context = new AutoLotEntities())
+    {
+        var delete = context.Inventories.Find(id);
+        if (delete != null)
+            context.Inventories.Remove(delete);
+        context.SaveChanges();
+    }
+}
+RemoveInventory(1016);
+```
+
+Удаление множества записей:
+
+Подлежащие удалению элементы должны быть отслеживаемыми.
+
+Пример:
+```csharp
+private static void RemoveMultiple()
+{
+    using (var context = new AutoLotEntities())
+    {
+        var removeInventories = context.Inventories.Take(2);
+        context.Inventories.RemoveRange(removeInventories);
+        context.SaveChanges();
+    }
+}
+```
+
+Удаление с использование состояния сущности:
+
+Для удаления создается экземпляр элемента, подлежащего удаленияю, ключу элемента присваивается ключ удаляемого и свойство EntityState устанавливается в Deleted. После вызова SaveChanges() элемент удаляться.
+
+Пример:
+```csharp
+private static void RemoveInventoryState(int id)
+{
+    using (var context = new AutoLotEntities())
+    {
+        Inventory del = new Inventory {CarId = id};
+        context.Entry(del).State = EntityState.Deleted;
+        try
+        {
+            context.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+}
+RemoveInventoryState(1017);
+```
+
+
+
+
 

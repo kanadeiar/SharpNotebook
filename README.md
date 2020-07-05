@@ -203,7 +203,7 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [Введение EF 6](./sql/indexEF6.md).
 
-x [EF 6 Примеры](./sql/indexEF6Samples.md).
+[EF 6 Примеры](./sql/indexEF6Samples.md).
 
 ## Веб
 
