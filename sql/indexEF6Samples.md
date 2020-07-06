@@ -1,6 +1,6 @@
 # EF 6 Примеры
 
-Библиотека классов, работающая с инфраструктурой EF.
+## Библиотека классов, работающая с инфраструктурой EF.
 
 1. Добавить NuGet пакет EF 6. 
 
@@ -8,7 +8,7 @@
 
 3. Добавить строку подключения в App.config.
 
-## Инициализация базы данных
+### Инициализация базы данных
 
 Мощным средством EF является возможность обеспечить равенстро базы данных и модели, инициализировать базу данных начальными данными. Это позволяет восстановить базу данных в известном состоянии перед каждым запуском кода.
 
@@ -138,7 +138,7 @@ static void Main(string[] args)
 }
 ```
 
-## Миграции EF
+### Миграции EF
 
 Если модель данных изменяется, то необходимо поддерживать базу данных в синхронизированном состоянии. Для этого существуют миграции EF. 
 
@@ -172,4 +172,116 @@ add-migration Final
 ```
 
 Возможно придется переопределить порядок выполнения команд миграции.
+
+### Паттерн "Хранилище"
+
+Можно использовать в библиотеке паттерн проектирования "хранилище" для доступа к данным. Суть паттерна - служить посредником между предметной областью и уровнями отображения данных.
+
+
+Интерфейс, открывающий доступ к большинству стандартных методов библиотеки доступа к данным:
+```csharp
+/// <summary> Интерфейс хранилища </summary>
+public interface IRepo<T>
+{
+    int Add(T entity);
+    int AddRange(IList<T> entities);
+    int Save(T entity);
+    int Delete(int id, byte[] timeStamp);
+    int Delete(T entity);
+    T GetOne(int? id);
+    List<T> GetAll();
+    List<T> ExecuteQuery(string sql);
+    List<T> ExecuteQuery(string sql, object[] sqlParametersObjects);
+}
+```
+
+Базовый класс реализующий этот интерйейс и предоставляющий основную функциональность для хранилищ, специфическим к типам:
+```csharp
+/// <summary> Базовый класс хранилища </summary>
+public class BaseRepo<T> : IDisposable, IRepo<T> where T:EntityBase, new()
+{
+    private readonly AutoLotEntities _entities;
+    private readonly DbSet<T> _table;
+    public BaseRepo()
+    {
+        _entities = new AutoLotEntities();
+        _table = _entities.Set<T>();
+    }
+    protected AutoLotEntities Context => _entities;
+    public void Dispose() => _entities?.Dispose();
+    internal int SaveChanges()
+    {
+        try
+        {
+            return _entities.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException ex)
+        { //ошибка параллелизма
+            throw;
+        }
+        catch (DbUpdateException ex)
+        { //обновление терпит неудачу
+            throw;
+        }
+        catch (CommitFailedException ex)
+        { //отказы транзакции
+            throw;
+        }
+        catch (Exception ex)
+        { //другое исключение
+            throw;
+        }
+    }
+    /// <summary> Извлечение одной записи </summary>
+    public T GetOne(int? id) => _table.Find(id);
+    /// <summary> Извлечение всех записей </summary>
+    public List<T> GetAll() => _table.ToList();
+    /// <summary> Извлечение с помощью кода SQL ОПАСНО! </summary>
+    public List<T> ExecuteQuery(string sql) => _table.SqlQuery(sql).ToList();
+
+    /// <summary> Извлечение с помощью кода SQL ОПАСНО! </summary>
+    public List<T> ExecuteQuery(string sql, object[] sqlParametersObjects) 
+        => _table.SqlQuery(sql, sqlParametersObjects).ToList();
+    /// <summary> Добавление одной записи </summary>
+    public int Add(T entity)
+    {
+        _table.Add(entity);
+        return SaveChanges();
+    }
+    /// <summary> Добавление кипы записей </summary>
+    public int AddRange(IList<T> entities)
+    {
+        _table.AddRange(entities);
+        return SaveChanges();
+    }
+    /// <summary> Обновление записей </summary>
+    public int Save(T entity)
+    {
+        _entities.Entry(entity).State = EntityState.Modified;
+        return SaveChanges();
+    }
+    /// <summary> Удаление записей </summary>
+    public int Delete(int id, byte[] timeStamp)
+    {
+        _entities.Entry(new T() {Id = id, Timestamp = timeStamp}).State = EntityState.Deleted;
+        return SaveChanges();
+    }
+    /// <summary> Удаление записей </summary>
+    public int Delete(T entity)
+    {
+        _entities.Entry(entity).State = EntityState.Deleted;
+        return SaveChanges();
+    }
+}
+```
+
+Возможно в хранилищах, специфичных для сущности предусмотреть дополнительную функциональность. Пример:
+```csharp
+class InventoryRepo : BaseRepo<Inventory>
+{
+    /// <summary> Извлечение всех записей </summary>
+    public new List<Inventory> GetAll() => Context.Inventories.OrderBy(x => x.Name).ToList();
+}
+```
+
 
