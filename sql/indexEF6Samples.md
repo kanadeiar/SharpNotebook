@@ -22,7 +22,7 @@ public partial class AutoLotEntities : DbContext
     public AutoLotEntities()
         : base("name=AutoLotConnection")
     {
-        Database.SetInitializer<AutoLotEntities>(new MyDataInitializer());
+        Database.SetInitializer<AutoLotEntities>(new MyDataInitializer()); //удаление и инит базы данных
     }
     public virtual DbSet<CreditRisk> CreditRisks { get; set; }
     public virtual DbSet<Customer> Customers { get; set; }
@@ -283,6 +283,294 @@ class InventoryRepo : BaseRepo<Inventory>
     public new List<Inventory> GetAll() => Context.Inventories.OrderBy(x => x.Name).ToList();
 }
 ```
+
+### Модель хранилища
+
+В хранилище используется следующая модель:
+```csharp
+namespace AutoLotDAL.EF
+{
+    using System.Data.Entity;
+
+    public partial class AutoLotEntities : DbContext
+    {
+        public AutoLotEntities()
+            : base("name=AutoLotConnection")
+        {
+        }
+        public virtual DbSet<CreditRisk> CreditRisks { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Inventory> Inventories { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+        }
+...
+namespace AutoLotDAL.EF
+{
+    public class MyDataInitializer : DropCreateDatabaseAlways<AutoLotEntities>
+    {
+        protected override void Seed(AutoLotEntities context)
+        {
+            var customers = new List<Customer>
+            {
+                new Customer {FirstName = "Dave", LastName = "Brenner"},
+...
+            };
+            customers.ForEach(x => context.Customers.AddOrUpdate(c => new {c.FirstName, c.LastName}, x));
+            var cars = new List<Inventory>
+            {
+                new Inventory {Make = "VW", Color = "Black", Name = "Zippy"},
+...
+            };
+            context.Inventories.AddOrUpdate(x => new {x.Make, x.Color}, cars.ToArray());
+            var orders = new List<Order>
+            {
+                new Order { Inventory = cars[0], Customer = customers[0]},
+...
+            };
+            orders.ForEach(x => context.Orders.AddOrUpdate(c => new {c.CarId, c.CustId}, x));
+            context.CreditRisks.AddOrUpdate(x => new { x.FirstName, x.LastName },
+                new CreditRisk
+                { Id = customers[4].Id, FirstName = customers[4].FirstName, LastName = customers[4].LastName, });
+        }
+    }
+}
+namespace AutoLotDAL.Models.Base
+{
+    public class EntityBase
+    {
+        [Key] //добавление в каждую сущность
+        public int Id { get; set; }
+        [Timestamp] //добавление в каждую сущность
+        public byte[] Timestamp { get; set; }
+...
+namespace AutoLotDAL.EF
+{
+    [Table("Inventory")]
+    public partial class Inventory : EntityBase
+    {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Inventory()
+        { }
+        [StringLength(50)]
+        public string Make { get; set; }
+        [StringLength(50)]
+        public string Color { get; set; }
+        [StringLength(50)]
+        public string Name { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+...
+    public partial class Inventory
+    {
+        public override string ToString()
+        {
+            return $"{Name ?? "<без имени>"} цвета {Color} марки {Make} c Id {Id}";
+        }
+        [NotMapped]
+        public string MakeColor => $"{Make} + {Color}";
+...
+namespace AutoLotDAL.EF
+{
+
+    public partial class Customer : EntityBase
+    {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Customer()
+        { }
+        [StringLength(50)]
+        public string FirstName { get; set; }
+        [StringLength(50)]
+        public string LastName { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Orders { get; set; } = new HashSet<Order>();
+...
+    public partial class Customer
+    {
+        [NotMapped]
+        public string FullName => FirstName + " " + LastName;
+    }
+namespace AutoLotDAL.EF
+{
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    public partial class Order : EntityBase
+    {
+        public int CustId { get; set; }
+        public int CarId { get; set; }
+        [ForeignKey(nameof(CustId))]
+        public virtual Customer Customer { get; set; }
+        [ForeignKey(nameof(CarId))]
+        public virtual Inventory Inventory { get; set; }
+...
+namespace AutoLotDAL.EF
+{
+    using System.ComponentModel.DataAnnotations;
+
+    public partial class CreditRisk : EntityBase
+    {
+        [StringLength(50)]
+        [Index("IDX_CreditRisk_Name", IsUnique = true, Order = 2)]
+        public string FirstName { get; set; }
+        [StringLength(50)]
+        [Index("IDX_CreditRisk_Name", IsUnique = true, Order = 1)]
+        public string LastName { get; set; }
+...
+```
+
+
+### Использование хранилища
+
+>В клиенское приложение установить пакет EF (сборки EntityFramework.dll, EntityFramework.SqlServer.dll).
+
+Пример исползьзования в клиенском приложении:
+```csharp
+using AutoLotDAL.Repos;
+...
+static void Main(string[] args)
+{
+    using (var repo = new InventoryRepo())
+    {
+        foreach (var el in repo.GetAll())
+        {
+            Console.WriteLine(el);
+        }
+    }
+/// <summary> Добавление </summary>
+private static void AddNewRecord(Inventory inventory)
+{
+    using (var repo = new InventoryRepo())
+    {
+        repo.Add(inventory);
+    }
+}
+/// <summary> Изменение </summary>
+private static void UpdateRecord(int carId)
+{
+    using (var repo = new InventoryRepo())
+    {
+        var updateInv = repo.GetOne(carId);
+        if (updateInv == null) return;
+        updateInv.Color = "Blue";
+        repo.Save(updateInv);
+    }
+}
+/// <summary> Удаление </summary>
+private static void RemoveInv(Inventory deleteInventory)
+{
+    using (var repo = new InventoryRepo())
+    {
+        repo.Delete(deleteInventory);
+    }
+}
+/// <summary> Удаление по свойствам ключа </summary>
+private static void RemoveInv(int carId, byte[] timeStamp)
+{
+    using (var repo = new InventoryRepo())
+    {
+        repo.Delete(carId, timeStamp);
+    }
+}
+```
+
+### Параллелизм в хранилище
+
+Когда два пользователя обновляют одну и ту же запись, то остаются изменения последнего из них. EF дают удобный механизм проверки наличия конфликтов параллелизма.
+
+Аннотация данных Timestamp командует SQL Server создать столбец типа RowVersion. Значение в этом столбце обновляется при SQL Server при каждом добавлении или обновлении записи. Это изменяет и запросы EF к базе данных. Теперь если несколько пользователей изменяет одну и туже запись, то только у первого пользователя значение столбца Timestamp совпадет и запись будет изменена. У остальных - произойдет исключение DbUpdateCuncurrencyException. Это класс - исключение открывает доступ к коллекции Entries с сущностями, с которыми произошел облом.
+
+Пример обработки исключения параллелизма в приведенном примере:
+```csharp
+/// <summary> Тест параллелизма </summary>
+private static void TestConcurrency()
+{
+    var repo1 = new InventoryRepo();
+    var repo2 = new InventoryRepo();
+    var car1 = repo1.GetOne(1);
+    var car2 = repo2.GetOne(1);
+    car1.Name = "NewName";
+    repo1.Save(car1);
+    car2.Name = "OtherName";
+    try
+    {
+        repo2.Save(car2);
+    }
+    catch (DbUpdateConcurrencyException ex)
+    {
+        var entry = ex.Entries.Single();
+        var current = entry.CurrentValues;
+        var original = entry.OriginalValues;
+        var baseVal = entry.GetDatabaseValues();
+        Console.WriteLine("Exception");
+        Console.WriteLine($"Current: {current[nameof(Inventory.Name)]}");
+        Console.WriteLine($"Orig: {original[nameof(Inventory.Name)]}");
+        Console.WriteLine($"base: {baseVal[nameof(Inventory.Name)]}");
+    }
+}
+```
+
+### Перехват
+
+Перехват в EF - выполнение различного кода на разных стадиях работы EF. Используется интерфейс IDBCommandInterceptor.
+
+Пример добавления перехватичка в приведенном примере:
+```csharp
+namespace AutoLotDAL.Interception
+{
+    /// <summary> Перехватчик </summary>
+    class ConsoleWriterInterceptor : IDbCommandInterceptor
+    {
+        public void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
+        {
+            WriteInfo(interceptionContext.IsAsync, command.CommandText);
+        }
+... //то-же самое
+        private void WriteInfo(bool isAsync, string sql)
+        {
+            Console.WriteLine($"Асинхрон: {isAsync}, запрос: \n{sql}");
+        }
+...
+//регистрация перехватчика:
+namespace AutoLotDAL.EF
+{
+    public partial class AutoLotEntities : DbContext
+    {
+        public AutoLotEntities()
+            : base("name=AutoLotConnection")
+        {
+            DbInterception.Add(new ConsoleWriterInterceptor());
+        }
+...
+```
+
+В EF есть встроенный перехватчик, выполняющий простую регистрацию в текстовом журнале.
+
+Пример добавления такого перехватчика в приведенном примере:
+```csharp
+namespace AutoLotDAL.EF
+{
+    using System.Data.Entity;
+    public partial class AutoLotEntities : DbContext
+    {
+        static readonly DatabaseLogger DatabaseLogger= new DatabaseLogger("sqllog.txt", true);
+        public AutoLotEntities()
+            : base("name=AutoLotConnection")
+        {
+            //DbInterception.Add(new ConsoleWriterInterceptor());
+            DatabaseLogger.StartLogging();
+            DbInterception.Add(DatabaseLogger);
+        }
+        protected override void Dispose(bool disposing)
+        {
+            DbInterception.Remove(DatabaseLogger);
+            DatabaseLogger.StopLogging();
+            base.Dispose(disposing);
+        }
+```
+
+Событие 
+
 
 
 ### Перехватчики ObjectMaterialized и SavingChanges
