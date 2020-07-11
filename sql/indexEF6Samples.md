@@ -620,9 +620,135 @@ namespace AutoLotDAL.EF
 
 В некоторых проектах оказывается чрезвычайно полезным отделить модель от кода EF. Делается это путем перемещения моделей в отдельную библиотеку, которая будет изменяться отдельно от основного кода EF.
 
-Пример библиотеки, разделенной на две сборки - модель и хранилище EF:
+Пример библиотеки, разделенной на две сборки - модель и код EF (без хранилища и миграций):
 ```csharp
+namespace SampleDAL.EF
+{
+    public partial class SampleEntities : DbContext
+    {
+        public SampleEntities() : base("name=SampleConnection")
+        {
+        }
+        public virtual DbSet<Person> Persons { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+        }
+...
+namespace SampleDAL.EF
+{
+    public class SampleDataInitializer : DropCreateDatabaseAlways<SampleEntities>
+    {
+        protected override void Seed(SampleEntities context)
+        {
+            var departments = new List<Department>
+            {
+                new Department {Name = "Отдел быта"},
+...
+            };
+            departments.ForEach(x => context.Departments.AddOrUpdate(d => new {d.Name}, x));
+            var persons = new List<Person>
+            {
+                new Person {Fam = "Петров", Name = "Петя", Age = 18, Department = departments[0]},
+...
+            };
+            persons.ForEach(x => context.Persons.AddOrUpdate(p => new {p.Fam, p.Name, p.Age, p.DepId}, x));
+        }
+...
+namespace SampleDAL.Models.Base
+{
+    public class BaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
+    }
+...
+namespace SampleDAL.Models
+{
+    [Table("Department")]
+    public partial class Department : BaseEntity
+    {
+        public Department() {}
+        [StringLength(50)]
+        public string Name { get; set; }
+        public virtual ICollection<Person> Persons { get; set; } = new HashSet<Person>();
+    }
+...
+namespace SampleDAL.Models
+{
+    public partial class Department
+    {
+        public override string ToString()
+        {
+            return $"Название отдела: {Name ?? "без имени"}";
+        }
+    }
+...
+namespace SampleDAL.Models
+{
+    [Table("Person")]
+    public partial class Person : BaseEntity
+    {
+        public Person() {}
 
+        [StringLength(50)]
+        public string Fam { get; set; }
+        [StringLength(50)]
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public int DepId { get; set; }
+        [ForeignKey(nameof(DepId))]
+        public virtual Department Department { get; set; }
+    }
+...
+namespace SampleDAL.Models
+{
+    public partial class Person
+    {
+        public override string ToString()
+        {
+            return $"id: {Id} {Fam ?? "без фамилии"} {Name ?? "без имени"} {Age}";
+        }
+        [NotMapped]
+        public string FullName => Fam + " " + Name;
+    }
+...
+namespace ConsoleApp2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Database.SetInitializer(new SampleDataInitializer()); //удаление, создание и заполнение базы данных
+            using (var context = new SampleEntities())
+            {
+                Console.WriteLine("Persons:");
+                foreach (var per in context.Persons)
+                    Console.WriteLine(per + " - " + per.Department.Name);
+                Console.WriteLine("Departments:");
+                foreach (var dep in context.Departments)
+                {
+                    Console.WriteLine(dep + ":");
+                    foreach (var per in dep.Persons)
+                        Console.WriteLine(per);
+                }
+            }
+            Console.WriteLine("Нажмите кнопку ...");
+            Console.ReadKey();
+        }
+...
+// App.config самого приложения
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+...
+  </entityFramework>
+  <connectionStrings>
+    <add name="SampleConnection" connectionString="data source=(localdb)\MSSQLLocalDB;initial catalog=sample;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework" providerName="System.Data.SqlClient" />
+  </connectionStrings>
+</configuration>
 ```
 
 
