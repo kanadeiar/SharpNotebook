@@ -500,6 +500,27 @@ foreach (var el in group1)
 }
 ```
 
+Проход по коллекциям - детям:
+```csharp
+class Child
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+class Person : Child
+{
+    public List<Child> Children { get; set; }
+}
+static void Main(string[] args)
+{
+    var persons = new List<Person>();
+    //дети есть с десятилетним возрастом
+    var with10AgeChild = persons.Where(p => p.Children.Select(c => c.Age).Contains(10));
+    //есть маленькие дети
+    var withManyKindChild = persons.Where(p => p.Children.Count(c => c.Age < 8) > 0);
+    //есть хотяб один малельний ребенок
+    var withOneKind = persons.Where(p => p.Children.FirstOrDefault(c => c.Age < 8) != null);
+```
 
 
 ## Внутренности операторов запросов LINQ.
