@@ -468,7 +468,8 @@ var arr2=(from i in arrInts select i).Skip(2);
 foreach (var el in arr2)
     WriteLine($"{el}");
 ```
-Группировка.
+
+## Группировка
 
 Примеры:
 ```csharp

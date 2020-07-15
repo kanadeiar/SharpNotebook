@@ -199,9 +199,9 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [ADO.NET Подключенный уровень Примеры](./sql/indexADOConnectedSamples.md).
 
-[Отключенный уровень ADO.NET](./sql/indexADODisconnected.md).
+[Автономный уровень ADO.NET](./sql/indexADODisconnected.md).
 
-[ADO.NET Отключенный уровень Примеры](./sql/indexADODisconnectedSamples.md).
+[ADO.NET Автономный уровень Примеры](./sql/indexADODisconnectedSamples.md).
 
 [Введение EF 6](./sql/indexEF6.md).
 
