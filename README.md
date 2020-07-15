@@ -193,15 +193,15 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [Основы базы данных MSSQL](./sql/indexSql.md).
 
-[Введение ADO.NET, фабрика поставщика, построитель, команды, чтение, транзакции, массовое копирование, отслеживание состояния](./sql/indexADO.md).
+[Введение ADO.NET](./sql/indexADO.md).
 
-[Подключенный уровень ADO.NET](./sql/indexConnected.md).
+[Подключенный уровень ADO.NET - фабрика поставщика, построитель, команды, чтение, транзакции, массовое копирование, отслеживание состояния](./sql/indexConnected.md).
 
 [ADO.NET Подключенный уровень Примеры](./sql/indexADOConnectedSamples.md).
 
-[Отключенный уровень ADO.NET](./sql/indexDisconnected.md).
+[Отключенный уровень ADO.NET](./sql/indexADODisconnected.md).
 
-[ADO.NET Отключенный уровень Примеры](./sql/indexADODiconnectedSamples.md).
+[ADO.NET Отключенный уровень Примеры](./sql/indexADODisconnectedSamples.md).
 
 [Введение EF 6](./sql/indexEF6.md).
 
