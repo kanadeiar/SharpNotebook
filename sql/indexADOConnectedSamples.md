@@ -1,4 +1,4 @@
-# ADO.NET Примеры
+# ADO.NET Подключенный уровень Примеры
 
 ## Чтение данных
 
@@ -284,7 +284,6 @@ CREATE TABLE [dbo].[Inventory](
     CONSTRAINT [PK_Inventory] PRIMARY KEY ([CarId])
 );
 ```
-
 Процедура:
 ```csharp
 CREATE PROCEDURE [dbo].[GetPetsName] 
@@ -519,15 +518,6 @@ static void Main(string[] args)
         Console.WriteLine($"{el.CarId}\t{el.Make}\t{el.Color}\t{el.Name}");
     Console.ReadKey();
 ```
-
-
-
-
-
-
-
-
-
 
 
 
