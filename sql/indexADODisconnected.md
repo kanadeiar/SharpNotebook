@@ -183,6 +183,35 @@ private static void PrintTable(DataTable table)
 }
 ```
 
+## Сериализация
+
+Сериализация возможна как в формат XML, так и в бинарный формат
+
+Пример:
+```csharp
+private static void SaveAndLoadAsXml(DataSet sample)
+{
+    sample.WriteXml("sample.xml");
+    sample.WriteXmlSchema("sample.xsd"); //файл схемы данных
+    sample.Clear();
+    sample.ReadXml("sample.xml");
+}
+private static void SaveAndLoadAsBinary(DataSet sample)
+{
+    sample.RemotingFormat = SerializationFormat.Binary;
+    var bFormat = new BinaryFormatter();
+    using (var stream = new FileStream("binarysample.bin", FileMode.Create))
+    {
+        bFormat.Serialize(stream, sample);
+    }
+    sample.Clear();
+    using (var stream = new FileStream("binarysample.bin", FileMode.Open))
+    {
+        sample = (DataSet)bFormat.Deserialize(stream);
+    }
+}
+```
+
 
 
 
