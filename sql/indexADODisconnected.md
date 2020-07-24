@@ -196,19 +196,20 @@ private static void SaveAndLoadAsXml(DataSet sample)
     sample.Clear();
     sample.ReadXml("sample.xml");
 }
-private static void SaveAndLoadAsBinary(DataSet sample)
+private static DataSet SaveAndLoadAsBinary(DataSet sample)
 {
+    DataSet retMe;
     sample.RemotingFormat = SerializationFormat.Binary;
     var bFormat = new BinaryFormatter();
     using (var stream = new FileStream("binarysample.bin", FileMode.Create))
     {
         bFormat.Serialize(stream, sample);
     }
-    sample.Clear();
     using (var stream = new FileStream("binarysample.bin", FileMode.Open))
     {
-        sample = (DataSet)bFormat.Deserialize(stream);
+        retMe = (DataSet)bFormat.Deserialize(stream);
     }
+    return retMe;
 }
 ```
 

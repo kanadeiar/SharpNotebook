@@ -215,8 +215,8 @@ WindowStartupLocation="CenterScreen">
 private void Button_Click(object sender, RoutedEventArgs e)
 {
     ChildWindow childWindow = new ChildWindow();
-    childWindow.ViewModel = "Дчернее окно";
-    childWindow.Owner = this;
+    childWindow.ViewModel = "Дочернее окно";
+    childWindow.Owner = Window.GetWindow(this);;
     childWindow.Show();
     childWindow.ShowViewModel();
     foreach (Window win in this.OwnedWindows)

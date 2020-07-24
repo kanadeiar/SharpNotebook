@@ -223,6 +223,14 @@ x [Веб API сервис](./asp/indexServices.md).
 
 x [Базовый Xamarin](./xamarin/indexBasic.md).
 
+## Тестирование
+
+[Unit-тестирование](./tests/indexUnitTest.md).
+
+[Примеры Unit-тестирования](./tests/indexUnitTestSamples.md).
+
+[Тестирование c инверсией управления](./tests/indexTestInversionOfControl.md).
+
 ## Система контроля версий
 
 x [Базовый Git](./git/indexBasic.md).

@@ -61,6 +61,21 @@ Binding binding = new Binding
 };
 mirrorTextBlock.SetBinding(TextBlock.TextProperty, binding);
 ```
+Примеры простой привязки в C#:
+```csharp
+Binding bindingTitle = new Binding
+{
+    Source = _panel,
+    Path = new PropertyPath("Title"),
+};
+this.SetBinding(TitleProperty, bindingTitle);
+Binding bindingFam = new Binding
+{
+    Source = Employee,
+    Path = new PropertyPath("Fam"),
+};
+TextBoxFamEmployee.SetBinding(TextBox.TextProperty, bindingFam);
+```
 
 В XAML для определения привязки данных можно использовать альтернативный формати, разбивающий значения, указанные расширенной разметкой {Bunding}, путем установки свойства DataContext. Пример:
 ```csharp
