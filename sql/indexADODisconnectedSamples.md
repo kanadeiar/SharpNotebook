@@ -2,6 +2,8 @@
 
 В WindowsForms есть элемент управления DataGridView, обладающий возможностью вывода содержимого DataSet и DataTable несколькими строками кода.
 
+## Работа с DataSet
+
 Пример простого приложения WF манипулирующего различными объектами DataSet:
 ```csharp
 namespace WindowsFormsApp1
@@ -113,6 +115,126 @@ namespace WindowsFormsApp1
     }
 }
 ```
+
+Пример работы с DataSet с несколькими таблицами взаимосвязанными:
+
+Код SQL генерации тестовой базы данных:
+```csharp
+CREATE TABLE [dbo].[Person] (
+    [Id]   INT           IDENTITY (1, 1) NOT NULL,
+    [Fam]  NVARCHAR (64) NOT NULL,
+    [Name] NVARCHAR (64) NOT NULL,
+    [Age]  INT           NOT NULL,
+    CONSTRAINT [PK_Id_Person] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+CREATE TABLE [dbo].[Child] (
+    [Id]       INT          IDENTITY (1, 1) NOT NULL,
+    [Fam]      NVARCHAR (64) NOT NULL,
+    [Name]     NVARCHAR (64) NOT NULL,
+	[Age] INT NOT NULL,
+    [PersonId] INT          NOT NULL,
+    CONSTRAINT [PK_Id_Child] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Child_To_Person] FOREIGN KEY ([PersonId]) REFERENCES [dbo].[Person] ([Id])
+);
+
+INSERT INTO Person([Fam], [Name], [Age])
+VALUES (N'Иванов', N'Иван', 20),
+(N'Петров', N'Петр', 22),
+(N'Сидоров', N'Сидор', 18);
+INSERT INTO Child([Fam], [Name], [Age], [PersonId])
+VALUES (N'Михаилов', N'Михаил', 3, 1),
+(N'Навозов', N'Дмитрий', 13, 1),
+(N'Логинов', N'Логин', 3, 2);
+```
+
+Код конфигурационного файла и приложения:
+```csharp
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+...
+    <connectionStrings>
+      <add name="SampleProvider" connectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=sample;Integrated Security=True"/>
+    </connectionStrings>
+</configuration>
+namespace WindowsFormsApp1
+{
+    public partial class FormMain : Form
+    {
+        private DataSet _dataSet = new DataSet("sample");
+        private SqlDataAdapter _personAdapter;
+        private SqlDataAdapter _childAdapter;
+        private string _connectionString;
+        public FormMain()
+        {
+            InitializeComponent();
+
+            _connectionString = ConfigurationManager.ConnectionStrings["SampleProvider"].ConnectionString;
+            _personAdapter = new SqlDataAdapter("SELECT * FROM Person", _connectionString);
+            _childAdapter = new SqlDataAdapter("SELECT * FROM Child", _connectionString);
+            var cbPerson = new SqlCommandBuilder(_personAdapter);
+            var cbChild = new SqlCommandBuilder(_childAdapter);
+
+            _personAdapter.Fill(_dataSet, "Person");
+            _childAdapter.Fill(_dataSet, "Child");
+
+            DataRelation relation = new DataRelation("PersonChild",
+                _dataSet.Tables["Person"].Columns["Id"], 
+                _dataSet.Tables["Child"].Columns["PersonId"]);
+            _dataSet.Relations.Add(relation);
+
+            dataGridViewPerson.DataSource = _dataSet.Tables["Person"];
+            dataGridViewChild.DataSource = _dataSet.Tables["Child"];
+        }
+        private void buttonUpdateDatabase_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _personAdapter.Update(_dataSet, "Person");
+                _childAdapter.Update(_dataSet, "Child");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        /// <summary> Инфа по родителю </summary>
+        private void buttonGetPersonInfo_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            int id = int.Parse(textBoxPersonId.Text);
+            var person = _dataSet.Tables["Person"].Select($"Id = {id}").First();
+            sb.AppendLine($"Person {person["Id"]} : {person["Fam"].ToString().Trim()} {person["Name"].ToString().Trim()}");
+
+            var childs = person.GetChildRows(_dataSet.Relations["PersonChild"]);
+            sb.AppendLine("Дети:");
+            if (childs.Length == 0)
+                sb.AppendLine("отсутствуют");
+            else
+                sb.AppendLine($"{childs.Length} шт.");
+            foreach (var c in childs)
+            {
+                sb.AppendLine($"Child {c["Id"]} : {c["Fam"].ToString().Trim()} {c["Name"].ToString().Trim()}");
+            }
+            MessageBox.Show(sb.ToString(), "Информация по родителю");
+        }
+        /// <summary> Инфа по ребенку </summary>
+        private void buttonChildInfo_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            int id = int.Parse(textBoxChildId.Text);
+            var child = _dataSet.Tables["Child"].Select($"Id = {id}").First();
+            sb.AppendLine($"Child {child["Id"]} : {child["Fam"].ToString().Trim()} {child["Name"].ToString().Trim()}");
+
+            var person = child.GetParentRow(_dataSet.Relations["PersonChild"]);
+            sb.AppendLine("Родитель:");
+            sb.AppendLine($"Person {person["Id"]} : {person["Fam"].ToString().Trim()} {person["Name"].ToString().Trim()}");
+
+            MessageBox.Show(sb.ToString(), "Информация по ребенку");
+        }
+    }
+}
+```
+
 
 ## Пример работы с адаптером данных
 

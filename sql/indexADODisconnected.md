@@ -251,8 +251,21 @@ table.AcceptChanges();
 
 ## Объекты DataSet с несколькими таблицами и отношениями между ними
 
+Истинная мощь автономного уровня появляется, когда в DataSet множество взаимосвязанных таблиц DataTable, при этом в коллекции DataRelations содержатся взаимосвязи между таблицами DataRelation. Объекты DataRelation можно применять чтоб на клиентском уровне перемещаться между объктами по их линиям связи, автономно.
 
+Связи между таблицами:
+```csharp
+DataRelation relation = new DataRelation("PersonChild",
+    _dataSet.Tables["Person"].Columns["Id"], 
+    _dataSet.Tables["Child"].Columns["PersonId"]);
+_dataSet.Relations.Add(relation);
+```
 
+Перемещение по связям:
+```csharp
+var childs = person.GetChildRows(_dataSet.Relations["PersonChild"]);
+var person = child.GetParentRow(_dataSet.Relations["PersonChild"]);
+```
 
 ## Адаптер данных
 
