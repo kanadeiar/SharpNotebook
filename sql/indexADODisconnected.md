@@ -213,16 +213,83 @@ private static DataSet SaveAndLoadAsBinary(DataSet sample)
 }
 ```
 
+## Манипулирование различными простыми объектами DataSet
+
+Добавление данных в DataTable:
+```csharp
+foreach (var el in list)
+{
+    var newRow = table.NewRow();
+    newRow["Name"] = el.Name;
+    table.Rows.Add(newRow);
+}
+```
+
+Фильтр данных из DataTable:
+```csharp
+//фильтровать по фамилии и номерам ид больше трех
+string filterStr = $"Fam = '{textBoxFilterFam.Text}' AND Id > 3";
+//сортировать по имени в обратном порядке
+DataRow[] fams = table.Select(filterStr, "Name DESC");
+```
+
+Изменение данных в DataTable путем фильра строк и их изменение:
+```csharp
+string filterStr = $"Name = '{textBoxReplaceNameFrom.Text}'";
+DataRow[] names = table.Select(filterStr);
+string strTo = textBoxReplaceNameTo.Text;
+foreach (var el in names)
+    el["Name"] = strTo;
+```
+
+Удаление строк из DataTable путем поиска строки через фильр и установку свойства:
+```csharp
+DataRow rowToDelete = table.Select($"Id = {int.Parse(textBoxDeleteRowNumber.Text)}").First();
+rowToDelete.Delete();
+table.AcceptChanges();
+```
+
+## Объекты DataSet с несколькими таблицами и отношениями между ними
 
 
 
 
+## Адаптер данных
 
+Адаптер данных - класс, применяемый для заполнения DataSet объектами DataTable и отбравки обратно в хранилище измененных объектов.
 
+Некторые члены адаптера DbDataAdapter:
 
+Член                     | Описание
+-------------------------|-------------------------
+Fill()                   | Выполняет SQL команду SELECT выборки данных из базы данных в объект/объекты DataTable
+SelectCommand InsertCommand UpdateCommand DeleteCommand | Установка SQL комманд, которые будут отправляться к базе данных при выполнении методов Fill() и Update()
+Update()                 | Выполняет SQL команды INSERT, UPDATE, DELETE для сохранения в базе данных изменений из DataTable
 
+У адаптеров подключение и отключение от базы данных происходит автоматически. Но адаптеру по прежнему нужно передать действительный объект подключения или объект подключения, чтобы сообщить, к какой базе данных нужно подключаться. Адаптер независим от баз данных и может налету подключать разные команды, объекты и разные типы баз данных (MSSQL, MySQL, Oracle).
 
+Пример работы с адаптером базы данных:
+```csharp
+string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=sample;Integrated Security=True";
+DataSet data = new DataSet("sample");
+SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM Person", connectionString); //адаптер с соединением и сразу с командой
+int count = adapter.Fill(data, "Person"); //заполнение только таблицы Person
+```
 
+Чтобы упростить работу с адаптерами данных, каждый поставщик данных ADO.NET снабжается построителем команд (SqlCommandBuilder), который автоматически генерирует InsertCommand UpdateCommand DeleteCommand адаптера на основе установленного SelectCommand.
 
+Способен строить команды только если выполняются условия:
+
+- SQL команда взаимодействует только с одной таблицей
+
+- единственная таблица имеет первичный ключ
+
+- таблица должна иметь столбец или столбцы первичного ключа включенным в SQL оператор SELECT.
+
+Пример применения построителя команд с адаптером:
+```csharp
+var adapter = new SqlDataAdapter("SELECT * FROM Person", connectionString);
+var _ = new SqlCommandBuilder(adapter); //конфигурирование остальных команд
+```
 
 
