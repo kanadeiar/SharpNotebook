@@ -305,4 +305,92 @@ var adapter = new SqlDataAdapter("SELECT * FROM Person", connectionString);
 var _ = new SqlCommandBuilder(adapter); //конфигурирование остальных команд
 ```
 
+## Визуальное конструирование базы данных
+
+### Конструирование набора базы данных интрументами Windows Forms
+
+Используя визуальные конструкторы, поддерживаемые элементом управления DataGridView из WindowsForms, можно визуально создавать код доступа к базе данных прямо в кодовую базу графического интерфейса.
+
+С элемента DataGridView доступен мастер конфигурирования источников данных. 
+
+По резельтатам работы мастера, после последовательности шагов, будут созданы в лотке с компонентами три компонента для доступа к базе данных: DataSet, BindingSource, TableAdapter. IDE автоматически создаст большой объем кода и настроит элемент управления для последующего использования.
+
+Мастер помимо изменений в конфигурационный файл создает строго типизированный класс DataSet. Это класс, расширяющий стандартный DataSet и открывающий доступ к нескольким членам, которые позволяют работать с базой данных напрямую, не углубляясь в коллекцию таблиц с использованием свойства Tables.
+
+В коде окна мастер создаст метод с кодом загрузки данных из хранилища в таблицу целевую при запуске приложения:
+```csharp
+private void FormMain_Load(object sender, EventArgs e)
+{
+    // TODO: данная строка кода позволяет загрузить данные в таблицу "sampleDataSet.Person". При необходимости она может быть перемещена или удалена.
+    this.personTableAdapter.Fill(this.sampleDataSet.Person);
+}
+```
+
+Можно дополнить кнопкой, которая будет сохранять изменения в таблице в хранилище данных и извлекать оттуда обратно данные:
+```csharp
+private void buttonRefresh_Click(object sender, EventArgs e)
+{
+    try
+    {
+        this.personTableAdapter.Update(this.sampleDataSet.Person);
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(ex.Message);
+    }
+    this.personTableAdapter.Fill(this.sampleDataSet.Person);
+}
+```
+
+### Конструирование набора базы данных визуальным конструктором набора данных
+
+Инструменты визуального конструирования набора базы данных можно активировать в лобой разновидности проекта. 
+
+При активации добавления в проект нового элемента "DataSet" запускается визуальный конструктор набора данных. Нужно перетащить нужные таблицы в область конструктора из обозревателя серверов, связи между таблицами будут учтены.
+
+IDE автоматически создаст большой объем кода и настроит элемент управления для последующего использования.
+
+Полученные таким образом строго типизированные классы можно применять в любом приложении .NET. 
+
+Пример выборки данных из хранилища посредством строго типизированных классов сгенерированного набора данных:
+```csharp
+static void Main(string[] args)
+{
+    var table = new sampleDataSet.PersonDataTable();
+    var adapter = new PersonTableAdapter();
+    adapter.Fill(table);
+    PrintPerson(table); //распечатка в консоль данных
+    Console.WriteLine("Нажмите любую кнопку ...");
+    Console.ReadKey();
+}
+```
+
+Пример добавления тестовых данных в хранилище с помощью сгенерированного кода:
+```csharp
+var newRow = table.NewPersonRow();
+newRow.Fam = "TestingX";
+newRow.Name = "TestX";
+newRow.Age = 20;
+table.AddPersonRow(newRow);
+table.AddPersonRow("TestingX2", "TestX2", 21); //другой способ
+adapter.Update(table); //обновить базу данных
+```
+
+Пример удаления тестовых данных из хранилища с помощью сгенерированного кода:
+```csharp
+var delRow = table.FindById(1);
+adapter.Delete(delRow.Id, delRow.Fam, delRow.Name, delRow.Age);
+```
+
+Пример вызова хранимой процедуры с помощью сгенерированного кода:
+```csharp
+int id = int.Parse(Console.ReadLine());
+string name = string.Empty;
+queriesTableAdarter.GetName(id, ref name);
+Console.WriteLine($"Персона с ид {id} имеет имя {name}");
+```
+
+
+
+
 
