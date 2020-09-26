@@ -285,7 +285,10 @@ private void comboColors_SelectionChanged(object sender, SelectionChangedEventAr
 
 Пример разметки строки состояния SatausBar:
 ```csharp
+<Window ...ResizeMode="CanResizeWithGrip"...
 <StatusBar DockPanel.Dock="Bottom" Background="Beige">
+    <StatusBarItem DockPanel.Dock="Right" Width="20">
+    </StatusBarItem>
     <StatusBarItem>
         <TextBlock Name="statusBarText" Text="Готов"/>
     </StatusBarItem>
