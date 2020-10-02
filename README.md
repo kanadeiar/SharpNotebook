@@ -209,19 +209,19 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 [База данных Access](./sql/indexAccess.md).
 
+## API
+
+[Основы WCF](./api/indexWCF.md).
+
+
+
+
 ## Веб
 
 x [Веб Введение](./asp/indexASP.md).
 
 x [Веб API сервис](./asp/indexServices.md).
 
-## Графическое приложение С#
-
-[Шаблон графического приложения](./graphicapp/indexTemplate.md).
-
-## Xamarin
-
-x [Базовый Xamarin](./xamarin/indexBasic.md).
 
 ## Тестирование
 
@@ -230,6 +230,14 @@ x [Базовый Xamarin](./xamarin/indexBasic.md).
 [Примеры Unit-тестирования](./tests/indexUnitTestSamples.md).
 
 [Тестирование c инверсией управления](./tests/indexTestInversionOfControl.md).
+
+## Графическое приложение С#
+
+[Шаблон графического приложения](./graphicapp/indexTemplate.md).
+
+## Xamarin
+
+x [Базовый Xamarin](./xamarin/indexBasic.md).
 
 ## Система контроля версий
 
