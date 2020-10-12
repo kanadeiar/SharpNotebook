@@ -278,6 +278,34 @@ private void comboColors_SelectionChanged(object sender, SelectionChangedEventAr
     MessageBox.Show("2");
 }
 ```
+Еще пример:
+```csharp
+<ToolBarTray DockPanel.Dock="Top">
+    <ToolBar Height="30" Band="0" ToolBarTray.IsLocked="True" Header="Сервера">
+        <ComboBox MinWidth="120" MaxWidth="200" SelectedIndex="0">
+            <ComboBoxItem>smtp.yandex.ru:587</ComboBoxItem>
+            <ComboBoxItem>smtp.gmail.com:587</ComboBoxItem>
+            <ComboBoxItem>smtp.mail.ru:25</ComboBoxItem>
+        </ComboBox>
+        <Button Name="ButtonAdd" Height="25" ToolTip="Добавить">
+            <Image Source="Images/add.png"/>
+        </Button>
+        <Button Name="ButtonEdit" Height="25" ToolTip="Добавить">
+            <Image Source="Images/edit.png"/>
+        </Button>
+        <Button Name="ButtonDelete" Height="25" ToolTip="Добавить">
+            <Image Source="Images/del.png"/>
+        </Button>
+    </ToolBar>
+    <ToolBar Header="два" Band="1" BandIndex="2">
+    </ToolBar>
+    <ToolBar Header="еще" Band="0">
+    </ToolBar>
+    <ToolBar Band="1">
+    </ToolBar>
+</ToolBarTray>
+```
+
 
 ## Строка состояния StatusBar.
 

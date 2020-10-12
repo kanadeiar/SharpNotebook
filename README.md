@@ -173,7 +173,7 @@
 
 [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-x [WPF MVVM Данные](./windows/indexWPFMVVMData.md).
+[WPF Core MVVM](./windows/indexWPFMVVMCore.md).
 
 x [WPF Примеры](./windows/indexWPFSamples.md).
 
