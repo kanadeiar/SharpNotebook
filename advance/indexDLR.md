@@ -1,4 +1,4 @@
-# Динамические типы и DLR (позднее связывание, COM, Excel)
+# Динамические типы и DLR (позднее связывание, COM, Excel, DBF, Simatic)
 
 В .NET версии 4.0 появилось ключевое слово dynamic, позволяющее объявлять не строго типизированную переменную. Она не типизирована статически. Способна принимать идентичность любого типа на лету.
 
@@ -164,6 +164,20 @@ namespace ConsoleApp1
     }
 }
 ```
+Пример использования того-же самого:
+```csharp
+using Excel = Microsoft.Office.Interop.Excel;
+var excel = new Excel.Application();
+var workbook = excel.Workbooks.Add();
+workbook.Sheets.Add();
+var worksheet = workbook.Sheets[numSheet];
+worksheet.Name = sheetName;
+worksheet.Columns[1].ColumnWidth = 4; //ширина колонок
+worksheet.Columns[2].ColumnWidth = 16;
+worksheet.Cells[1, 1] = "№";
+worksheet.Cells[1, i + 6].Formula = $"=SUM(F2:F6)"; //формула
+worksheet.Range[$"A1:Z{list.Count + 1}"].AutoFormat(Excel.XlRangeAutoFormat.xlRangeAutoFormatClassic1); //форматирование листа
+```
 Пример использования COM-библиотеки в приложении для открытия файла Excel и быстрой записи большого объема информации в него:
 ```csharp
 using Excel = Microsoft.Office.Interop.Excel;
@@ -226,3 +240,20 @@ if (attachments != null)
 mailItem.Importance = COutlook.OlImportance.olImportanceNormal;
 mailItem.Display(false);
 ```
+
+## Взаимодействие с DBF
+
+Пакет: NDbfReaderEx
+```csharp
+using (DbfTable table = DbfTable.Open(FileDbf1, Encoding.GetEncoding(437)))
+{
+    var row = table.GetRow(i + 3);
+    var Number = Int32.Parse(row.GetString("0001")),
+}
+```
+
+## Взаимодействие с Simatic
+
+
+
+
