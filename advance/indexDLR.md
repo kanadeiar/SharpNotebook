@@ -244,6 +244,7 @@ mailItem.Display(false);
 ## Взаимодействие с DBF
 
 Пакет: NDbfReaderEx
+
 ```csharp
 using (DbfTable table = DbfTable.Open(FileDbf1, Encoding.GetEncoding(437)))
 {
@@ -254,6 +255,14 @@ using (DbfTable table = DbfTable.Open(FileDbf1, Encoding.GetEncoding(437)))
 
 ## Взаимодействие с Simatic
 
+Пакет: Sharp7
 
-
-
+```csharp
+using Sharp7;
+static S7Client s7client = new S7Client();
+rez = s7client.ReadArea(S7Consts.S7AreaMK, 0, 282, 4, S7Consts.S7WLByte, buffer); //меркерты, 282 смещение в памяти, длинна - 4 байта
+fromMixToVT1 = (buffer[1] & 0b100000) != 0;
+fromMixToVT1Work = (buffer[2] & 0b10) != 0;
+s7client.DBRead(201, 100, 2, buffer); //блок данных 201, смещение в нем 100, длинна - 2 байта
+valuePath = S7.GetIntAt(buffer, 0);
+```

@@ -133,7 +133,7 @@
 
 [Библиотеки классов](./advance/indexDll.md).
 
-[Динамические типы и DLR (позднее связывание, COM, Excel, DBF, Simatic)(./advance/indexDLR.md).
+[Динамические типы и DLR (позднее связывание, COM, Excel, DBF, Simatic)](./advance/indexDLR.md).
 
 [Домены приложений (процессы, контексты)](./advance/indexDomain.md).
 
