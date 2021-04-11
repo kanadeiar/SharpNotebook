@@ -193,6 +193,16 @@
 
 [Основы WPF Сервисы](./windows/index0WPFService.md).
 
+## Веб
+
+[Веб HTML+CSS](./asp/indexHTML.md).
+
+[Веб HTML+CSS Адаптив](./asp/indexHTMLAdopt.md).
+
+x [Веб Введение](./asp/indexASP.md).
+
+x [Веб API сервис](./asp/indexServices.md).
+
 ## Xamarin
 
 [Базовый Xamarin](./xamarin/indexBasic.md).
@@ -232,15 +242,7 @@
 
 
 
-## Веб
 
-х [Веб HTML+CSS](./asp/indexHTML.md).
-
-х [Веб HTML+CSS Адаптив пример](./asp/indexHTMLSample.md).
-
-x [Веб Введение](./asp/indexASP.md).
-
-x [Веб API сервис](./asp/indexServices.md).
 
 
 ## Тестирование
