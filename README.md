@@ -173,9 +173,13 @@
 
 [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-[WPF Core MVVM](./windows/indexWPFMVVMCore.md).
+х [5 WPF MVVM Инфраструктура](./windows5/indexMVVMInfrastructure.md).
 
-x [WPF Примеры](./windows/indexWPFSamples.md).
+х [5 WPF MVVM Примеры базовые](./windows5/indexMVVMSampleBasic.md).
+
+х [5 WPF MVVM Пример расширенный](./windows5/indexMVVMSampleAdvanced.md).
+
+
 
 [Основы WPF](./windows/index0WPF.md).
 
@@ -188,6 +192,28 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 [Основы WPF Приложение Базы данных](./windows/index0WPFADOApp.md).
 
 [Основы WPF Сервисы](./windows/index0WPFService.md).
+
+## Веб
+
+[Веб HTML+CSS](./asp/indexHTML.md).
+
+[Веб HTML+CSS Адаптив](./asp/indexHTMLAdopt.md).
+
+x [Веб Введение](./asp/indexASP.md).
+
+x [Веб API сервис](./asp/indexServices.md).
+
+## Xamarin
+
+[Базовый Xamarin](./xamarin/indexBasic.md).
+
+[Активности Android](./xamarin/indexActivities.md).
+
+[Элементы Android](./xamarin/indexElements.md)
+
+[Контейнеры Android](./xamarin/indexContainers.md)
+
+[Примеры Android](./xamarin/indexSamples.md)
 
 ## База данных
 
@@ -216,11 +242,7 @@ x [WPF Примеры](./windows/indexWPFSamples.md).
 
 
 
-## Веб
 
-x [Веб Введение](./asp/indexASP.md).
-
-x [Веб API сервис](./asp/indexServices.md).
 
 
 ## Тестирование
@@ -235,9 +257,7 @@ x [Веб API сервис](./asp/indexServices.md).
 
 [Шаблон графического приложения](./graphicapp/indexTemplate.md).
 
-## Xamarin
 
-x [Базовый Xamarin](./xamarin/indexBasic.md).
 
 ## Система контроля версий
 
