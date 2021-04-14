@@ -122,6 +122,21 @@ string message = $"{date,20}{number,20:N3}";
 
 # Продвинутое
 
+## Русификация консоли в .NET 5
+
+Гарантированная русификация в новых версиях консолей:
+```csharp
+static void Main(string[] args)
+{
+    [DllImport("kernel32.dll")] static extern bool SetConsoleCP(uint pagenum);
+    [DllImport("kernel32.dll")] static extern bool SetConsoleOutputCP(uint pagenum);
+    SetConsoleCP(65001);        //установка кодовой страницы utf-8 (Unicode) для вводного потока
+    SetConsoleOutputCP(65001);  //установка кодовой страницы utf-8 (Unicode) для выводного потока
+    Console.WriteLine("Приложение завершило свою работу");
+    Console.ReadKey();
+}
+```
+
 ## Асинхронные методы main()
 Используются при асинхронном программировании.
 ```csharp
