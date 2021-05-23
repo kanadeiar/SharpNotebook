@@ -173,13 +173,11 @@
 
 [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-х [5 WPF MVVM Инфраструктура](./windows5/indexMVVMInfrastructure.md).
+х [NET5 WPF MVVM Инфраструктура](./windows/index5MVVMInfrastructure.md).
 
-х [5 WPF MVVM Примеры базовые](./windows5/indexMVVMSampleBasic.md).
+х [NET5 WPF MVVM Примеры базовые](./windows/index5MVVMSampleBasic.md).
 
-х [5 WPF MVVM Пример расширенный](./windows5/indexMVVMSampleAdvanced.md).
-
-
+х [NET5 WPF MVVM Пример расширенный](./windows/index5MVVMSampleAdvanced.md).
 
 [Основы WPF](./windows/index0WPF.md).
 
