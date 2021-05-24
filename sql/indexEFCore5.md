@@ -34,4 +34,24 @@ SaveChanges, SaveChangesAsync | Сохранение всех воздейств
 OnConfiguring            | Используется для создания и модификации опций контекста. Исполняется каждый раз как создается контекст. Желательно использовать DbContextOptions во время выполнения и IDesignTimeDbContextFactory во время разработки.
 OnModelCreating          | Вызывается когда модель инициализирована, но перед финализацией.
 
+Библиотека доступа к данным.
+
+## Библиотека доступа к данным - "StudentsDAL".
+
+Пакеты:
+
+- Microsoft.EntityFrameworkCore.SqlServer
+
+- Microsoft.EntityFrameworkCore.Tools
+
+## Библиотека моделей доступа к данным - "StudentsDAL.Models".
+
+Модели данных:
+
+
+
+## Консольное приложение разработки библиотеки - "StudentsDAL.TestDriver".
+
+
+
 
