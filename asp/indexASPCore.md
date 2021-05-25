@@ -54,7 +54,10 @@ a                | Html.ActionLink() | asp-route | Для именованных
 |  |  | asp-route-<параметр> | Добавляет параметр к маршруту (asp-route-id="1")
 |  |  | asp-all-route-data | словать с дополнительными значениями для маршрута
 input            | Html.TextBox()/ Html.TextBoxFor() Html.Editor()/ Html.EditorFor() | asp-for | Свойство модели, можно перемещаться по модели и применять выражения, атрибуты id и name и HTML5 генерятся автоматом
-
+textarea         | Html.TextAreaFor() | asp-for | Свойство модели, можно перемещаться по модели и применять выражения, атрибуты id и name и HTML5 генерятся автоматом
+label            | Html.LabelFor()    | asp-for | Свойство модели, можно перемещаться по модели и применять выражения
+select           | Html.DropDownListFor() | asp-for | Свойство модели, можно перемещаться по модели и применять выражения
+|  | Html.ListBoxFor() | asp-items | Указывает на элементы option, атрибуты id, name и select и HTML5 генерятся автоматом
 
 
 
