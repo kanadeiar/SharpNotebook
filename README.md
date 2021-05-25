@@ -173,9 +173,9 @@
 
 [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-х [* NET5 WPF MVVM Инфраструктура](./windows/inde5MVVMInfrastructure5.md).
+х [* NET5 WPF MVVM Инфраструктура *](./windows/inde5MVVMInfrastructure5.md).
 
-х [* NET5 WPF MVVM Примеры базовые](./windows/indexMVVMSample5.md).
+х [* NET5 WPF MVVM Примеры базовые *](./windows/indexMVVMSample5.md).
 
 [Основы WPF](./windows/index0WPF.md).
 
@@ -203,33 +203,11 @@
 
 [ADO.NET Автономный уровень Примеры](./sql/indexADODisconnectedSamples.md).
 
-[NET 5 EF Core 5](./sql/indexEFCore5.md).
+[* NET EF Core 5 *](./sql/indexEFCore5.md).
 
 [Введение EF 6](./sql/indexEF6.md).
 
 [EF 6 Примеры](./sql/indexEF6Samples.md).
-
-[База данных Access](./sql/indexAccess.md).
-
-## Веб
-
-[Основы базы данных MSSQL](./sql/indexSql.md).
-
-[Введение ADO.NET](./sql/indexADO.md).
-
-[Подключенный уровень ADO.NET - фабрика поставщика, построитель, команды, чтение, транзакции, массовое копирование, отслеживание состояния](./sql/indexConnected.md).
-
-[ADO.NET Подключенный уровень Примеры](./sql/indexADOConnectedSamples.md).
-
-[Автономный уровень ADO.NET](./sql/indexADODisconnected.md).
-
-[ADO.NET Автономный уровень Примеры](./sql/indexADODisconnectedSamples.md).
-
-[Введение EF 6](./sql/indexEF6.md).
-
-[EF 6 Примеры](./sql/indexEF6Samples.md).
-
-[* NET5 EF Core 5](./sql/indexEFCore5.md).
 
 [База данных Access](./sql/indexAccess.md).
 
@@ -239,7 +217,7 @@
 
 [Веб HTML+CSS Адаптив](./asp/indexHTMLAdopt.md).
 
-x [Веб Введение](./asp/indexASP.md).
+[Веб ASP.NET Core Введение](./asp/indexASPCore5.md).
 
 x [Веб API сервис](./asp/indexServices.md).
 

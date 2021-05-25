@@ -1,4 +1,4 @@
-# NET 5 EF Core 5
+# NET EF Core 5
 
 ## Аннотации данных EF
 
@@ -19,7 +19,7 @@ NotMapped                | Исключение свойства в классе
 
 ## Контекст базы данных
 
-Должен быть унаследован от DbCOntext. 
+Должен быть унаследован от DbContext. 
 
 Главные члены:
 
@@ -84,6 +84,15 @@ namespace Students.Dal.Models
         [NotMapped]
         public string FullName => $"{LastName} {FirstName} {Patronymic}";
     }
+    [Table("StarStudents")]
+    public class StarStudent : Student
+    {
+        public int Star { get; set; }
+        public override string ToString()
+        {
+            return $"Особый студент {FullName} питомец: {this.Pet ?? "Без питомца"} звезность: {Star}";
+        }
+    }
     public class Group : Entity
     {
         [Required, StringLength(100)]
@@ -119,6 +128,22 @@ namespace Students.Dal.Models
 
 - Microsoft.EntityFrameworkCore.Tools
 
+Для включения управления с помощью консоли (устаревшее) (на консольном приложении):
+```csharp
+<ItemGroup>
+<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+</ItemGroup>
+```
+Новое (на библиотеки доступа к данным), установка консолного управления:
+
+dotnet new tool-manifest
+
+dotnet tool install dotnet-ef
+
+Команды: dotnet ef,    dotnet ef migrations add Initial,      dotnet ef database update,        dotnet ef database drop, 
+
+dotnet ef migrations add InitialCreate
+
 Фабрика времени разработки:
 ```csharp
 namespace Students.Dal
@@ -136,6 +161,7 @@ namespace Students.Dal
     }
 }
 ```
+
 Контекст базы данных:
 ```csharp
 namespace StudentsDAL.EF
@@ -145,6 +171,7 @@ namespace StudentsDAL.EF
         public DbSet<Course> Courses { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<StarStudent> StarStudents { get; set; }
         public StudentsContext(DbContextOptions options) : base(options)
         {
         }
@@ -160,13 +187,10 @@ namespace StudentsDAL.EF
                 optionsBuilder.UseSqlServer(connectionString, options => options.EnableRetryOnFailure());
             }
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }
 ```
+
 Инициализатор данных:
 ```csharp
 namespace Students.Dal.DataInit
@@ -205,6 +229,19 @@ namespace Students.Dal.DataInit
                 Group = groups[rnd.Next(groups.Count)],
             }).ToList();
             context.Students.AddRange(students);
+            context.StarStudents.Add(new StarStudent
+            {
+                LastName = "Петров",
+                FirstName = "Петр",
+                Patronymic = "Петрович",
+                Birthday = new DateTime(1900, 1, 1),
+                Rating = 10,
+                Pet = "Лев",
+                Courses = Enumerable.Range(1, rnd.Next(8))
+                    .Select(c => cources[rnd.Next(cources.Count)]).ToList(),
+                Group = groups[rnd.Next(groups.Count)],
+                Star = 5,
+            });
             context.Database.OpenConnection();
             try
             {
@@ -222,9 +259,11 @@ namespace Students.Dal.DataInit
         public static void ClearData(StudentsContext context)
         {
             ExecuteDeleteSql(context, "CourseStudent");
+            ExecuteDeleteSql(context, "StarStudents");
             ExecuteDeleteSql(context, "Students");
             ExecuteDeleteSql(context, "Groups");
             ExecuteDeleteSql(context, "Courses");
+            ResetIdentity(context);
             static void ExecuteDeleteSql(StudentsContext context, string tableName)
             {
                 var rawSqlString = $"Delete from dbo.{tableName}";
@@ -232,7 +271,7 @@ namespace Students.Dal.DataInit
             }
             static void ResetIdentity(StudentsContext context)
             {
-                var tables = new[] { "CourseStudent", "Students", "Groups", "Courses" };
+                var tables = new[] { "Students", "Groups", "Courses" };
                 foreach (var item in tables)
                 {
                     var rawSqlString = $"DBCC CHECKIDENT (\"dbo.{item}\", RESEED, -1);";
@@ -409,13 +448,6 @@ namespace StudentsDAL.Repos
 
 ## Консольное приложение разработки библиотеки - "Students.Dal.TestDriver".
 
-Для включения управления с помощью консоли:
-```csharp
-<ItemGroup>
-<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-</ItemGroup>
-```
-Команды: dotnet ef,    dotnet ef migrations add Initial,      dotnet ef database update,        dotnet ef database drop
 
 ```csharp
 namespace StudentsDAL.TestDriver
@@ -426,6 +458,12 @@ namespace StudentsDAL.TestDriver
         {
             ConsoleToRussian();
             Console.WriteLine("Тестирование библиотеки доступа к данным");
+            using (var context = new StudentsContext())
+            {
+                //StudentsDataInit.RecreateDatabase(context);
+                //StudentsDataInit.ClearData(context);
+                StudentsDataInit.InitData(context);
+            }
             using (var repo = new StudentsRepo())
             {
                 Console.WriteLine("Студенты:");
