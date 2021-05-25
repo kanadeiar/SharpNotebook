@@ -36,6 +36,14 @@ OnModelCreating          | Вызывается когда модель иниц
 
 Библиотека доступа к данным.
 
+Методы Database предназначенные для удаления и воссоздания базы данных:
+
+Методы                   | Описание
+-------------------------|-------------------------
+EnsureDeleted()          | Удаляет базу данных, если она существует
+EnsuteCreated()          | Создает базу данных на основе файла <...>ModelSnapshot.cs
+Migrate()                | Создает базу данных и выполняет все миграции, если они сущетвует. 
+
 ## Библиотека доступа к данным - "StudentsDAL".
 
 Пакеты:
@@ -43,6 +51,9 @@ OnModelCreating          | Вызывается когда модель иниц
 - Microsoft.EntityFrameworkCore.SqlServer
 
 - Microsoft.EntityFrameworkCore.Tools
+
+
+
 
 ## Библиотека моделей доступа к данным - "StudentsDAL.Models".
 
@@ -52,6 +63,11 @@ OnModelCreating          | Вызывается когда модель иниц
 
 ## Консольное приложение разработки библиотеки - "StudentsDAL.TestDriver".
 
-
-
+Для включения управления с помощью консоли:
+```csharp
+<ItemGroup>
+<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+</ItemGroup>
+```
+Команды: dotnet ef,    dotnet ef migrations add Initial,      dotnet ef database update
 
