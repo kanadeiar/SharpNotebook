@@ -217,7 +217,7 @@
 
 [Веб HTML+CSS Адаптив](./asp/indexHTMLAdopt.md).
 
-[* Веб ASP.NET Core 5 Введение *](./asp/indexASPCore.md).
+[Веб ASP.NET Core Введение](./asp/indexASPCore.md).
 
 x [Веб API сервис](./asp/indexServices.md).
 
