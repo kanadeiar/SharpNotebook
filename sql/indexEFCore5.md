@@ -294,6 +294,8 @@ using System.Runtime.CompilerServices;
 Add-Migration init,       Update-Database,      Get-Migrations,     Drop-Migration,       Drop-Database
 
 ## Репозиторий
+
+Универсальный репозиторий базы данных
 ```csharp
 namespace Students.Dal.Repos.Base
 {
@@ -447,7 +449,7 @@ namespace StudentsDAL.Repos
 ```
 
 ## Консольное приложение разработки библиотеки - "Students.Dal.TestDriver".
-
+Приложение тестирования базы данных
 
 ```csharp
 namespace StudentsDAL.TestDriver
