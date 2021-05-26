@@ -91,7 +91,60 @@ envioment        | - | name               | (Development, Stage, Production)
 <a asp-controller="Home" asp-action="Index">Ссылка на дом</a>
 ```
 
+Атрибуты HTML, генерируемые из типов .NET с помощью input
 
+Тип .NET                 | Генерируемый атрибут HTML
+-------------------------|-------------------------
+Bool                     | type="checkbox"
+String                   | type="text"
+DateTime                 | type="datetime"
+Byte,Int,Single,Double   | type="number"
+
+На основе аннотации данных генерируется атрибут HTML
+
+Аннотация данных .NET    | Генерируемый атрибут HTML
+-------------------------|-------------------------
+EmailAddress             | type="email"
+Url                      | type="url"
+HiddenInput              | type="hidden"
+Phone                    | type="tel"
+DataType(DataType.Password) | type="password"
+DataType(DataType.Date) | type="date"
+DataType(DataType.Time) | type="time"
+
+```csharp
+<form asp-action="Index">
+    <input asp-for="LastName" class="form-control"/>
+</form>
+```
+
+```csharp
+<form asp-action="Index">
+    <textarea asp-for="Patronymic"></textarea>
+</form>
+```
+
+Список элементов списка:
+```csharp
+public class Data
+{
+    public IEnumerable<SelectListItem> Persons { get; set; }
+    public Person Person { get; set; }
+}
+//действие контроллера:
+return View(new Data
+{
+    Persons = _persons.Select(p => new SelectListItem(p.FirstName, p.FirstName)),
+    Person = _persons.FirstOrDefault(),
+});
+<form asp-action="Index">
+    <select asp-items="Model.Persons"></select>
+</form>
+```
+
+```csharp
+<span asp-validation-for="Person" class="text-danger"></span>
+```
 
 
 
