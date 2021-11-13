@@ -173,10 +173,6 @@
 
 [WPF MVVM Команды](./windows/indexWPFMVVMComands.md).
 
-х [* NET5 WPF MVVM Инфраструктура *](./windows/inde5MVVMInfrastructure5.md).
-
-х [* NET5 WPF MVVM Примеры базовые *](./windows/indexMVVMSample5.md).
-
 [Основы WPF](./windows/index0WPF.md).
 
 [Основы WPF Привязки](./windows/index0WPFBinding.md).
@@ -191,6 +187,8 @@
 
 ## База данных
 
+[NET EF Core 5](./sql/indexEFCore5.md).
+
 [Основы базы данных MSSQL](./sql/indexSql.md).
 
 [Введение ADO.NET](./sql/indexADO.md).
@@ -203,8 +201,6 @@
 
 [ADO.NET Автономный уровень Примеры](./sql/indexADODisconnectedSamples.md).
 
-[* NET EF Core 5 *](./sql/indexEFCore5.md).
-
 [Введение EF 6](./sql/indexEF6.md).
 
 [EF 6 Примеры](./sql/indexEF6Samples.md).
@@ -213,25 +209,26 @@
 
 ## Веб
 
+[Веб .NET 6 Команды](./web/indexCommands.md).
+
+[Веб .NET 6 Введение](./web/indexWeb.md).
+
+
+
+
 [Веб HTML+CSS](./asp/indexHTML.md).
 
 [Веб HTML+CSS Адаптив](./asp/indexHTMLAdopt.md).
 
 [Веб ASP.NET Core Введение](./asp/indexASPCore.md).
 
-x [Веб API сервис](./asp/indexServices.md).
+
+
+
 
 ## Xamarin
 
-[Базовый Xamarin](./xamarin/indexBasic.md).
-
-x [Активности Android](./xamarin/indexActivities.md).
-
-x [Элементы Android](./xamarin/indexElements.md)
-
-x [Контейнеры Android](./xamarin/indexContainers.md)
-
-x [Примеры Android](./xamarin/indexSamples.md)
+[Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
 
 ## API
