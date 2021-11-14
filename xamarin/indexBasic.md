@@ -1,4 +1,4 @@
-# Базовый Xamarin
+# Базовый Xamarin.Android
 
 ## Проект
 

@@ -228,7 +228,12 @@
 
 ## Xamarin
 
+[Базовый Xamarin.Forms](./xamarin/indexForms.md).
+
+[Компоненты Xamarin.Forms](./xamarin/indexComponents.md).
+
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
+
 
 
 ## API
