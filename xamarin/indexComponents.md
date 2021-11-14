@@ -277,3 +277,37 @@ private void Switch_Toggled(object sender, ToggledEventArgs e)
 
 - Settings: используется для отображения набора настроек
 
+Xaml:
+```csharp
+<TableView Intent="Form">
+    <TableView.Root>
+        <TableRoot>
+            <TableSection Title="Персональные данные">
+                <EntryCell x:Name="EntryCellLogin" Label="Логин:" Keyboard="Default" Placeholder="Введите логин" Completed="EntryCell_Completed" />
+                <SwitchCell x:Name="SwitchCellSave" Text="Сохранить" OnChanged="SwitchCell_OnChanged" />
+            </TableSection>
+            <TableSection Title="Контакты">
+                <EntryCell Label="Телефон:" Keyboard="Telephone" Placeholder="Введите телефон" />
+                <EntryCell Label="Почта:" Keyboard="Email" Placeholder="Введите Email" />
+            </TableSection>
+        </TableRoot>
+    </TableView.Root>
+</TableView>
+<Label x:Name="LabelResult" Text="Результат" />
+```
+Код:
+```csharp
+private void EntryCell_Completed(object sender, EventArgs e)
+{
+    LabelResult.Text = $"Введен логин: {EntryCellLogin.Text}";
+}
+private void SwitchCell_OnChanged(object sender, ToggledEventArgs e)
+{
+    LabelResult.Text = $"Выбор: {((SwitchCellSave.On) ? "включен" : "отключен")}";
+}
+```
+
+## Веб
+
+
+
