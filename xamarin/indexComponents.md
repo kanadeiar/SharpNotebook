@@ -309,5 +309,86 @@ private void SwitchCell_OnChanged(object sender, ToggledEventArgs e)
 
 ## Веб
 
+Простой веб браузер в приложении:
 
+Xaml:
+```csharp
+<StackLayout Orientation="Horizontal" >
+    <Button Text="GO" Clicked="Button_Clicked" />
+    <Entry x:Name="UrlEntry" HorizontalOptions="FillAndExpand" />
+</StackLayout>
+<WebView x:Name="WebView" Source="https://airwarehouse.azurewebsites.net/" VerticalOptions="FillAndExpand"/>
+```
+Код:
+```csharp
+private void Button_Clicked(object sender, EventArgs e)
+{
+    WebView.Source = new UrlWebViewSource { Url = UrlEntry.Text };
+}
+```
 
+## Сообщения
+
+Сообщения - DisplayAlert & DisplayActionSheet
+
+Xaml:
+```csharp
+<Button Text="Показ сообщения" Clicked="Button_Clicked" />
+```
+Код:
+```csharp
+private void Button_Clicked(object sender, EventArgs e)
+{
+    DisplayAlert("Уведомление", "Пришло новое сообщение", "ОК");
+}
+private async void Button_Clicked(object sender, EventArgs e)
+{
+    bool result = await DisplayAlert("Подтверждение", "Действительно сделать это?", "Да", "Нет");
+    await DisplayAlert("Уведомление", $"Вабранный вариант: {(result ? "Да" : "Нет")}", "ОК");
+}
+private async void Button_Clicked_1(object sender, EventArgs e)
+{
+    var action = await DisplayActionSheet("Выбор", "Отмена", "Удалить", "Вконтакте", "Твиттер", "Фейсбук");
+    await DisplayAlert("Уведомление", $"Вабранный вариант: {action}", "ОК");
+}
+```
+
+Запросы пользователю:
+
+Код:
+```csharp
+private async void Button_Clicked_2(object sender, EventArgs e)
+{
+    var result = await DisplayPromptAsync("Запрос", "Как ваше имя?");
+    await DisplayAlert("Результат", $"Результат: {((result != null) ? result : "<null>")}", "OK");
+}
+```
+
+## Таймер
+
+Xaml:
+```csharp
+<Button x:Name="ButtonTimer" Text="Нажми" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Large" Clicked="ButtonTimer_Clicked"/>
+```
+Код:
+```csharp
+bool alive = true;
+...
+    Device.StartTimer(TimeSpan.FromSeconds(1), OnTimerTick);
+...
+private bool OnTimerTick()
+{
+    ButtonTimer.Text = DateTime.Now.ToString("T");
+    return alive;
+}
+private void ButtonTimer_Clicked(object sender, EventArgs e)
+{
+    if (alive)
+        alive = false;
+    else
+    {
+        alive = true;
+        Device.StartTimer(TimeSpan.FromSeconds(1), OnTimerTick);
+    }
+}
+```
