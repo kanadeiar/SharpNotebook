@@ -179,5 +179,101 @@ private void TimePicker_PropertyChanged(object sender, System.ComponentModel.Pro
 }
 ```
 
+## Выпадающий список
 
+Xaml:
+```csharp
+<Label x:Name="LabelHeader" Text="Языки программирования" FontSize="Large" />
+<Picker x:Name="PickerLanguages" SelectedIndexChanged="Picker_SelectedIndexChanged" >
+    <Picker.Items>
+        <x:String>C#</x:String>
+        <x:String>C++</x:String>
+        <x:String>Java</x:String>
+        <x:String>PHP</x:String>
+    </Picker.Items>
+</Picker>
+```
+Код:
+```csharp
+private void Picker_SelectedIndexChanged(object sender, EventArgs e)
+{
+    LabelHeader.Text = $"Выбран язык: {PickerLanguages.Items[PickerLanguages.SelectedIndex]}";
+}
+```
+
+## Слайдеры числовых значений
+
+Кнопки:
+
+Xaml:
+```csharp
+<Label x:Name="LabelStepper" Text="Число: 0" FontSize="Large"/>
+<Stepper Minimum="0" Maximum="10" Increment="0.5" ValueChanged="Stepper_ValueChanged" />
+```
+Код:
+```csharp
+private void Stepper_ValueChanged(object sender, ValueChangedEventArgs e)
+{
+    var value = e.NewValue;
+    LabelStepper.Text = $"Выбрано значение: {value:F1}";
+}
+```
+
+Слайдер:
+
+Xaml:
+```csharp
+<Label x:Name="LabelSlider" Text="Слайдер: 0" FontSize="Large" />
+<Slider Minimum="0" Maximum="100" Value="50" MinimumTrackColor="Green"
+        MaximumTrackColor="Gray" ThumbColor="Green" ValueChanged="Slider_ValueChanged"/>
+```
+Код:
+```csharp
+private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
+{
+    LabelSlider.Text = $"Значение: {e.NewValue:F1}";
+}
+```
+
+Выключатели:
+
+Xaml:
+```csharp
+<Label Text="Переключатель" FontSize="Large" HorizontalOptions="Center" />
+<Switch HorizontalOptions="Center" Toggled="Switch_Toggled" />
+<Label x:Name="LabelSwitch" FontSize="Large" HorizontalOptions="Center" />
+```
+Код:
+```csharp
+private void Switch_Toggled(object sender, ToggledEventArgs e)
+{
+    LabelSwitch.Text = $"Значение: {e.Value}";
+}
+```
+
+## Таблица
+
+Типы ячеек. При создании таблицы мы можем использовать разные виды ячеек:
+
+- EntryCell: представляет метку с текстовым полем для ввода данных
+
+- SwitchCell: представляет метку с переключателем
+
+- TextCell: две метки для вывода текста
+
+- ImageCell: аналогична TextCell со включением изображения
+
+- ViewCell: содержимое и формат отображения данных ячейки определяется разработчиком
+
+Наиболее часто используемыми из них являются SwitchCell и EntryCell.
+
+Виды таблиц. Свойство Intent определяет виды таблицчных представлений и может принимать следующие значения:
+
+- Data: предназначен для простого отображения данных
+
+- Form: представляет форму ввода данных, как в примере выше
+
+- Menu: используется для вывода меню
+
+- Settings: используется для отображения набора настроек
 
