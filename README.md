@@ -238,6 +238,8 @@
 
 [Данные Xamarin.Forms](./xamarin/indexData.md).
 
+[Навигация Xamarin.Forms](./xamarin/indexNavigation.md).
+
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
 

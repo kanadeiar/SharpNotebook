@@ -109,25 +109,162 @@ public class Phone
     public string Company { get; set; }
     public int Price { get; set; }
 }
-public List<Phone> Phones { get; set; }
-public MainPage()
+public partial class MainPage : ContentPage
 {
-    InitializeComponent();
-    Phones = new List<Phone>
+    public List<Phone> Phones { get; set; }
+    public MainPage()
     {
-        new Phone {Title = "iPhone 7", Company = "Apple", Price = 80000 },
-        new Phone {Title = "Samsung", Company = "Galaxy S5", Price = 12000 },
-        new Phone {Title = "LG", Company = "G5", Price = 8000 },
-        new Phone {Title = "Huawei", Company = "P10", Price = 20000 },
-        new Phone {Title = "HTC", Company = "U Ultra", Price = 15000 },
-    };
-    this.BindingContext = this;
-}
-private async void phonesList_ItemTapped(object sender, ItemTappedEventArgs e)
-{
-    var selected = e.Item as Phone;
-    if (selected != null)
-        await DisplayAlert("Выбранная модель", $"{selected.Company} - {selected.Title}", "OK");
+        InitializeComponent();
+        Phones = new List<Phone>
+        {
+            new Phone {Title = "iPhone 7", Company = "Apple", Price = 80000 },
+            new Phone {Title = "Samsung", Company = "Galaxy S5", Price = 12000 },
+            new Phone {Title = "LG", Company = "G5", Price = 8000 },
+            new Phone {Title = "Huawei", Company = "P10", Price = 20000 },
+            new Phone {Title = "HTC", Company = "U Ultra", Price = 15000 },
+        };
+        this.BindingContext = this;
+    }
+    private async void phonesList_ItemTapped(object sender, ItemTappedEventArgs e)
+    {
+        var selected = e.Item as Phone;
+        if (selected != null)
+            await DisplayAlert("Выбранная модель", $"{selected.Company} - {selected.Title}", "OK");
+    }
 }
 ```
 
+Использование элемента TextCell
+
+```xml
+<ListView.ItemTemplate>
+    <DataTemplate>
+        <TextCell 
+            Text="{Binding Title}" 
+            Detail="{Binding Company, StringFormat='Компания {0}'}" />
+    </DataTemplate>
+</ListView.ItemTemplate>
+```
+
+## Изображения в списках
+
+```xml
+<StackLayout Padding="5">
+    <Label Text="{Binding Source={x:Reference ListViewPhones}, Path=SelectedItem.Title}" FontSize="Large"/>
+    <ListView x:Name="ListViewPhones" 
+                HasUnevenRows="True"
+                ItemsSource="{Binding Phones}">
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="local:Phone">
+                <ImageCell 
+                    ImageSource="{Binding ImagePath}"
+                    Text="{Binding Title}"
+                    Detail="{Binding Company, StringFormat='Модель {0}'}"
+                    TextColor="Red"
+                    DetailColor="Green"/>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</StackLayout>
+```
+Код:
+```csharp
+public class Phone
+{
+    public string Title { get; set; }
+    public string Company { get; set; }
+    public int Price { get; set; }
+    public string ImagePath { get; set; }
+}
+public partial class MainPage : ContentPage
+{
+    public List<Phone> Phones { get; set; }
+    public MainPage()
+    {
+        InitializeComponent();
+        Phones = new List<Phone>
+        {
+            new Phone {Title = "iPhone 7", Company = "Apple", Price = 80000, ImagePath = "phone1.png" },
+            new Phone {Title = "Samsung", Company = "Galaxy S5", Price = 12000, ImagePath = "phone2.png" },
+            new Phone {Title = "LG", Company = "G5", Price = 8000, ImagePath = "phone3.png" },
+            new Phone {Title = "Huawei", Company = "P10", Price = 20000, ImagePath = "phone1.png" },
+            new Phone {Title = "HTC", Company = "U Ultra", Price = 15000, ImagePath = "phone2.png" },
+            new Phone {Title = "Philips", Company = "S400", Price = 8000, ImagePath = "phone3.png" },
+        };
+        this.BindingContext = this;
+    }
+}
+```
+
+## Наблюдаемая коллекция
+
+За счет реализации интерфейса INotifyCollectionChanged при добавлении или удалении объектов в ObservableCollection автоматически будут изменяться все привязанные к этой коллекции объекты, в том числе и ListView.
+
+```xml
+<StackLayout Padding="5">
+    <Label Text="{Binding Source={x:Reference ListViewPhones}, Path=SelectedItem.Title}" FontSize="Large"/>
+    <ListView x:Name="ListViewPhones" 
+                HasUnevenRows="True"
+                ItemsSource="{Binding Phones}">
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="local:Phone">
+                <ViewCell>
+                    <ViewCell.View>
+                        <StackLayout>
+                            <Label Text="{Binding Title}" FontSize="Large" />
+                            <Label Text="{Binding Company}" />
+                            <Label Text="{Binding Price, StringFormat='Цена: {0} руб.'}" />
+                        </StackLayout>
+                    </ViewCell.View>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+        <Button Text="Добавить" Clicked="ButtonAdd_Clicked" />
+        <Button Text="Удалить" Clicked="ButtonDelete_Clicked" />
+    </StackLayout>
+</StackLayout>
+```
+Код:
+```csharp
+public class Phone
+{
+    public string Title { get; set; }
+    public string Company { get; set; }
+    public int Price { get; set; }
+}
+public partial class MainPage : ContentPage
+{
+    public ObservableCollection<Phone> Phones { get; set; }
+    public MainPage()
+    {
+        InitializeComponent();
+        Phones = new ObservableCollection<Phone>
+        {
+            new Phone {Title = "iPhone 7", Company = "Apple", Price = 80000 },
+            new Phone {Title = "Samsung", Company = "Galaxy S5", Price = 12000 },
+            new Phone {Title = "LG", Company = "G5", Price = 8000 },
+            new Phone {Title = "Huawei", Company = "P10", Price = 20000 },
+            new Phone {Title = "HTC", Company = "U Ultra", Price = 15000 },
+            new Phone {Title = "Philips", Company = "S400", Price = 8000 },
+        };
+        this.BindingContext = this;
+    }
+
+    private void ButtonAdd_Clicked(object sender, EventArgs e)
+    {
+        Phones.Add(new Phone { Title = "Newest", Company = "Test", Price = 999 });
+    }
+
+    private void ButtonDelete_Clicked(object sender, EventArgs e)
+    {
+        var phone = ListViewPhones.SelectedItem as Phone;
+        if (phone != null)
+        {
+            Phones.Remove(phone);
+            ListViewPhones.SelectedItem = null;
+        }
+    }
+}
+```
