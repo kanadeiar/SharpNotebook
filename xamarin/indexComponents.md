@@ -4,7 +4,7 @@
 
 Margin, Padding
 
-```csharp
+```xml
 <StackLayout Padding="0,20,0,0">
     <BoxView Color="Green" Margin="20" />
     <BoxView Color="Blue" Margin="10, 15" />
@@ -16,7 +16,7 @@ Margin, Padding
 
 Start, Center, End, Fill, StartAndExpand, CenterAndExpand, EndAndExpand, FillAndExpand
 
-```csharp
+```xml
 <StackLayout Padding="0,20,0,0">
     <Label Text="Привет из Xamarin Forms" VerticalOptions="Center" HorizontalOptions="Center" />
 </StackLayout>
@@ -26,7 +26,7 @@ Start, Center, End, Fill, StartAndExpand, CenterAndExpand, EndAndExpand, FillAnd
 
 Start, Center, End
 
-```csharp
+```xml
 <StackLayout Padding="0,20,0,0">
     <Label Text="Привет из Xamarin Forms" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
 </StackLayout>
@@ -35,7 +35,7 @@ Start, Center, End
 ## Кнопки
 
 xaml
-```csharp
+```xml
 <Button Text = "Нажми!" FontSize="Large" BorderWidth="1"
     HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="OnButtonClicked" />
 ```
@@ -90,7 +90,7 @@ Completed: возникает при завершении ввода
 - Numeric
 
 xaml
-```csharp
+```xml
 <StackLayout>
     <Label Font="26" Text="Многострочный ввод" />
     <Editor BackgroundColor="#a5d6a7" HeightRequest="200" />
@@ -100,7 +100,7 @@ xaml
 ## Контейнер выделения
 
 xaml
-```csharp
+```xml
 <Frame BorderColor="Gray" BackgroundColor="#e1e1e1" CornerRadius="8">
     <Label Text="Xamarin Forms" FontSize="Large" HorizontalOptions="Center"  />
 </Frame>
@@ -115,7 +115,7 @@ xaml
 Использование изображений:
 
 xaml:
-```csharp
+```xml
 <Image x:Name="MyImage" Source="Eat.png"/>
 ```
 Код:
@@ -142,14 +142,14 @@ image.Source = new UriImageSource
 - AspectFill: сохраняет аспектное отношение, но вырезает из него ту часть, которая вписывается в экран
 
 Xaml:
-```csharp
+```xml
 <Image Source="forest.jpg" Aspect="AspectFill" />
 ```
 
 ## Дата
 
 Xaml:
-```csharp
+```xml
 <Label x:Name="LabelDate" Text="Выберите дату:" FontSize="Medium" />
 <DatePicker Format="D" DateSelected="DatePicker_DateSelected">
     <DatePicker.MinimumDate>6/6/2021</DatePicker.MinimumDate>
@@ -167,7 +167,7 @@ private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
 ## Время
 
 Xaml:
-```csharp
+```xml
 <Label x:Name="LabelTime" Text="Выберите время:" FontSize="Medium" />
 <TimePicker x:Name="TimePicker" Time="12:00:00" PropertyChanged="TimePicker_PropertyChanged"/>
 ```
@@ -182,7 +182,7 @@ private void TimePicker_PropertyChanged(object sender, System.ComponentModel.Pro
 ## Выпадающий список
 
 Xaml:
-```csharp
+```xml
 <Label x:Name="LabelHeader" Text="Языки программирования" FontSize="Large" />
 <Picker x:Name="PickerLanguages" SelectedIndexChanged="Picker_SelectedIndexChanged" >
     <Picker.Items>
@@ -206,7 +206,7 @@ private void Picker_SelectedIndexChanged(object sender, EventArgs e)
 Кнопки:
 
 Xaml:
-```csharp
+```xml
 <Label x:Name="LabelStepper" Text="Число: 0" FontSize="Large"/>
 <Stepper Minimum="0" Maximum="10" Increment="0.5" ValueChanged="Stepper_ValueChanged" />
 ```
@@ -222,7 +222,7 @@ private void Stepper_ValueChanged(object sender, ValueChangedEventArgs e)
 Слайдер:
 
 Xaml:
-```csharp
+```xml
 <Label x:Name="LabelSlider" Text="Слайдер: 0" FontSize="Large" />
 <Slider Minimum="0" Maximum="100" Value="50" MinimumTrackColor="Green"
         MaximumTrackColor="Gray" ThumbColor="Green" ValueChanged="Slider_ValueChanged"/>
@@ -238,7 +238,7 @@ private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
 Выключатели:
 
 Xaml:
-```csharp
+```xml
 <Label Text="Переключатель" FontSize="Large" HorizontalOptions="Center" />
 <Switch HorizontalOptions="Center" Toggled="Switch_Toggled" />
 <Label x:Name="LabelSwitch" FontSize="Large" HorizontalOptions="Center" />
@@ -278,7 +278,7 @@ private void Switch_Toggled(object sender, ToggledEventArgs e)
 - Settings: используется для отображения набора настроек
 
 Xaml:
-```csharp
+```xml
 <TableView Intent="Form">
     <TableView.Root>
         <TableRoot>
@@ -312,7 +312,7 @@ private void SwitchCell_OnChanged(object sender, ToggledEventArgs e)
 Простой веб браузер в приложении:
 
 Xaml:
-```csharp
+```xml
 <StackLayout Orientation="Horizontal" >
     <Button Text="GO" Clicked="Button_Clicked" />
     <Entry x:Name="UrlEntry" HorizontalOptions="FillAndExpand" />
@@ -332,7 +332,7 @@ private void Button_Clicked(object sender, EventArgs e)
 Сообщения - DisplayAlert & DisplayActionSheet
 
 Xaml:
-```csharp
+```xml
 <Button Text="Показ сообщения" Clicked="Button_Clicked" />
 ```
 Код:
@@ -367,7 +367,7 @@ private async void Button_Clicked_2(object sender, EventArgs e)
 ## Таймер
 
 Xaml:
-```csharp
+```xml
 <Button x:Name="ButtonTimer" Text="Нажми" VerticalOptions="Center" HorizontalOptions="Center" FontSize="Large" Clicked="ButtonTimer_Clicked"/>
 ```
 Код:

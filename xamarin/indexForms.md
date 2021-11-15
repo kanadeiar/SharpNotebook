@@ -5,7 +5,7 @@
 Проект -> Xamarin.Forms.
 
 Текст со сложным оформлением:
-```csharp
+```xml
 <Label FontSize="16" Padding="30,24,30,0">
     <Label.FormattedText>
         <FormattedString>
@@ -41,14 +41,14 @@ public const string HEADER = "Xamarin";
 ```
 
 Xaml:
-```csharp
+```xml
 xmlns:local="clr-namespace:HelloApp"
 <Label Text="{x:Static local:MainPage.HEADER}" />
 ```
 
 Расширение разметки x:Array позволяет определить массив данных.
 Xaml:
-```csharp
+```xml
 <ListView Margin="20,0,20,0" SeparatorVisibility="None">
     <ListView.ItemTemplate>
         <DataTemplate>
@@ -96,7 +96,7 @@ Xaml:
 - FlexLayout
 
 Xaml:
-```csharp
+```xml
 <StackLayout x:Name="stackLayout" Spacing="8">
     <Label Text="Первая метка" TextColor="Red"  />
     <Label Text="Вторая метка" TextColor="Blue" />
@@ -108,7 +108,7 @@ Xaml:
 ```
 
 Xaml:
-```csharp
+```xml
 <ScrollView>
     <StackLayout>
       <Label Text="Метка 1" FontSize="23" />
@@ -120,7 +120,7 @@ Xaml:
 ```
 
 Xaml:
-```csharp
+```xml
 <AbsoluteLayout>
     <BoxView Color="LightBlue" AbsoluteLayout.LayoutBounds="70, 70, 200, 70" />
     <Label Text="Заголовок" FontSize="Large" AbsoluteLayout.LayoutBounds="110, 90, 150, 60" />
@@ -134,7 +134,7 @@ Xaml:
 ```
 
 Xaml:
-```csharp
+```xml
 <RelativeLayout>
     <BoxView WidthRequest="100" HeightRequest="100" Color="Blue"
         RelativeLayout.XConstraint= "{ConstraintExpression Type=RelativeToParent, 
@@ -158,7 +158,7 @@ Xaml:
 ```
 
 Xaml:
-```csharp
+```xml
 <Grid>
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
