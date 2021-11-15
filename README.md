@@ -226,13 +226,13 @@
 
 
 
-## Xamarin
+## Мобильный
 
 [Базовый Xamarin.Forms](./xamarin/indexForms.md).
 
 [Компоненты Xamarin.Forms](./xamarin/indexComponents.md).
 
-[Ресурсы Xamarin.Forms](./xamarin/indexResources.md)
+[Стильный Xamarin.Forms](./xamarin/indexStyles.md).
 
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
