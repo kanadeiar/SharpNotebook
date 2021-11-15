@@ -234,6 +234,8 @@
 
 [Ресурсы Xamarin.Forms](./xamarin/indexResources.md).
 
+[Привязки Xamarin.Forms](./xamarin/indexBinding.md)
+
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
 
