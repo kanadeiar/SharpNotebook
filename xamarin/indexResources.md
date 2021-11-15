@@ -14,7 +14,7 @@
 
 На уровне всего приложения. Эти ресурсы доступы из любого места и из любой страницы приложения.
 
-```csharp
+```xaml
 <ContentPage ...>
   <ContentPage.Resources>
     <ResourceDictionary>
@@ -34,7 +34,7 @@
 
 С помощью ресурсов можно задать легко управлять визуальными параметрами (например, цветом, отступами и т.д.), которые должны быть специфичными для отдельным платформ.
 
-```csharp
+```xml
 <ContentPage.Resources>
     <ResourceDictionary>
         <OnPlatform x:Key="textColor"
@@ -222,7 +222,7 @@ public class EntryValidation : TriggerAction<Entry>
 }
 ```
 xaml
-```csharp
+```xaml
 <ContentPage ...
              xmlns:local="clr-namespace:HelloApp;assembly=HelloApp"
              ...>
@@ -241,5 +241,54 @@ xaml
     <Entry FontSize="Large" Style="{StaticResource Key=entryStyle}" />
   </StackLayout>
 </ContentPage>
+```
+
+## Стили
+
+В Xamarin Forms для стилизации элементов управления можно использовать стили CSS. 
+
+Файл стилей styles.css в папке styles:
+```css
+^contentpage {
+    background-color: darkseagreen;
+}
+stacklayout {
+    margin: 15;
+    padding: 10;
+}
+label {
+    color: black;
+}
+#header {
+    font-size: 32;
+    font-weight: bold;
+}
+.english {
+    font-weight: bold;
+    font-size: large;
+    color: darkblue;
+}
+.russian {
+    font-size: medium;
+}
+stacklayout label {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+```
+
+Использование стилей, xaml:
+```xml
+<ContentPage.Resources>
+    <StyleSheet Source="/styles/styles.css" />
+</ContentPage.Resources>
+
+<StackLayout Padding="5">
+    <Label x:Name="Header" StyleId="header" Text="Заголовок" />
+    <Label Text="apple" StyleClass="english" />
+    <Label Text="яблоко" StyleClass="russian" />
+    <Label Text="house" StyleClass="english" />
+    <Label Text="дом" StyleClass="russian" />
+
+</StackLayout>
 ```
 
