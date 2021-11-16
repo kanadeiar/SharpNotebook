@@ -213,9 +213,6 @@
 
 [Веб .NET 6 Введение](./web/indexWeb.md).
 
-
-
-
 [Веб HTML+CSS](./asp/indexHTML.md).
 
 [Веб HTML+CSS Адаптив](./asp/indexHTMLAdopt.md).
@@ -239,6 +236,8 @@
 [Данные Xamarin.Forms](./xamarin/indexData.md).
 
 [Навигация Xamarin.Forms](./xamarin/indexNavigation.md).
+
+[MVVM Xamarin.Forms](./xamarin/indexMVVM.md).
 
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
