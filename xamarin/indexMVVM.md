@@ -158,13 +158,19 @@ public static IServiceProvider Services => _Services ??= GetServices().BuildServ
 private static void InitializeServices(IServiceCollection services)
 {
     services.AddScoped<MainPageViewModel>();
+
+    services.AddScoped<MainPage>();
 }
-```
-App.xaml
-```xml
-<Application.Resources>
-    <vm:ViewModelLocator x:Key="Locator" />
-</Application.Resources>
+
+public App()
+{
+    InitializeComponent();
+
+    var mainPage = Services.GetRequiredService<MainPage>();
+    mainPage.ViewModel = Services.GetRequiredService<MainPageViewModel>();
+
+    MainPage = new NavigationPage(mainPage);
+}
 ```
 
 Base.Entity
@@ -253,6 +259,13 @@ public class ViewModelLocator
 }
 ```
 
+App.xaml
+```xml
+<Application.Resources>
+    <vm:ViewModelLocator x:Key="Locator" />
+</Application.Resources>
+```
+
 MainPage.xaml
 ```xml
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
@@ -272,5 +285,5 @@ MainPage.xaml
 
 MainPage.xaml.cs
 ```csharp
-
+public MainPageViewModel ViewModel { get; set; }
 ```
