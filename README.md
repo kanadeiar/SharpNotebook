@@ -239,6 +239,8 @@
 
 [MVVM Xamarin.Forms](./xamarin/indexMVVM.md).
 
+[Интернет Xamarin.Forms](./xamarin/indexInternet.md).
+
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
 

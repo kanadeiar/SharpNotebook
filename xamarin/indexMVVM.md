@@ -365,4 +365,150 @@ public FriendPage(FriendViewModel model)
 
 
 
+## Инфраструктура
 
+<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+
+App.xaml.cs
+```csharp
+private static IServiceProvider _Services;
+private static IServiceCollection GetServices()
+{
+    var services = new ServiceCollection();
+    InitializeServices(services);
+    return services;
+}
+/// <summary> Сервисы приложения </summary>
+public static IServiceProvider Services => _Services ??= GetServices().BuildServiceProvider();
+private static void InitializeServices(IServiceCollection services)
+{
+    services.AddScoped<MainPageViewModel>();
+
+    services.AddScoped<MainPage>();
+}
+
+public App()
+{
+    InitializeComponent();
+
+    var mainPage = Services.GetRequiredService<MainPage>();
+    mainPage.ViewModel = Services.GetRequiredService<MainPageViewModel>();
+
+    MainPage = new NavigationPage(mainPage);
+}
+```
+
+Base.Entity
+```csharp
+public abstract class Entity : INotifyPropertyChanged
+{
+    public int Id { get; set; }
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    {
+        if (Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+}
+```
+
+Friend
+```csharp
+public class Friend : Entity
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+}
+```
+
+Base.ViewModel
+```csharp
+public abstract class ViewModel : INotifyPropertyChanged
+{
+    public int Id { get; set; }
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    {
+        if (Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+}
+```
+
+MainPageViewModel
+```csharp
+public class MainPageViewModel : ViewModel
+{
+    #region Свойства
+
+    private string _Title = "Клиентское приложение";
+    /// <summary> Название приложения </summary>
+    public string Title
+    {
+        get => _Title;
+        set => Set(ref _Title, value);
+    }
+
+    #endregion
+
+    public MainPageViewModel()
+    {
+
+    }
+
+    #region Команды
+
+    #endregion
+}
+```
+
+Locator
+```csharp
+public class ViewModelLocator
+{
+    public MainPageViewModel MainPageViewModel => App.Services
+        .GetRequiredService<MainPageViewModel>();
+}
+```
+
+App.xaml
+```xml
+<Application.Resources>
+    <vm:ViewModelLocator x:Key="Locator" />
+</Application.Resources>
+```
+
+MainPage.xaml
+```xml
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:vm="clr-namespace:ClientApp.ViewModels" 
+             x:DataType="vm:MainPageViewModel"
+             x:Class="ClientApp.Views.MainPage"
+             Title="{Binding Title}"             
+             BindingContext="{Binding MainPageViewModel, Source={StaticResource Locator}}">
+
+    <StackLayout Padding="5">        
+
+    </StackLayout>
+
+</ContentPage>
+```
+
+MainPage.xaml.cs
+```csharp
+public MainPageViewModel ViewModel { get; set; }
+```
