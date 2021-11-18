@@ -241,6 +241,10 @@
 
 [Интернет Xamarin.Forms](./xamarin/indexInternet.md).
 
+[Летающая панель Xamarin.Forms](./xamarin/indexFlyout.md).
+
+[Публикация Xamarin.Forms](./xamarin/indexDeploy.md).
+
 [Базовый Xamarin.Android](./xamarin/indexBasic.md).
 
 
