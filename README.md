@@ -67,7 +67,15 @@
 
 [Общеязыковая спецификация CLS](./platform/cls.md).
 
-[Общеязыковая инфраструктура CLI](./platform/cli.md)
+[Общеязыковая инфраструктура CLI](./platform/cli.md).
+
+## Теория
+
+[ООП](./theory/indexOOP.md). 
+
+[SOLID](./theory/indexSOLID.md).
+
+
 
 ## Базовый С#
 
@@ -108,8 +116,6 @@
 [Библиотека полезностей](./basic/indexLibs.md).
 
 ## Классический C#
-
-[Основы ООП](./classic/indexBasic.md).
 
 [Класс (конструктор, this, static, синтаксис инициализации, константы, частичные классы)](./classic/indexClass.md).
 
