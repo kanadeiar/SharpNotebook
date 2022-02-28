@@ -79,6 +79,18 @@
 
 [Микросервисы](./theory/indexMicroservices.md).
 
+Порождающие
+
+[Паттерн абстрактная фабрика](./theory/indexAbstractFabric.md).
+
+[Паттерн строитель](./theory/indexBuilder.md).
+
+
+
+Структурные паттерны проектирования
+
+Поведенческие паттерны проектирования
+
 ## Базовый С#
 
 [Консоль](./basic/indexConsole.md).
