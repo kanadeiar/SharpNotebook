@@ -81,9 +81,9 @@
 
 Порождающие
 
-[Паттерн абстрактная фабрика](./theory/indexAbstractFabric.md).
+[Порождающие паттерны](./theory/indexCreate.md).
 
-[Паттерн строитель](./theory/indexBuilder.md).
+
 
 
 
