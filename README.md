@@ -75,7 +75,9 @@
 
 [SOLID](./theory/indexSOLID.md).
 
+[REST](./theory/indexREST.md).
 
+[Микросервисы](./theory/indexMicroservices.md).
 
 ## Базовый С#
 
@@ -288,6 +290,8 @@ x [Базовый Git](./git/indexBasic.md).
 ## Использованные источники
 
 [Интересные книги](./link/books.md). 
+
+[Docker](./link/docker.md).
 
 [Интерактивный тур в git](https://githowto.com/ru).
 
