@@ -169,3 +169,112 @@ Console.WriteLine($"RESULT: {tree.Operation()}\n");
 Console.WriteLine();
 Console.ReadKey();
 ```
+
+## Паттерн декоратор
+
+Декоратор — это структурный паттерн, который позволяет добавлять объектам новые поведения на лету, помещая их в объекты-обёртки.
+
+Декоратор позволяет оборачивать объекты бесчисленное количество раз благодаря тому, что и обёртки, и реальные оборачиваемые объекты имеют общий интерфейс.
+
+```csharp
+abstract class Component
+{
+    public abstract string Operation();
+}
+class ConcreteComponent : Component
+{
+    public override string Operation()
+    {
+        return "ConcreteComponent";
+    }
+}
+class Decorator : Component
+{
+    protected Component _component;
+    public Decorator(Component component)
+    {
+        _component = component;
+    }
+    public void SetComponent(Component component)
+    {
+        _component = component;
+    }
+    public override string Operation()
+    {
+        if (_component != null)
+        {
+            return _component.Operation();
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+}
+class ConcreteDecoratorA : Decorator
+{
+    public ConcreteDecoratorA(Component comp) : base(comp)
+    {
+    }
+    public override string Operation()
+    {
+        return $"ConcreteDecoratorA({base.Operation()})";
+    }
+}
+```
+Использование:
+```csharp
+Console.WriteLine("Decoreator");
+var simple = new ConcreteComponent();
+Console.WriteLine("RESULT: " + simple.Operation());
+var decorator1 = new ConcreteDecoratorA(simple);
+Console.WriteLine("RESULT: " + decorator1.Operation());
+Console.WriteLine();
+Console.ReadKey();
+```
+
+## Паттерн фасад
+
+Фасад — это структурный паттерн, который предоставляет простой (но урезанный) интерфейс к сложной системе объектов, библиотеке или фреймворку.
+
+Кроме того, что Фасад позволяет снизить общую сложность программы, он также помогает вынести код, зависимый от внешней системы в единственное место.
+
+```csharp
+public class Facade
+{
+    protected Subsystem1 _subsystem1;
+    public Facade(Subsystem1 subsystem1)
+    {
+        _subsystem1 = subsystem1;
+    }
+    public string Operation()
+    {
+        string result = "Facade initializes subsystems:\n";
+        result += _subsystem1.operation1();
+        result += "Facade orders subsystems to perform the action:\n";
+        result += _subsystem1.operationN();
+        return result;
+    }
+}
+
+public class Subsystem1
+{
+    public string operation1()
+    {
+        return "Subsystem1: Ready!\n";
+    }
+    public string operationN()
+    {
+        return "Subsystem1: Go!\n";
+    }
+}
+```
+Использование:
+```csharp
+Console.WriteLine("Facade");
+Subsystem1 subsystem1 = new Subsystem1();
+Facade facade = new Facade(subsystem1);
+Console.Write(facade.Operation());
+Console.WriteLine();
+Console.ReadKey();
+```
