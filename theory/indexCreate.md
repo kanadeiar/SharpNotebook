@@ -215,9 +215,21 @@ var p3 = p1.Copy();
 Одиночка — это порождающий паттерн проектирования, который гарантирует, что у класса есть только один экземпляр, и предоставляет к нему глобальную точку доступа.
 
 ```csharp
-
+public sealed class Singleton
+{
+    private Singleton() { }
+    private static Singleton _instance;
+    public static Singleton GetInstance() => _instance ??= new Singleton();
+}
 ```
 Использование:
 ```csharp
-
+var s1 = Singleton.GetInstance();
+var s2 = Singleton.GetInstance();
+if (s1 == s2)
+{
+    Console.WriteLine("Equals");
+}
+Console.WriteLine();
+Console.ReadKey();
 ```

@@ -433,3 +433,127 @@ Console.WriteLine();
 Console.ReadKey();
 ```
 
+## Паттерн наблюдатель
+
+Наблюдатель — это поведенческий паттерн, который позволяет объектам оповещать другие объекты об изменениях своего состояния.
+
+При этом наблюдатели могут свободно подписываться и отписываться от этих оповещений.
+
+```csharp
+public interface IObserver
+{
+    void Update(ISubject subject);
+}
+public interface ISubject
+{
+    void Attach(IObserver observer);
+    void Detach(IObserver observer);
+    void Notify();
+}
+public class Subject : ISubject
+{
+    public int State { get; set; } = 0;
+    private List<IObserver> _observers = new List<IObserver>();
+    public void Attach(IObserver observer)
+    {
+        Console.WriteLine("Attached");
+        _observers.Add(observer);
+    }
+    public void Detach(IObserver observer)
+    {
+        _observers.Remove(observer);
+        Console.WriteLine("Detached");
+    }
+    public void Notify()
+    {
+        Console.WriteLine("Subject - Notify");
+        foreach (IObserver observer in _observers)
+            observer.Update(this);
+    }
+    public void SomeBisinessLogic()
+    {
+        State++;
+        Notify();
+    }
+}
+class ConcreteObserverA : IObserver
+{
+    public void Update(ISubject subject)
+    {
+        if ((subject as Subject).State == 0 || (subject as Subject).State > 1)
+        {
+            Console.WriteLine("ConcreteObserverA: reacted to the event.");
+        }
+    }
+}
+```
+Использование:
+```csharp
+var subject = new Subject();
+var observerA = new ConcreteObserverA();
+subject.Attach(observerA);
+subject.SomeBisinessLogic();
+subject.SomeBisinessLogic();
+subject.Detach(observerA);
+Console.WriteLine();
+Console.ReadKey();
+```
+
+## Паттерн состояние
+
+Состояние — это поведенческий паттерн, позволяющий динамически изменять поведение объекта при смене его состояния.
+
+Поведения, зависящие от состояния, переезжают в отдельные классы. Первоначальный класс хранит ссылку на один из таких объектов-состояний и делегирует ему работу.
+
+```csharp
+class Context
+{
+    private State _state = null;
+    public Context(State state)
+    {
+        TransitionTo(state);
+    }
+    public void TransitionTo(State state)
+    {
+        Console.WriteLine("Transition to {0}", state.GetType().Name);
+        _state = state;
+        _state.SetContext(this);
+    }
+    public void Request1()
+    {
+        _state.Handle1();
+    }
+}
+abstract class State
+{
+    protected Context _context;
+    public void SetContext(Context context)
+    {
+        _context = context;
+    }
+    public abstract void Handle1();
+}
+class ConcreteStateA : State
+{
+    public override void Handle1()
+    {
+        Console.WriteLine("ConcreteA change context");
+        _context.TransitionTo(new ConcreteStateB());
+    }
+}
+class ConcreteStateB : State
+{
+    public override void Handle1()
+    {
+        Console.WriteLine("ConcreteB handles request 1");
+    }
+}
+```
+Использование:
+```csharp
+var context = new Context(new ConcreteStateA());
+context.Request1();
+context.Request1();
+Console.WriteLine();
+Console.ReadKey();
+```
