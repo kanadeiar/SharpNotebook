@@ -557,3 +557,158 @@ context.Request1();
 Console.WriteLine();
 Console.ReadKey();
 ```
+
+## Паттерн стратегия
+
+Стратегия — это поведенческий паттерн, выносит набор алгоритмов в собственные классы и делает их взаимозаменимыми.
+
+Другие объекты содержат ссылку на объект-стратегию и делегируют ей работу. Программа может подменить этот объект другим, если требуется иной способ решения задачи.
+
+```csharp
+class Context
+{
+    private IStrategy _strategy;
+    public Context()
+    { }
+    public Context(IStrategy strategy)
+    {
+        _strategy = strategy;
+    }
+    public void SetStrategy(IStrategy strategy)
+    {
+        _strategy = strategy;
+    }
+    public void DoSomeBusinessLogic()
+    {
+        Console.WriteLine("Context: Sorting data using the strategy");
+        var results = _strategy.DoIt(new List<int> { 1, 2, 3 });
+        var strs = string.Join(", ", results as List<int>);
+        Console.WriteLine(strs);
+    }
+}
+interface IStrategy
+{
+    object DoIt(object data);
+}
+class ConcreteStrategyA : IStrategy
+{
+    public object DoIt(object data)
+    {
+        var list = data as List<int>;
+        list.Sort();
+        return list;
+    }
+}
+class ConcreteStrategyB : IStrategy
+{
+    public object DoIt(object data)
+    {
+        var list = data as List<int>;
+        list.Sort();
+        list.Reverse();
+        return list;
+    }
+}
+```
+Использование:
+```csharp
+var context = new Strategy.Context();
+context.SetStrategy(new Strategy.ConcreteStrategyA());
+context.DoSomeBusinessLogic();
+context.SetStrategy(new Strategy.ConcreteStrategyB());
+context.DoSomeBusinessLogic();
+Console.WriteLine();
+Console.ReadKey();
+```
+
+## Паттерн шаблонный метод
+
+Шаблонный метод — это поведенческий паттерн, задающий скелет алгоритма в суперклассе и заставляющий подклассы реализовать конкретные шаги этого алгоритма.
+
+```csharp
+abstract class AbstractClass
+{
+    public void TemplateMethod()
+    {
+        BaseOperation();
+        RequiredOperation();
+        Hook();
+        BaseOperation();
+    }
+    protected void BaseOperation()
+    {
+        Console.WriteLine("Base operation");
+    }
+    protected abstract void RequiredOperation();
+    protected virtual void Hook() { }
+}
+class ConcreteClass1 : AbstractClass
+{
+    protected override void RequiredOperation()
+    {
+        Console.WriteLine("Concrete class 1 implement operation");
+    }
+}
+class ConcreteClass2 : AbstractClass
+{
+    protected override void RequiredOperation()
+    {
+        Console.WriteLine("Concrete class 2 implement operation");
+    }
+    protected override void Hook()
+    {
+        Console.WriteLine("Override hook");
+    }
+}
+```
+Использование:
+```csharp
+AbstractClass concrete1 = new ConcreteClass1();
+concrete1.TemplateMethod();
+AbstractClass concrete2 = new ConcreteClass2();
+concrete2.TemplateMethod();
+Console.WriteLine();
+Console.ReadKey();
+```
+
+## Паттерн посетитель
+
+Посетитель — это поведенческий паттерн, который позволяет добавить новую операцию для целой иерархии классов, не изменяя код этих классов.
+
+```csharp
+public interface IComponent
+{
+    void Accept(IVisitor visitor);
+}
+public class ConcreteComponentA : IComponent
+{
+    public void Accept(IVisitor visitor)
+    {
+        visitor.VisitConcreteComponentA(this);
+    }
+    public string ExclusiveMethodOfConcreteComponentA()
+    {
+        return "A";
+    }
+}
+public interface IVisitor
+{
+    void VisitConcreteComponentA(ConcreteComponentA element);
+}
+class ConcreteVisitor : IVisitor
+{
+    public void VisitConcreteComponentA(ConcreteComponentA element)
+    {
+        Console.WriteLine(element.ExclusiveMethodOfConcreteComponentA() + " + Concrete Visitor 1");
+    }
+}
+```
+Использование:
+```csharp
+IComponent component = new ConcreteComponentA();
+Console.WriteLine("visit to the base visitor interface");
+var visitor = new ConcreteVisitor();
+component.Accept(visitor);
+Console.WriteLine();
+Console.ReadKey();
+```
