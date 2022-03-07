@@ -299,6 +299,12 @@ x [Базовый Git](./git/indexBasic.md).
 
 [Docker](./link/docker.md).
 
+[Postgree](./link/postgreedb.md).
+
+[Rabbitmq](./link/rabbitmq.md).
+
+[Redis](./link/redis.md).
+
 [Интерактивный тур в git](https://githowto.com/ru).
 
 [Ссылки](./link/links.md). 
