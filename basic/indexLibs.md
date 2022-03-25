@@ -83,6 +83,41 @@ var res = (DateTime.Now - start).TotalMilliseconds;
 Console.WriteLine("время - {0} мс",res);
 ```
 
+## Точный замер скорости выполнения кода и количества сборок мусора:
+```csharp
+internal sealed class OperationTimer : IDisposable
+{
+    private int _startTime;
+    private string _text;
+    private string _collectionCount;
+    public OperationTimer(string text)
+    {        
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        _text = text;
+        _collectionCount = GC.CollectionCount(0);
+        _startTime = Stopwatch.StartNew();
+    }
+    public void Dispose()
+    {
+        Console.WriteLine("{0} (GC={1,3}) - {2}", _startTime.Elapsed, GC.CollectionCount(0) - _collectionCount, _text);
+    }
+}
+```
+Пример использования:
+```csharp
+using (new OperationTimer("List<int>"))
+{
+    List<int> list = new List<int>();
+    for (var i = 0; i < 100000; i++)
+    {
+        list.Add(i);
+        int x = list[i];
+    }
+    list = null;
+}
+```
 
 ## Цикличная задержка программы в асинхронном режиме
 ```csharp
