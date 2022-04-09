@@ -305,6 +305,8 @@ x [Базовый Git](./git/indexBasic.md).
 
 [Redis](./link/redis.md).
 
+[NuGet](./link/nuget.md).
+
 [Интерактивный тур в git](https://githowto.com/ru).
 
 [Ссылки](./link/links.md). 
