@@ -74,7 +74,23 @@
 
 [Общеязыковая спецификация CLS](./platform/cls.md).
 
-[Общеязыковая инфраструктура CLI](./platform/cli.md)
+[Общеязыковая инфраструктура CLI](./platform/cli.md).
+
+## Теория
+
+[ООП](./theory/indexOOP.md). 
+
+[SOLID](./theory/indexSOLID.md).
+
+[REST](./theory/indexREST.md).
+
+[Микросервисы](./theory/indexMicroservices.md).
+
+[Порождающие паттерны](./theory/indexCreate.md).
+
+[Структурные паттерны](./theory/indexStruct.md).
+
+[Поведенческие паттерны](./theory/indexBehavior.md).
 
 ## Базовый С#
 
@@ -115,8 +131,6 @@
 [Библиотека полезностей](./basic/indexLibs.md).
 
 ## Классический C#
-
-[Основы ООП](./classic/indexBasic.md).
 
 [Класс (конструктор, this, static, синтаксис инициализации, константы, частичные классы)](./classic/indexClass.md).
 
@@ -200,7 +214,7 @@
 
 [Введение ADO.NET](./sql/indexADO.md).
 
-[Подключенный уровень ADO.NET - фабрика поставщика, построитель, команды, чтение, транзакции, массовое копирование, отслеживание состояния](./sql/indexConnected.md).
+[Подключенный уровень ADO.NET - фабрика поставщика, построитель, команды, чтение, транзакции, массовое копирование, отслеживание состояния](./sql/indexADOConnected.md).
 
 [ADO.NET Подключенный уровень Примеры](./sql/indexADOConnectedSamples.md).
 
@@ -216,9 +230,9 @@
 
 ## Веб
 
-[Веб .NET 6 Команды](./web/indexCommands.md).
-
 [Веб .NET 6 Введение](./web/indexWeb.md).
+
+[Веб .NET 6 Команды](./web/indexCommands.md).
 
 [Веб HTML+CSS](./asp/indexHTML.md).
 
@@ -289,6 +303,16 @@ x [Базовый Git](./git/indexBasic.md).
 ## Использованные источники
 
 [Интересные книги](./link/books.md). 
+
+[Docker](./link/docker.md).
+
+[Postgree](./link/postgreedb.md).
+
+[Rabbitmq](./link/rabbitmq.md).
+
+[Redis](./link/redis.md).
+
+[NuGet](./link/nuget.md).
 
 [Интерактивный тур в git](https://githowto.com/ru).
 
