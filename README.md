@@ -2,9 +2,16 @@
 
 ![Блокнот](img/header.png) 
 
-Маленький справочник по языку C#.
+Заметки по языку C#.
+
+## Перезагрузка dotnet
+
+[CLR](./dotnet/clr.md)
+
+
 
 ## Введение
+
 [Привет мир](./welcome/index.md)
 
 [Фичи C#](./welcome/features.md)
