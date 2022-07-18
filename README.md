@@ -4,9 +4,9 @@
 
 Заметки по языку C#.
 
-## Перезагрузка dotnet
+## .NET
 
-[CLR](./dotnet/clr.md)
+[Введение в платформу .NET](./dotnet/introduction.md)
 
 
 
