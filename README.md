@@ -8,7 +8,7 @@
 
 [Введение в платформу .NET](./dotnet/introduction.md)
 
-
+[Core Runtime](./dotnet/runtime.md)
 
 ## Введение
 
