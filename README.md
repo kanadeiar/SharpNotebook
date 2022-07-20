@@ -10,6 +10,13 @@
 
 [Core Runtime](./dotnet/runtime.md)
 
+[Командная строка dotnet - полезные команды](./dotnet/commands.md)
+
+[Консольное приложение](./dotnet/console.md)
+
+
+
+
 ## Введение
 
 [Привет мир](./welcome/index.md)
