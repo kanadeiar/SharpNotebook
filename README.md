@@ -14,6 +14,11 @@
 
 [Консольное приложение](./dotnet/console.md)
 
+## C#
+
+[Основы типов](./csharp/core.md)
+
+[Различные типы](./csharp/types.md)
 
 
 
