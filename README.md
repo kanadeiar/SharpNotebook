@@ -16,7 +16,7 @@
 
 ## C#
 
-[Основы типов](./csharp/core.md)
+[Основы типов](./csharp/origintypes.md)
 
 [Различные типы](./csharp/types.md)
 
