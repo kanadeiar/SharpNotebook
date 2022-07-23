@@ -10,6 +10,8 @@
 
 [Core Runtime](./dotnet/runtime.md)
 
+[Детали работы CLR](./dotnet/details.md)
+
 [Командная строка dotnet - полезные команды](./dotnet/commands.md)
 
 [Консольное приложение](./dotnet/console.md)
