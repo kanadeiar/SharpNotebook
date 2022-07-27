@@ -6,11 +6,7 @@
 
 ## .NET
 
-[Введение в платформу .NET](./dotnet/introduction.md)
-
-[Core Runtime](./dotnet/runtime.md)
-
-[Детали работы CLR](./dotnet/details.md)
+[Введение в платформу .NET](./dotnet/introduction.md) [Core Runtime](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
 
 [Командная строка dotnet - полезные команды](./dotnet/commands.md)
 
@@ -18,11 +14,9 @@
 
 ## C#
 
-[Основы типов](./csharp/origintypes.md)
+[Основы типов](./csharp/origintypes.md) [Разновидности типов](./csharp/typetypes.md) [Типы](./csharp/types.md) [Члены типов](./csharp/fieldstypes.md)
 
-[Различные типы](./csharp/types.md)
-
-
+[Константы](./csharp/consts.md) [Поля](./csharp/fields.md)
 
 ## Введение
 
