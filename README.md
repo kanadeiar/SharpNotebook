@@ -4,7 +4,7 @@
 
 Заметки по языку C#.
 
-## .NET
+## CLR C#
 
 [Введение в платформу .NET](./dotnet/introduction.md) [Core Runtime](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
 
@@ -12,11 +12,19 @@
 
 [Консольное приложение](./dotnet/console.md)
 
-## C#
+## Типы C#
 
-[Основы типов](./csharp/origintypes.md) [Разновидности типов](./csharp/typetypes.md) [Типы](./csharp/types.md) [Члены типов](./csharp/fieldstypes.md)
+[Основы типов](./csharp/origintypes.md) 
+
+[Разновидности типов](./csharp/typetypes.md) [Типы](./csharp/types.md) [Члены типов](./csharp/fieldstypes.md)
 
 [Константы](./csharp/consts.md) [Поля](./csharp/fields.md)
+
+## Типы данных C#
+
+## Механизмы C#
+
+## Многопоточность C#
 
 ## Введение
 
