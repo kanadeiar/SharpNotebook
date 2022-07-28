@@ -18,7 +18,7 @@
 
 [Разновидности типов](./csharp/typetypes.md) [Типы](./csharp/types.md) [Члены типов](./csharp/fieldstypes.md)
 
-[Константы](./csharp/consts.md) [Поля](./csharp/fields.md)
+[Константы](./csharp/consts.md) [Поля](./csharp/fields.md) [Методы](./csharp/methods.md)
 
 ## Типы данных C#
 
