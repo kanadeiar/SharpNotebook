@@ -4,27 +4,29 @@
 
 Заметки по языку C#.
 
-## CLR C#
+## .NET C#
 
 [Введение в платформу .NET](./dotnet/introduction.md) [Core Runtime](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
 
-[Командная строка dotnet - полезные команды](./dotnet/commands.md)
+[Команды командной строки dotnet](./dotnet/commands.md)
 
 [Консольное приложение](./dotnet/console.md)
 
-## Типы C#
+## Создание типов C#
 
 [Основы типов](./csharp/origintypes.md) 
 
 [Разновидности типов](./csharp/typetypes.md) [Типы](./csharp/types.md) [Члены типов](./csharp/fieldstypes.md)
 
-[Константы](./csharp/consts.md) [Поля](./csharp/fields.md) [Методы](./csharp/methods.md)
+[Константы](./csharp/consts.md) [Поля](./csharp/fields.md) [Методы](./csharp/methods.md) [Параметры](./csharp/parameters.md)
 
 ## Типы данных C#
 
 ## Механизмы C#
 
 ## Многопоточность C#
+
+
 
 ## Введение
 
