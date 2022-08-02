@@ -112,6 +112,36 @@ private static void Method(Object? s, ValueEventArgs e)
 }
 ```
 
+Пример заинтересованного класса:
+
+```csharp
+//объект, заинтересованный в уведомлении о событии
+internal sealed class Fax
+{
+    public Fax(TestManager tm)
+    {
+        tm.Message += FaxMessage;
+    }
+    private void FaxMessage(object? sender, TestEventArgs e)
+    {
+        System.Console.WriteLine($"Fax message: {e.One} {e.Two}");
+    }
+    public void Unregister(TestManager tm)
+    {
+        tm.Message -= FaxMessage;
+    }
+}
+```
+
+Его использование:
+
+```csharp
+var manager = new TestManager();
+var fax = new Fax(manager);
+manager.SimulateNewMessage(1, 2);
+fax.Unregister(manager);
+```
+
 Компилятор C# транслирует оператор += в код, регистрирующий объект для получения уведомления о событии:
 
 ```csharp
