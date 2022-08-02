@@ -14,11 +14,13 @@
 
 ## Создание типов C#
 
-[Основы типов](./csharp/origintypes.md) 
+[Основы типов](./types/origintypes.md) 
 
-[Разновидности типов](./csharp/typetypes.md) [Типы](./csharp/types.md) [Члены типов](./csharp/fieldstypes.md)
+[Разновидности типов](./types/typetypes.md) [Типы](./types/types.md) [Члены типов](./types/fieldstypes.md)
 
-[Константы](./csharp/consts.md) [Поля](./csharp/fields.md) [Методы](./csharp/methods.md) [Параметры](./csharp/parameters.md) [Свойства](./csharp/properties.md) [События](./csharp/events.md)
+[Константы](./types/consts.md) [Поля](./types/fields.md) [Методы](./types/methods.md) [Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md) 
+
+[Обобщения](./types/generics.md)
 
 ## Типы данных C#
 
