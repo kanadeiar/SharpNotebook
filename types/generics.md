@@ -138,9 +138,85 @@ Func<string, Stream> fn2 = fn1;
 
 ## Обобщенные методы
 
+CLR позволяет методу иметь собственные параметры-типы, которые могут применяться для параметров, возвращаемых значений или локальных переменных. 
 
+```csharp
+internal sealed class Sample<T>
+{
+    private T _value;
+    public Sample(T value)
+    {
+        _value = value;
+    }
+    public TOutput Converter<TOutput>()
+    {
+        TOutput result = (TOutput)Convert.ChangeType(_value, typeof(TOutput));
+        return result;
+    }
+}
+```
 
+Пример обобщенного метода:
 
+```csharp
+private static void Swap<T>(ref T o1, ref T o2)
+{
+    T temp = o1;
+    o1 = o2;
+    o2 = temp;
+}
+//использование
+Swap<int>(ref n1, ref n2);
+Swap<string>(ref s1, ref s2);
+```
+
+## Логическое выведение типов
+
+Компилятор C# предлагает логическое выведение типов при вызове обобщенных методов. Компилятор будет автоматически пытаться определить тип параметра-типа.
+
+```csharp
+//использование
+Swap(ref n1, ref n2); //вызов Swap<int>
+```
+
+## Верификация и ограничения
+
+Компиляторы и CLR поддерживают механизм ограничений. Ограничения сужают перечень типов, которые можно передать в обобщенном аргументе и расширяют возможности по работе с этими типами данных.
+
+```csharp
+public static T Min<T>(T o1, T o2) where T : IComparable<T>
+{
+    if (o1.CompareTo(o2) < 0) return o1;
+    return o2;
+}
+```
+
+Перегрузка типов и методов выполняется только по арности, нет поддержки перегрузки по именам параметров типа или по именам ограничений.
+
+```csharp
+internal sealed class Sample { }
+internal sealed class Sample<T> { }
+internal sealed class Sample<T1, T2> { }
+internal sealed class Another
+{
+    private static void M() {}
+    private static void M<T>() {}
+    private static void M<T1, T2>() {}
+}
+```
+
+При переопределении виртуального обобщенного метода в переопределяющем методе должно быть столько-же параметров-типов, они наследуют ограничения от базового типа, можно только переименовывать эти параметры-типы. При реализации интерфейсного типа в нем должно задаваться то же число параметров-типов, что и в интерфейсном методе, причем эти параметры-типы наследуют ограничения, заданные методом интерфейса.
+
+```csharp
+internal class Base
+{
+    public virtual void M<T>() where T : class { }
+}
+internal sealed class Derived : Base
+{
+    public override void M<T>() { }
+}
+```
 
 
 
