@@ -8,7 +8,7 @@
 
 [Введение в платформу .NET](./dotnet/introduction.md) [Core Runtime](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
 
-[Команды командной строки dotnet](./dotnet/commands.md)
+[Команды dotnet](./dotnet/commands.md)
 
 [Консольное приложение](./dotnet/console.md)
 
@@ -16,11 +16,11 @@
 
 [Основы типов](./types/origintypes.md) 
 
-[Разновидности типов](./types/typetypes.md) [Типы](./types/types.md) [Члены типов](./types/fieldstypes.md)
+[Разновидности типов](./types/typetypes.md) [Поведение типов](./types/types.md) [Члены типов](./types/fieldstypes.md)
 
-[Константы](./types/consts.md) [Поля](./types/fields.md) [Методы](./types/methods.md) [Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md) 
+[Константы и поля](./types/fields.md) [Методы](./types/methods.md) [Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md) 
 
-[Обобщения](./types/generics.md)
+[Обобщения](./types/generics.md) [Интерфейсы](./types/interfaces.md)
 
 ## Типы данных C#
 
