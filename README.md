@@ -18,13 +18,15 @@
 
 [Разновидности типов](./types/typetypes.md) [Поведение типов](./types/methodtypes.md) [Члены типов](./types/fieldstypes.md)
 
-[Константы и поля](./types/fields.md) [Методы](./types/methods.md) [Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md)
+[Константы и поля](./types/fields.md) [Методы](./types/methods.md) 
+
+[Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md)
 
 [Обобщения](./types/generics.md) [Интерфейсы](./types/interfaces.md)
 
 ## Типы данных C#
 
-[Строки, их обработка и символы](./deftypes/strings.md)
+[Строки, их обработка и символы](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md)
 
 ## Механизмы C#
 
