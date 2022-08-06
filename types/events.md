@@ -251,7 +251,7 @@ public class InvokeEvents
 
 ```csharp
 var test = new InvokeEvents();
-test.Test += Method;
+test.Test += new EventHandler(Method);
 test.Simulate();
 private static void Method(Object? s, InvokeEventArgs e)
 {

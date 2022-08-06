@@ -26,7 +26,9 @@
 
 ## Типы данных C#
 
-[Строки, их обработка и символы](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md)
+[Строки, их обработка и символы](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md) [Массивы](./deftypes/arrays.md) [Делегаты](./deftypes/delegates.md)
+
+
 
 ## Механизмы C#
 
