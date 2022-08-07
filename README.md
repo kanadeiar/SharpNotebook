@@ -12,6 +12,10 @@
 
 [Консольное приложение](./dotnet/console.md)
 
+## Код C#
+
+
+
 ## Создание типов C#
 
 [Основы типов](./types/origintypes.md)
@@ -26,15 +30,15 @@
 
 ## Типы данных C#
 
-[Строки, их обработка и символы](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md) [Массивы](./deftypes/arrays.md) [Делегаты](./deftypes/delegates.md)
-
-
+[Символы](./deftypes/symbols.md) [Строки](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md) [Массивы](./deftypes/arrays.md) [Делегаты](./deftypes/delegates.md)
 
 ## Механизмы C#
 
+[Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md)
+
 ## Многопоточность C#
 
-## Код C#
+
 
 ## Библиотека C#
 
