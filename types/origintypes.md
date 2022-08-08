@@ -77,6 +77,32 @@ dt = new(); // 1/1/0001 12:00:00 AM
 
 Все числовые типы .NET Core поддерживают разнообразные свойства: MaxValue и MinValue и другие полезные члены.
 
+## Очень большие целые числа
+
+Следует применять для операций с большими целыми числами тип BigInteger.
+
+```csharp
+Console.WriteLine("=> Use BigInteger:");
+BigInteger biggy = BigInteger.Parse("9999999999999999999999999999999999999999999999");
+Console.WriteLine("Value of biggy is {0}", biggy);
+```
+
+## Разделители в числовых литералах
+
+Для удобства чтения литералов допускается применять символы:
+
+```csharp
+Console.WriteLine(123_456);
+Console.WriteLine(123_456_789L);
+Console.WriteLine(123_456.1234F);
+Console.WriteLine(123_456.12);
+Console.WriteLine(123_456.12M);
+Console.WriteLine(0x_00_00_FF);
+Console.WriteLine("Sixteen: {0}", 0b_0001_0000);
+Console.WriteLine("Thirty Two: {0}", 0b_0010_0000);
+Console.WriteLine("Sixty Four: {0}", 0b_0100_0000);
+```
+
 ## Неявно типизированные локальные переменные
 
 C# поддерживает определения типа локальных переменных по типу использованных при их инициализации выражений.
