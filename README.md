@@ -6,7 +6,7 @@
 
 ## .NET C#
 
-[Введение в платформу .NET](./dotnet/introduction.md) [Core Runtime](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
+[Введение в платформу .NET](./dotnet/introduction.md) [Среда исполнения](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
 
 [Команды dotnet](./dotnet/commands.md)
 
@@ -18,7 +18,7 @@
 
 [Разновидности типов](./types/typetypes.md) [Поведение типов](./types/methodtypes.md) [Члены типов](./types/fieldstypes.md)
 
-[Константы и поля](./types/fields.md) [Методы](./types/methods.md) 
+[Константы и поля](./types/fields.md) [Методы](./types/methods.md)
 
 [Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md)
 

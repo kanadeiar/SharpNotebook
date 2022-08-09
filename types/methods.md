@@ -70,9 +70,11 @@ internal sealed class Sample
 
 ## Конструктор значимых типов
 
-CLR всегда разрешает создание экземпляров значимых типов. Конструкоры у значимых типов можно не определять. Компилятор не определяет конструктор по умолчанию не имеющий параметров для значимого типа. Поля значимого типа инициализируются нулями / null. 
+CLR всегда разрешает создание экземпляров значимых типов. Конструкоры у значимых типов можно не определять. Компилятор определяет конструктор по умолчанию не имеющий параметров для значимого типа, в нем поля значимого типа инициализируются значением 0 / null. 
 
 CLR позволяет определять конструкторы для значимых типов, но они должны вызыватся только при наличии кода, явно вызывающего их.
+
+CLR еще позволяет определять конструкторы без параметров для значимых типов. Также можно устанавливать значения по умолчанию для полей и свойств структур, но тогда нужно установить значения для всех полей.
 
 ```csharp
 internal struct Test
@@ -91,20 +93,28 @@ _test = new Test(1);
 
 Компилятор не генерирует автоматически код для вызова конструктора по умолчанию для значимого типа даже при наличии конструктора без параметров, нужно его явно вызвать.
 
-Компилятор C# не позволяет определять для значимого типа явные конструкторы без параметров, только конструкторы с параметрами.
+Компилятор C# позволяет определять для значимого типа как конструкторы без параметров, так и конструкторы с параметрами.
 
-В значимый тип нельзя подставлять инициализацию экземплярных полей.
+В значимый тип можно подставлять инициализацию экземплярных полей.
 
 ```csharp
 internal struct SampleVal
 {
-    public Int32 _value;
+    public int value = 10;
+    public int Val2 { get; set; }
+    public SampleVal()
+    {
+        Val2 = 20;
+    }
     public SampleVal(Int32 value)
     {
         this = new SampleVal();
-        _value = value;
+        value = 10;
     }
 }
+// использование
+SampleVal v1 = new();
+var v2 = new SampleVal(10);
 ```
 
 В конструкторе значимого типа this - экземпляр значимого типа, допускает запись, а в конструкторах ссылочного типа указатель this - только для чтения.
@@ -193,12 +203,12 @@ public static Sample operator+(Sample s1, Sample s2) { ... }
 
 Оператор C# | Имя специального метода | Рекомендуемое CLS-совместимое имя
 ----|-----|-----
-+ | op_UnaryPlus | Plus
-- | op_UnaryNegation | Negate
-! | op_LogicalNot | Not
-- | op_OnesComplement | OnesComplement
-++ | op_Increment | Increment
--- | op_Decrement | Decrement
+\+ | op_UnaryPlus | Plus
+\- | op_UnaryNegation | Negate
+\! | op_LogicalNot | Not
+\- | op_OnesComplement | OnesComplement
+\+\+ | op_Increment | Increment
+\-\- | op_Decrement | Decrement
 Нет | op_True | IsTrue { get; }
 Нет | op_False | IsFalse { get; }
 
@@ -206,22 +216,22 @@ public static Sample operator+(Sample s1, Sample s2) { ... }
 
 Оператор C# | Имя специального метода | Рекомендуемое CLS-совместимое имя
 ----|-----|-----
-+ | op_Addition | Add
-- | op_Subtraction | Subtract
-* | op_Multiply | Multiply
-/ | op_Division | Divide
-% | op_Modulus | Modulus
-& | op_BitwiseAnd | BitwiseAnd
-|| op_BitwiseOr | BitwiseOr
-^ | op_ExclusiveOr | Xor
-<< | op_LeftShift | LeftShift
->> | op_RightShift | RightShift
-== | op_Equality | Equality
-!= | op_Inequality | Inequality
-< | op_LessThan | Compare
-> | op_GreatherThan | Compare
-<= | op_LessThanOrEqual | Compare
->= | op_GreatherThanOrEqual | Compare
+\+ | op_Addition | Add
+\- | op_Subtraction | Subtract
+\* | op_Multiply | Multiply
+\/ | op_Division | Divide
+\% | op_Modulus | Modulus
+\& | op_BitwiseAnd | BitwiseAnd
+\|\| op_BitwiseOr | BitwiseOr
+\^ | op_ExclusiveOr | Xor
+\<\< | op_LeftShift | LeftShift
+\>\> | op_RightShift | RightShift
+\=\= | op_Equality | Equality
+\!\= | op_Inequality | Inequality
+\< | op_LessThan | Compare
+\> | op_GreatherThan | Compare
+\<\= | op_LessThanOrEqual | Compare
+\>\= | op_GreatherThanOrEqual | Compare
 
 ## Методы операторов преобразования
 
@@ -310,4 +320,4 @@ internal sealed partial class Base
 }
 ```
 
-Преимущество такого решения - при отсутствии объялвения выполняемого частичного метода компилятор не будет генерировать метаданные частичного метода. Частичные методы могут объявлятся только внутри частичного класса или структуры. Частичные методы должны иметь возвращаемый тип void и не могут иметь параметров out. Метод не существует во время выполнения программы.
+Преимущество такого решения - при отсутствии объявления выполняемого частичного метода компилятор не будет генерировать метаданные частичного метода. Частичные методы могут объявлятся только внутри частичного класса или структуры. Частичные методы должны иметь возвращаемый тип void и не могут иметь параметров out. Частичные метод не существует во время выполнения программы.
