@@ -117,7 +117,12 @@ public sealed class GenericSample<T> : IEnumerator<T>
 public delegate TReturn CallTest<TReturn, TValue>(TValue value);
 ```
 
-Везде, где это возможно, следует использовать обобщенные делегаты Action и Func.
+Везде, где это возможно, следует использовать определенные в пространсте имен System обобщенные делегаты Action<T> и Func<T, TResult>.
+
+```csharp
+Action<int> action1;
+Func<int, int> func1;
+```
 
 ## Контравариантность и ковариантность аргументов-типов в делегатах и интерфейсах
 
@@ -132,8 +137,10 @@ public delegate TReturn CallTest<TReturn, TValue>(TValue value);
 - Ковариантными - обозначение ключевым словом out. Параметр-тип может быть преобразован к одному из его базовых классов. Может появляться только в выходной позиции, в качестве возвращаемого значения метода.
 
 ```csharp
-Func<object, FileStream> fn1 = null;
-Func<string, Stream> fn2 = fn1;
+public delegate void Action<in T>(T obj);
+public delegate TResult Func<in T, out TResult>(T arg);
+Func<object, FileStream> fun1 = null;
+Func<string, Stream> fun2 = fun1;
 ```
 
 ## Обобщенные методы
