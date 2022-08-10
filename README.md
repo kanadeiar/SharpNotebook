@@ -42,7 +42,21 @@
 
 ## Библиотека C#
 
+## Теория
 
+[ООП](./theory/indexOOP.md). 
+
+[SOLID](./theory/indexSOLID.md).
+
+[REST](./theory/indexREST.md).
+
+[Микросервисы](./theory/indexMicroservices.md).
+
+[Порождающие паттерны](./theory/indexCreate.md).
+
+[Структурные паттерны](./theory/indexStruct.md).
+
+[Поведенческие паттерны](./theory/indexBehavior.md).
 
 ## Введение
 
@@ -109,22 +123,6 @@
 [Общеязыковая спецификация CLS](./platform/cls.md).
 
 [Общеязыковая инфраструктура CLI](./platform/cli.md).
-
-## Теория
-
-[ООП](./theory/indexOOP.md). 
-
-[SOLID](./theory/indexSOLID.md).
-
-[REST](./theory/indexREST.md).
-
-[Микросервисы](./theory/indexMicroservices.md).
-
-[Порождающие паттерны](./theory/indexCreate.md).
-
-[Структурные паттерны](./theory/indexStruct.md).
-
-[Поведенческие паттерны](./theory/indexBehavior.md).
 
 ## Базовый С#
 
