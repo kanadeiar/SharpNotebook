@@ -215,6 +215,19 @@ var rez = (first, second) switch
 };
 ```
 
+Пример использования кортежей внутри функции, в качестве входного параметра - кортеж:
+
+```csharp
+static string GetVal((string one, string two) value)
+{
+    return value switch
+    {
+        ("one", "two") => "OneTwo",
+        (_) => "Default",
+    };
+}
+```
+
 Также можно применять инструкцию when для оценки условий на переменной:
 
 ```csharp
