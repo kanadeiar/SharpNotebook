@@ -23,14 +23,14 @@ static int Add(int x, int y) => x + y;
 Один конструктор может вызывать другой конструктор используя ключевое слово this. Так можно строить цепочки конструкторов.
 
 ```csharp
-internal sealed class Sample
+internal class Sample
 {
     private int _value;
     public Sample()
     {
         _value = 5;
     }
-    public Sample(int value) : this() 
+    public Sample(int value) : this()
     {
         _value = value;
     }
@@ -83,6 +83,31 @@ internal sealed class Sample
 internal sealed class Sample
 {
     private int _value = 5;
+}
+```
+
+Все подклассы должны явно вызывать подходящий конструктор базового класса. Ключевое слово base можно применять всякий раз, когда подкласс желает обратиться к открытому или защищенному члену, определенному в родительском классе.
+
+```csharp
+internal class Sample
+{
+    private int _value;
+    protected string Name { get; set; }
+    public Sample()
+    {
+        _value = 5;
+    }
+    public Sample(int value) : this()
+    {
+        _value = value;
+    }
+}
+internal sealed class AdvSample : Sample
+{
+    public AdvSample(int val) : base(val)
+    {
+        base.Name = "Advanved";
+    }
 }
 ```
 

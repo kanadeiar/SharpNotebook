@@ -22,7 +22,7 @@
 
 [Параметры](./types/parameters.md) [Свойства](./types/properties.md) [События](./types/events.md)
 
-[Обобщения](./types/generics.md) [Интерфейсы](./types/interfaces.md)
+[Обобщения](./types/generics.md) [Абстракции и интерфейсы](./types/interfaces.md)
 
 ## Типы данных C#
 

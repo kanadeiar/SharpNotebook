@@ -2,7 +2,7 @@
 
 ## Инкапсуляция
 
-Такая характерная черта описывает способность языка скрывать излишние детали реализации от пользователя объекта.
+Такая характерная черта как инкапсуляция описывает способность языка скрывать излишние детали реализации от пользователя объекта.
 
 Модификаторы доступа по всему C#:
 
@@ -16,6 +16,8 @@ protected internal | Члены типов или вложенные типы | 
 private protected | Члены типов или вложенные типы | Доступен внутри класса и производным классам внутри сборки
 
 ## Наследование
+
+Наследование — это аспект ООП, упрощающий повторное использование кода.
 
 Все типы прямо или косвенно являются производными от System.Object. Все значимые типы наследуются от ValueType, а ValueType в свою очередь - от System.Object.
 
@@ -42,6 +44,25 @@ var h = 12.GetHashCode();
 var b = 12.Equals(23);
 var s = 12.ToString();
 var t = 12.GetType();
+```
+
+Определение System.Object:
+
+```csharp
+public class Object
+{
+    // Виртуальные члены.
+    public virtual bool Equals(object obj);
+    protected virtual void Finalize();
+    public virtual int GetHashCode();
+    public virtual string ToString();
+    // Невиртуальные члены уровня экземпляра.
+    public Type GetType();
+    protected object MemberwiseClone();
+    // Статические члены.
+    public static bool Equals(object objA, object objB);
+    public static bool ReferenceEquals(object objA, object objB);
+}
 ```
 
 ## Создание типа
@@ -221,12 +242,35 @@ if (e != null)
 }
 ```
 
-Можно использовать более удобный вариант:
+Ключевое слово is можно определять для проверки совместимости типа, и если типы несовместимы, тогда возвращается false.
+
+```csharp
+Employee e = o is Employee;
+```
+
+Можно использовать присваивать объект переменной, если приведение работает:
 
 ```csharp
 if (o is Employee emp)
 {
     // использовать emp
+}
+```
+
+Есть дополнительные возможности сопоставления с образцами:
+
+```csharp
+if (o is not Employee and not Sales)
+{
+    // использовать emp
+}
+```
+
+Можно использовать отбрасывание:
+
+```csharp
+if (o is var _)
+{
 }
 ```
 
