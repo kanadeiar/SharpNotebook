@@ -390,9 +390,47 @@ List<Toy> myToys = new List<Toy>
     new Toy { X = 1 },
     new Toy { X = 5 },
 };
-foreach (Toy el in myToys)
+```
+
+## Класс ObservableCollection<T>
+
+Этот класс удобен своей возможностью информировать внешние объекты, когда его содержимое каким-то образом изменяется. Он поддерживает событие по имени CollectionChanged. Указанное событие будет инициироватся каждый раз, когда вставляется новый элемент, удаляется, перемещается, модифицируется вся коллекция целиком.
+    
+Использование:
+
+```csharp
+private static void UseObserv()
 {
-    WriteLine(el);
+    ObservableCollection<Per> pers = new ObservableCollection<Per>
+    {
+        new Per(1),
+        new Per {X = 3},
+    };
+    pers.CollectionChanged += pers_CollChanged;
+    pers.Add(new Per(6));
+    pers.RemoveAt(0);
+}
+
+static void pers_CollChanged(object sender, 
+    NotifyCollectionChangedEventArgs e)
+{
+    WriteLine($"\nActions = {e.Action}");
+    if (e.Action == NotifyCollectionChangedAction.Add)
+    {
+        Write("New Items:");
+        foreach (var el in e.NewItems)
+        {
+            Write($"{el.ToString()} ");
+        }
+    }
+    if (e.Action == NotifyCollectionChangedAction.Remove)
+    {
+        Write("Deleted Items:");
+        foreach (var el in e.OldItems)
+        {
+            Write($"{el.ToString()} ");
+        }
+    }
 }
 ```
 
