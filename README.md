@@ -6,7 +6,7 @@
 
 ## .NET C#
 
-[Введение в платформу .NET](./dotnet/introduction.md) [Среда исполнения](./dotnet/runtime.md) [Детали работы CLR](./dotnet/details.md)
+[Введение в платформу .NET](./dotnet/introduction.md) [Среда исполнения](./dotnet/runtime.md) 
 
 [Команды dotnet](./dotnet/commands.md)
 
@@ -34,7 +34,7 @@
 
 ## Механизмы C#
 
-[Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md)
+[Механизмы работы CLR](./mech/details.md) [Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md) [Асинхронность async](./mech/async.md)
 
 ## Многопоточность C#
 
