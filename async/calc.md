@@ -307,4 +307,110 @@ parent.Start();
 
 ### Планировщики заданий
 
+Задания обладают очень гибкой инфраструктурой. Для получения ссылки на планировщик заданий в пуле потоков используется статическое свойство Default класса TaskScheduler.
+
+Планировщики заданий контекста синхронизации обычно применяются в приложениях настольных (Windows Forms, WPF) и мобильных (Xamarin).
+
+Они планируют задания в потоке графического интерфейса приложения. Получить на него ссылку можно с помощью cтатического метода FromCurrentSynchronizationContext класса TaskScheduler.
+
+Пример использования:
+
+```csharp
+private CancellationTokenSource _cts;
+private readonly TaskScheduler _syncContextTaskScheduler;
+private string _Text;
+public string Text
+{
+    get => _Text;
+    set => Set(ref _Text, value);
+}
+public MainWindowViewModel()
+{
+    _syncContextTaskScheduler =
+    TaskScheduler.FromCurrentSynchronizationContext();
+    Text = "Тестирование";
+}
+private void OnTestCommandExecuted(object p)
+{
+    if (_cts != null)
+    { // Операция начата, отменяем ее
+        _cts.Cancel();
+        _cts = null;
+    }
+    else
+    { // Операция не начата, начинаем ее
+        Text = "Операция запускается";
+        _cts = new CancellationTokenSource();
+        Task<int> t = Task.Run(() => Sum(20000, _cts.Token), _cts.Token);
+        t.ContinueWith(task => Text = "Результат: " + task.Result,
+        CancellationToken.None,
+        TaskContinuationOptions.OnlyOnRanToCompletion,
+        _syncContextTaskScheduler);
+        t.ContinueWith(task => Text = "Операция отменена",
+        CancellationToken.None, TaskContinuationOptions.OnlyOnCanceled,
+        _syncContextTaskScheduler);
+        t.ContinueWith(task => Text = "Ошибка операции",
+        CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted,
+        _syncContextTaskScheduler);
+    }
+}
+```
+
+### Класс Parallel
+
+Для упрощения программирования с применением заданий созданы специальные методы в классе System.Threading.Tasks.Parallel. Максимальный выигрыш от этого инструмента достигается при наличии множество элементов для обработки или когда обработка каждого элемента представляет собой длительную вычислительную операцию.
+
+Примеры использования этих методов:
+
+```csharp
+private static void DoWork(int i)
+{
+    Console.WriteLine(i);
+}
+//перебор
+Parallel.For(0, 1000, x => DoWork(x));
+Parallel.ForEach(collection, x => DoWork(x));
+Parallel.Invoke(() => DoWork(1), () => DoWork(2));
+```
+
+Методы класса Parallel потребляют много ресурсов — приходится выделять память под делегаты, которые вызываются по одному для каждого рабочего элемента.
+
+Существуют перегруженные версии и для методов For и ForEach, позволяющие передавать три делегата:
+
+- Делегат локальной инициализации задания (localInit) для каждой выполняемой задачи вызывается только один раз — перед получением команды на обслуживание рабочего элемента.
+
+- Делегат body вызывается один раз для каждого элемента, обслуживаемого участвующими в процессе потоками.
+
+- Делегат локального состояния каждого потока (localFinally) вызывается один раз для каждого задания, после того как оно обслужит все переданные ему рабочие элементы. Также он вызывается, если код делегата body становится источником необработанного исключения.
+
+Пример использования таких версий методов параллельного перебора коллекций - посчет количества символов:
+
+```csharp
+var names = new string[] { "Паша", "Петя", "Соня" };
+int total = 0;
+var result = Parallel.ForEach<string, int>(
+    names,
+() =>
+{
+    return 0;
+},
+(name, loopState, index, taskLocalTotal) =>
+{
+    var len = name.Length;
+    return taskLocalTotal + len;
+},
+taskLocalTotal =>
+{
+    Interlocked.Add(ref total, taskLocalTotal);
+});
+System.Console.WriteLine("Всего символов: {0}", total);
+```
+
+Результат работы цикла можно определить при помощи свойств. Если свойство IsCompleted возвращает значение true, значит, цикл пройден полностью, и все элементы обработаны. Если свойство IsCompleted возвращает значение false, а свойство LowestBreakIteration — значение null, значит, каким-то из потоков был вызван метод Stop. Если же в последнем случае значение, возвращаемое свойством LowestBreakIteration, отлично от null, значит, каким-то из потоков был вызван метод Break.
+
+### Параллельный LINQ
+
+Повысить производительность LINQ можно при помощи языка параллельных запросов (Parallel LINQ), позволяющего
+последовательный запрос превратить в параллельный (parallel query). Внутри задействуются задания, распределяемые по потокам. Максимальный выигрыш от этого инструмента достигается при наличии множество элементов для обработки или когда обработка каждого элемента представляет собой длительную вычислительную операцию.
+
 
