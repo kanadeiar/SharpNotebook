@@ -34,11 +34,11 @@
 
 ## Механизмы C#
 
-[Механизмы работы CLR](./mech/details.md) [Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md) [Асинхронность async](./mech/async.md)
+[Механизмы работы CLR](./mech/details.md) [Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md) [Пул потоков](./mech/threadpool.md) [Асинхронность async](./mech/async.md)
 
 ## Многопоточность C#
 
-[Потоки](./async/threads.md) [Асинхронные вычисления](./async/calc.md)
+[Потоки](./async/threads.md) [Асинхронные вычисления](./async/calc.md) [Асинхронное управление](./async/control.md)
 
 ## Библиотека C#
 
