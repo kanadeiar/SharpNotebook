@@ -18,7 +18,7 @@
 
 Для асинхронных функций действует ряд ограничений:
 
-- Метод Main приложения не может быть преобразован в асинхронную функцию. Кроме того, конструкторы, методы доступа свойств и методы доступа событий не могут быть преобразованы в асинхронные функции.
+- Конструкторы, методы доступа свойств и методы доступа событий не могут быть преобразованы в асинхронные функции.
 
 - Асинхронная функция не может иметь параметры out и ref.
 
@@ -43,9 +43,9 @@ static void MyDetailWork(int x)
 }
 static async void MyVoidAsync() //без возврата значения
 {
-    await Task.Run(() =>
+    await Task.Run(async () =>
     {
-        Thread.Sleep(5_000);
+        await Task.Delay(1_000);
         Console.WriteLine("void async Работа");
     });
 }
@@ -53,13 +53,13 @@ static async Task MyWorkAsync(int x)
 {
     await Task.Run(MyWork); //без параметра
     await Task.Run(() => MyDetailWork(x)); //с параметром
-    Thread.Sleep(2_000);
+    await Task.Delay(3_0000);
     Console.WriteLine($"async Task Работа #{x}");
 }
 static async Task Main() //вызов в неблокирующей манере
 {
-    MyWorkAsync(1); //вызов асинхронного метода
     MyVoidAsync(); //еще вызов асинх метода
+    MyWorkAsync(1); //вызов асинхронного метода
     Console.WriteLine("Работа #1 запущена асинхронно");
     await Task.Run(() =>
     {
@@ -89,7 +89,7 @@ static int MyFunc(int x)
 static async Task<int> MyFuncAsync(int x)
 {
     int y = await Task.Run(() => MyFunc(x));
-    Thread.Sleep(2_000);
+    await Task.Delay(4_000);
     Console.WriteLine($"int async Вычисление : {y}");
     return y + 1;
 }
@@ -103,12 +103,12 @@ static async Task<int> MyFuncSumAsync() //сумма асинхронная вы
 }
 static async Task Main() //вызов в неблокирующей манере
 {
-    int x = await Task<int>.Run(() => 1); //асинхронная работа лямбда функция с ожиданием
+    int x = await Task<int>.Run(() => 1); //асинхронная работа - лямбда-функция с ожиданием
     Console.WriteLine("Введите что нибудь:");
     string s = Console.ReadLine();
     Console.WriteLine($"Вы ввели: {s}");
     Console.WriteLine("Старт и ожидание завершения вычислений");
-    int y = await MyFuncAsync(1); //ожидание завершения асинх метода
+    int y = await MyFuncAsync(1); //ожидание завершения асинхронного метода
     Console.WriteLine($"Вычисление завершено y = {y}");
     y = await MyFuncSumAsync();
     Console.WriteLine($"Результат вычисления асинхронного: {y}");
@@ -136,16 +136,28 @@ static async Task Main() //вызов в неблокирующей манере
     Task.Run(MyWork); //запуск асинхронно
     Console.WriteLine("Работа запущена асинхронно");
     Console.WriteLine("Старт и ожидание завершения вычислений");
-    int y = await Task<int>.Run(() => MyFunc(1)); //ожидание завершения асинх вычислений
+    int y = await Task<int>.Run(() => MyFunc(1)); //ожидание завершения асинхронных вычислений
     Console.WriteLine($"Вычисление завершено y = {y}");
     Console.WriteLine("Нажмите любую кнопку ...");
     Console.ReadKey();
 }
 ```
 
+## Расширение задач
+
+Представление всех разновидностей асинхронных операций одним типом (Task) чрезвычайно полезно, потому что оно
+позволяет реализовать комбинаторы (методы WhenAll и WhenAny класса Task) и другие полезные операции.
+
+Асинхронные функции предоставляют еще одну точку расширения: компилятор вызывает GetAwaiter для операнда, использовавшегося с await. Таким образом, операнд вообще не обязан быть объектом Task; он может относиться к любому типу, содержащему метод GetAwaiter.
+
+В библиотеке Kanadeiar.Core определен класс TaskLogger. Он позволяет выводить информацио о всех незавершенных асинхронных задачах. Такая информация чрезвычайно полезна в ходе отладки, особенно если ваше приложение «виснет» из-за некорректного запроса или отсутствия реакции сервера.
 
 
 
+
+## Отмена асинхронной операции
+
+В библиотеке Kanadeiar.Core определен метод расширения WithCancellation, позволяющий производить отмену асинхронной операции по истечении заданного в методе интервала времени.
 
 
 
