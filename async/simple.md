@@ -309,11 +309,115 @@ internal partial class Program
 
 События (events) представляют собой переменные типа bool, находящиеся под управлением ядра. Ожидающий события поток блокируется, если оно имеет значение false, и освобождается в случае значения true. Когда событие с автосбросом имеет значение true, оно освобождает всего один заблокированный поток, так как после освобождения первого потока ядро автоматически возвращает событию значение false. Если же значение true имеет событие с ручным сбросом, оно освобождает все ожидающие этого потоки, так как в данном случае ядро не присваивает ему значение false автоматически, в коде это должно быть сделано в явном виде.
 
+Классы событий:
 
+```csharp
+public class EventWaitHandle : WaitHandle
+{
+    public Boolean Set(); // Boolean присваивается true; всегда возвращает true
+    public Boolean Reset(); // Boolean присваивается false; всегда возвращает true
+}
+public sealed class AutoResetEvent : EventWaitHandle
+{
+    public AutoResetEvent(Boolean initialState);
+}
+public sealed class ManualResetEvent : EventWaitHandle
+{
+    public ManualResetEvent(Boolean initialState);
+}
+```
 
+При наличии нескольких потоков в режиме ожидания событие с автосбросом освобождает только один из них.
 
+Событие с ручным сбросом снимает блокировку со всех ожидающих его потоков.
 
+Пример блокировки ресурса в рамках синхронизации потоков:
 
+```csharp
+class SimpleWaitLock : IDisposable
+{
+    private readonly AutoResetEvent _avaitable;
+    public SimpleWaitLock()
+    {
+        _avaitable = new AutoResetEvent(true);
+    }
+    public void Enter()
+    {
+        _avaitable.WaitOne();
+    }
+    public void Leave()
+    {
+        _avaitable.Reset();
+    }
+    public void Dispose() => _avaitable.Dispose();
+}
+// использование
+using (SimpleWaitLock swl = new SimpleWaitLock())
+{
+    for (Int32 i = 0; i < iterations; i++)
+    {
+        swl.Enter(); x++; swl.Leave();
+    }
+}
+```
+
+### Семафоры
+
+Семафоры (semaphores) также представляют собой обычные переменные типа int, управляемые ядром. Ожидающий семафора поток блокируется при значении 0 и освобождается при значениях больше 0. При снятии блокировки с ожидающего семафора потока ядро автоматически вычитает единицу из счетчика. С семафорами связано максимальное значение типа int, которое ни при каких обстоятельствах не могут превысить текущие показания счетчика.
+
+```csharp
+public sealed class Semaphore : WaitHandle
+{
+    public Semaphore(Int32 initialCount, Int32 maximumCount);
+    public Int32 Release(); // Вызывает Release(1);
+                            // возвращает предыдущее значение счетчика
+    public Int32 Release(Int32 releaseCount); // Возвращает предыдущее
+                                              // значение счетчика
+}
+```
+
+При наличии нескольких потоков, ожидающих семафора, его появление снимает блокировку с потоков releaseCount (здесь releaseCount — это аргумент, переданный методу Release класса Semaphore).
+
+Пример блокировки ресурса в рамках синхронизации потоков:
+
+```csharp
+class SimpleWaitLock : IDisposable
+{
+    private Semaphore _avaitable;
+    public SimpleWaitLock(int maximumThreads)
+    {
+        _avaitable = new Semaphore(maximumThreads, maximumThreads);
+    }
+    public void Enter()
+    {
+        _avaitable.WaitOne();
+    }
+    public void Leave()
+    {
+        _avaitable.Release();
+    }
+    public void Dispose() => _avaitable.Dispose();
+}
+```
+
+### Мьютексы
+
+Мьютекс (mutex) предоставляет взаимно исключающую блокировку. Он функционирует аналогично объекту AutoResetEvent (или объекту Semaphore со значением счетчика 1), так как все три конструкции за один раз освобождают всего один ожидающий поток.
+
+```csharp
+public sealed class Mutex : WaitHandle {
+    public Mutex();
+    public void ReleaseMutex();
+}
+```
+
+Мьютексы снабжены дополнительной логикой, что делает их более сложными по сравнению с другими конструкциями. 
+
+Объекты Mutex сохраняют информацию о том, какие потоки ими владеют. Для этого они запрашивают идентификатор потока (int).
+
+Объекты Mutex управляют рекурсивным счетчиком, указывающим, сколько раз поток-владелец уже владел объектом. Если поток владеет мьютексом в настоящий момент и ожидает его еще раз, рекурсивный счетчик увеличивается на единицу, и потоку разрешается продолжить выполнение. При вызове потоком метода ReleaseMutex рекурсивный счетчик уменьшается на единицу. И только после того, как его значение достигнет 0, владельцем мьютекса может стать другой поток.
+
+Объекту Mutex требуется дополнительная память для хранения идентификатора потока и рекурсивного счетчика. И главное, код объекта Mutex должен управлять этой информацией, что тормозит блокировку.
 
 
 
