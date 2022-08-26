@@ -44,6 +44,10 @@
 
 [Файлы](./data/files.md)
 
+## Клиентские приложения C#
+
+[Основы](./desktop/origin.md) 
+
 ## Теория
 
 [ООП](./theory/indexOOP.md). 
