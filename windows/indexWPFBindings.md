@@ -5,6 +5,7 @@
 Механизмом, обеспечивающим определение привязки в разметке XAML, является расширение разметки {Binding}. Привязки можно определять как посредством кода C#, так и прямо в разметке. Значение ElementName указывает источник операции привязки данных, а Path - свойство к которому осущетсвляется привязка.
 
 Пример установки привязки в разметке:
+
 ```csharp
 <StackPanel>
     <Label Content="Переместить ползунок"/>
@@ -13,7 +14,9 @@
     <Label x:Name="labelThumb" Height="30" BorderBrush="Blue" BorderThickness="2" Content="{Binding ElementName=myScrollBar, Path=Value}"/>
 </StackPanel>
 ```
+
 Пример установки привязки в коде C#:
+
 ```csharp
 <StackPanel>
     <Label Content="Переместить ползунок"/>

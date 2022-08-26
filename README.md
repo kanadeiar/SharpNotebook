@@ -42,11 +42,11 @@
 
 ## Данные C#
 
-[Файлы](./data/files.md)
+[Файлы](./data/files.md) 
 
 ## Клиентские приложения C#
 
-[Основы](./desktop/origin.md) 
+[Основы](./desktop/origin.md) [Компоненты](./desktop/components.md) [Позиционирование](./desktop/positions.md) [События](./desktop/events.md) [Привязки](./desktop/bindings.md)
 
 ## Теория
 
