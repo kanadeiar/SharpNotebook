@@ -325,6 +325,50 @@ static void Main(string[] args)
     var withOneKind = persons.Where(p => p.Children.FirstOrDefault(c => c.Age < 8) != null);
 ```
 
+## Пагинация данных
+
+Есть возможность в LINQ осуществлять пагинацию даных без использоания методов Take() и Skip() вместе. Можно использовать в методе Take() типы Range. Пример:
+
+```csharp
+var names = new[] { "Иван", "Петр", "Сидор", "Вася", "Павел", "Дима" };
+var three = names.Take(..3); //первые три
+var skipping = names.Take(3..); //пропуск первых трех
+var last = names.Take(^2..); //поледние два
+var skip = names.Take(..^2); //пропуск последних двух
+var skipTake = names.Take(2..4); //пропуск двух, забор двух
+```
+
+В языке C# в LINQ существует возможность разбивать массивы по страницам. Для этого следует использовать метод Chunk(). 
+
+```csharp
+var names = new[] { "Иван", "Петр", "Сидор", "Вася", "Павел", "Дима" };
+var chunks = names.Chunk(size: 3);
+foreach (var chunk in chunks)
+{
+    Console.Write($"Страница: ");
+    foreach (var e in chunk)
+    {
+        Console.Write($"{e} ");
+    }
+    Console.WriteLine();
+}
+```
+
+## Получение количества элементов
+
+В C# есть возможность получить количество элементов в коллекции без актуального перечисления элементов списка. Для этого следует использовать расширяющий метод LINQ TryGetNonEnumeratedCount().
+
+```csharp
+var names = new[] { "Иван", "Петр", "Сидор", "Вася", "Павел", "Дима" };
+var result = names.TryGetNonEnumeratedCount(out int count);
+```
+
+## Значение по умолчанию
+
+Есть возможность указать значение по умолчанию, возвращаемое методами FirstOrDefault(), LastOrDefault(), SingleOrDefault(). Для этого значение нужно указать в параметрах метода.
+
+Есть возможность указать значение по умолчанию, возвращаемое, если коллекция пуста - метод DefaultIfEmpty(). В параметре метода нужно указать значение по умолчанию.
+
 ## LINQ при чтении файлов
 
 Пример:

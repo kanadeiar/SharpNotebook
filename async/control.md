@@ -368,7 +368,16 @@ private static async Task<string> GetWebAsync(Uri uri)
 
 ### Отмена операции
 
+В языке C# есть методы для отмены асинхронной операции, в параметрах которого можно передавать время на выполнение метода и токен отмены операции.
 
+Пример:
+
+```csharp
+var cts = new CancellationTokenSource();
+var r1 = await Method(1).WaitAsync(TimeSpan.FromSeconds(5));
+var r2 = await Method(2).WaitAsync(cts.Token);
+var r3 = await Method(3).WaitAsync(TimeSpan.FromSeconds(5), cts.Token);
+```
 
 В библиотеке Kanadeiar.Core определен метод расширения WithCancellation, позволяющий производить отмену асинхронной операции по истечении заданного в методе интервала времени.
 

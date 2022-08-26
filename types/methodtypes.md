@@ -66,7 +66,7 @@ new | вложенный тип не связан с похожим базово
 
 ```csharp
 public override Int32 GetHashCode() {
-    return m_x ^ m_y; // Исключающее ИЛИ для m_x и m_y
+    return _x ^ _y; // Исключающее ИЛИ для _x и _y
 }
 ```
 
