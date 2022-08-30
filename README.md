@@ -46,7 +46,7 @@
 
 ## Клиентские приложения C#
 
-[Основы](./desktop/origin.md) [Компоненты](./desktop/components.md) [Позиционирование](./desktop/positions.md) [События](./desktop/events.md) [Привязки](./desktop/bindings.md) [Ресурсы](./desktop/resources.md) [Анимация](./desktop/animation.md) [Стили](./desktop/styles.md) [Шаблоны](./desktop/templates.md) [Уведомления](./desktop/notify.md) [Валидация](./desktop/validations.md) [Команды](./desktop/commands.md)
+[Основы](./desktop/origin.md) [Компоненты](./desktop/components.md) [Позиционирование](./desktop/positions.md) [События](./desktop/events.md) [Привязки](./desktop/bindings.md) [Ресурсы](./desktop/resources.md) [Анимация](./desktop/animation.md) [Стили](./desktop/styles.md) [Шаблоны](./desktop/templates.md) [Уведомления](./desktop/notify.md) [Валидация](./desktop/validation.md) [Команды](./desktop/commands.md)
 
 ## Теория
 
