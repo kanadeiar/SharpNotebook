@@ -107,6 +107,356 @@ public interface INotifyDataErrorlnfo
 
 Пример валидации параметра с применением интерфейса INotifyDataErrorInfo для проверки достоверности:
 
+```csharp
+public partial class Inventory : INotifyPropertyChanged //наблюдаемая модель
+{
+...
+    private string make;
+    public string Make
+    {
+        get => make;
+        set
+        {
+            if (value == make) return;
+            make = value;
+            //проверка достоверности
+            if (Make == "Чайка") 
+            {
+                AddError(nameof(Make), "Чайка");
+            }
+            else
+            {
+                ClearErrors(nameof(Make));
+            }
+            //передача названия свойства значение которого изменилось
+            OnPropertyChanged(nameof(Make));
+        }
+    }
+...
+public partial class Inventory : INotifyDataErrorInfo
+{
+    //хранение всех сведений о ошибках, сгруппированные по именам свойств
+    private readonly Dictionary<string, List<string>> errors = new Dictionary<string, List<string>>();
+    //возвращает любые ошибки в словаре, когда в параметре пустая сторока или null, если имя свойства - то ошибки этого свойства
+    public IEnumerable GetErrors(string propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName))
+        {
+            return errors.Values;
+        }
+        return errors.ContainsKey(propertyName) ? errors[propertyName] : null;
+    }
+    //истина если в словаре присуствуют любые ошибки
+    public bool HasErrors => errors.Count != 0;
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+    //вспомогательный метод инициирования события ErrorChanged
+    private void OnErrorChanged(string propertyName)
+    {
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+    //добавление ошибок
+    private void AddError(string propertyName, string error)
+    {
+        AddErrors(propertyName, new List<string>{error});
+    }
+    private void AddErrors(string propertyName, IList<string> errors)
+    {
+        var changed = false;
+        if (!this.errors.ContainsKey(propertyName))
+        {
+            this.errors.Add(propertyName, new List<string>());
+            changed = true;
+        }
+        foreach (var err in errors)
+        {
+            if (this.errors[propertyName].Contains(err)) continue;
+            this.errors[propertyName].Add(err);
+            changed = true;
+        }
+        if (changed)
+            OnErrorChanged(propertyName);
+    }
+    //удаление ошибок
+    protected void ClearErrors(string propertyName = "")
+    {
+        if (string.IsNullOrEmpty(propertyName))
+            errors.Clear();
+        else
+            errors.Remove(propertyName);
+        OnErrorChanged(propertyName);
+    }
+}
+```
+
+Пример валидации параметра с применением комбинирования интерфейсов IDataErrorInfo и INotifyDataErrorInfo для проверки достоверности:
+
+```csharp
+public partial class Inventory : INotifyPropertyChanged
+{
+    public bool IsChanged { get; set; }
+    public int CarId { get; set; }
+    public string Make { get; set; }
+    public string Color { get; set; }
+    public string PetName { get; set; }
+    public event PropertyChangedEventHandler PropertyChanged;
+}
+public partial class Inventory : IDataErrorInfo, INotifyDataErrorInfo
+{
+    //хранение всех сведений о ошибках, сгруппированные по именам свойств
+    private readonly Dictionary<string, List<string>> errors = new Dictionary<string, List<string>>();
+    //возвращает любые ошибки в словаре, когда в параметре пустая сторока или null, если имя свойства - то ошибки этого свойства
+    public IEnumerable GetErrors(string propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName))
+        {
+            return errors.Values;
+        }
+        return errors.ContainsKey(propertyName) ? errors[propertyName] : null;
+    }
+    //истина если в словаре присуствуют любые ошибки
+    public bool HasErrors => errors.Count != 0;
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+    //вспомогательный метод инициирования события ErrorChanged
+    private void OnErrorChanged(string propertyName)
+    {
+        ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+    //добавление ошибок
+    private void AddError(string propertyName, string error)
+    {
+        AddErrors(propertyName, new List<string>{error});
+    }
+    private void AddErrors(string propertyName, IList<string> errors)
+    {
+        var changed = false;
+        if (!this.errors.ContainsKey(propertyName))
+        {
+            this.errors.Add(propertyName, new List<string>());
+            changed = true;
+        }
+        foreach (var err in errors)
+        {
+            if (this.errors[propertyName].Contains(err)) continue;
+            this.errors[propertyName].Add(err);
+            changed = true;
+        }
+        if (changed)
+            OnErrorChanged(propertyName);
+    }
+    //удаление ошибок
+    protected void ClearErrors(string propertyName = "")
+    {
+        if (string.IsNullOrEmpty(propertyName))
+            errors.Clear();
+        else
+            errors.Remove(propertyName);
+        OnErrorChanged(propertyName);
+    }
+    private string error;
+    //индексатор валидации
+    public string this[string columnName]
+    {
+        get
+        {
+            bool hasError = false;
+            switch (columnName)
+            {
+                case nameof(CarId):
+                    break;
+                case nameof(Make):
+                    hasError = CheckMakeAndColor();
+                    if (Make == "Чайка")
+                    {
+                        AddError(nameof(Make), "Слишком старая");
+                        hasError = true;
+                    }
+                    if (!hasError)
+                    {
+                        ClearErrors(nameof(Make));
+                        ClearErrors(nameof(Color));
+                    }
+                    break;
+                case nameof(Color):
+                    hasError = CheckMakeAndColor();
+                    if (!hasError)
+                    {
+                        ClearErrors(nameof(Make));
+                        ClearErrors(nameof(Color));
+                    }
+                    break;
+                case nameof(PetName):
+                    break;
+            }
+            return string.Empty;
+        }
+    }
+    private bool CheckMakeAndColor()
+    {
+        if (Make == "Копейка" && Color == "Беж")
+        {
+            AddError(nameof(Make), $"{Make} не может быть цвета {Color}");
+            AddError(nameof(Color), $"{Make} не может быть цвета {Color}");
+            return true;
+        }
+        return false;
+    }
+    public string Error => error;
+}
+```
+
+## Отображение ошибок
+
+Отображение ошибок класса Validation доступно различными способами.
+
+Пример отображения найденных ошибок в списке в окне приложения:
+
+```csharp
+<ListBox Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" ItemsSource="{Binding ElementName=DetailsGrid, Path=(Validation.Errors)}">
+    <ListBox.ItemTemplate>
+        <DataTemplate>
+            <ListBox ItemsSource="{Binding Path=ErrorContent}"/>
+        </DataTemplate>
+    </ListBox.ItemTemplate>
+</ListBox>
+```
+
+## Аннотации данных
+
+Возможно применение аннотаций данных для проверки достоверности в пользовательских интерфейсах инфтраструктуры WPF. Чтоб их использовать нужно добавить ссылку на сборку System.ComponentModel.DataAnnotation.dll. Добавление атрибутов [Required], [StringLength(50)] и др. к свойствам класса-модели определяют правило проверки достоверности.
+
+Пример добавления валидации через добавление аннотаций к свойствам класса и отображения предупреждений изменением стиля XAML:
+
+```csharp
+<Window.Resources>
+    <Style TargetType="{x:Type TextBox}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="Background" Value="Pink"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="ToolTip" 
+                        Value="{Binding RelativeSource={RelativeSource Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock Foreground="Red" FontSize="20" Text="!"
+                                   ToolTip="{Binding ElementName=controlWithError,
+                                   Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"/>
+                        <Border BorderBrush="Red" BorderThickness="1">
+                            <AdornedElementPlaceholder Name="controlWithError"/>
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</Window.Resources>
+...
+//метод добавленный к другим методам, таким как GetErrors
+protected string[] GetErrorsFromAnnotations<T>(string propertyName, T value)
+{
+    var results = new List<ValidationResult>();
+    var vc = new ValidationContext(this, null, null) {MemberName = propertyName};
+    var isValid = Validator.TryValidateProperty(value, vc, results);
+    return (isValid) ? null : Array.ConvertAll(results.ToArray(), o => o.ErrorMessage);
+}
+...
+protected void AddErrors(string propertyName, IList<string> errors)
+{
+    if (errors == null || errors?.Count == 0) 
+        return;
+...
+public partial class Inventory : INotifyPropertyChanged
+{
+    public bool IsChanged { get; set; }
+    [Required]
+    public int CarId { get; set; }
+    [Required][StringLength(50)]
+    public string Make { get; set; }
+    [Required][StringLength(50)]
+    public string Color { get; set; }
+    [StringLength(50)]
+    public string PetName { get; set; }
+...
+public string this[string columnName]
+{
+    get
+    {
+        bool hasError = false;
+        switch (columnName)
+        {
+            case nameof(CarId):
+                AddErrors(nameof(CarId), GetErrorsFromAnnotations(nameof(CarId),CarId));
+                break;
+            case nameof(Make):
+                hasError = CheckMakeAndColor();
+                if (Make == "Чайка")
+                {
+                    AddError(nameof(Make), "Слишком старый автомобиль");
+                    hasError = true;
+                }
+                if (!hasError)
+                {
+                    ClearErrors(nameof(Make));
+                    ClearErrors(nameof(Color));
+                }
+                AddErrors(nameof(Make), GetErrorsFromAnnotations(nameof(Make), Make));
+                break;
+            case nameof(Color):
+                hasError = CheckMakeAndColor();
+                if (!hasError)
+                {
+                    ClearErrors(nameof(Make));
+                    ClearErrors(nameof(Color));
+                }
+                AddErrors(nameof(Color), GetErrorsFromAnnotations(nameof(Color), Color));
+                break;
+            case nameof(PetName):
+                AddErrors(nameof(PetName), GetErrorsFromAnnotations(nameof(PetName), PetName));
+                break;
+        }
+        return string.Empty;
+    }
+}
+```
+
+## Настройка свойства ErrorTemplate
+
+Возможно создание стиля, который будет применяться, когда элемент управления содержит ошибку, а также обновление ErrorTemplate для отображения более осмысленного сообщения об ошибке.
+
+Шаблон ErrorTemplate является декоратором, который располагается поверх элемента управления.
+
+Пример стиля:
+
+```csharp
+<Window.Resources>
+    <Style TargetType="{x:Type TextBox}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="Background" Value="Pink" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock Foreground=MRed" FontSize="20M Text="!" ToolTip="{Binding ElementName=controlWithError, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"/>
+                        <Border BorderBrush="Red" BorderThickness="l">
+                            <AdornedElementPlaceholder Name="controlWithError" />
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</Window.Resources>
+```
+
 
 
 
