@@ -124,8 +124,8 @@ CLR еще позволяет определять конструкторы бе
 ```csharp
 internal struct Test
 {
-    public Int32 _value;
-    public Test(Int32 value)
+    public int _value;
+    public Test(int value)
     {
         _value = value;
     }
@@ -151,7 +151,7 @@ internal struct SampleVal
     {
         Val2 = 20;
     }
-    public SampleVal(Int32 value)
+    public SampleVal(int value)
     {
         this = new SampleVal();
         value = 10;
@@ -171,7 +171,7 @@ var v2 = new SampleVal(10);
 ```csharp
 internal sealed class Sample
 {
-    private static Int32 _value;
+    private static int _value;
     static Sample()
     {     
         _value = 5;
@@ -200,7 +200,7 @@ CLR старается гарантировать, чтобы конструкт
 ```csharp
 internal struct SampleVal
 {
-    public Int32 _value;
+    public int _value;
     static SampleVal()
     {
         _value = value;
@@ -315,8 +315,8 @@ public static Sample operator--(Sample s) { ... }
 ```csharp
 public sealed class Sample
 {
-    public Sample(Int32 value) { ... }
-    public Int32 ToInt32() { ... }
+    public Sample(int value) { ... }
+    public int ToInt() { ... }
     //Неявное приведение типа
     public static implicit operator Sample(Int32 value) => new Sample(value);
     //Явное приведение типа
@@ -335,9 +335,9 @@ public sealed class Sample
 Методы расширения позволяют определить статический метод, который вызывается посредством синтаксиса экземплярного метода.
 
 ```csharp
-public static class Int32Exts
+public static class IntExts
 {
-    public static Int32 SumOf(this Int32 one, Int32 two)
+    public static int SumOf(this int one, int two)
     {
         return one + two;
     }
@@ -347,7 +347,7 @@ var result = Int32Exts.SumOf(value, 32);
 var result = value.SumOf(32);
 ```
 
-Методы расширения должны быть объявлены в статическом необобщенном классе. Метод должен иметь хотябы один параметр, первый параметр должен быть помечен ключевым словом this. Компилятор ищет C# методы разширения только в статических классах. Если в нескольких статических классах определены несколько одинаковых методов расширения, то тогда выдается сообщение о ошибке (для устранения ошибки нужно применять синтаксис статического метода с указанием имени статического класса).
+Методы расширения должны быть объявлены в статическом необобщенном классе. Метод должен иметь хотябы один параметр, первый параметр должен быть помечен ключевым словом this. Компилятор ищет C# методы расширения только в статических классах. Если в нескольких статических классах определены несколько одинаковых методов расширения, то тогда выдается сообщение о ошибке (для устранения ошибки нужно применять синтаксис статического метода с указанием имени статического класса).
 
 При расширении одного типа методом расширения все унаследованные типы также будут расширены этим методом. Экземплярный метод с таким-же названием как и метод расширения, имеет приоритет над методом расширения.
 
