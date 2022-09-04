@@ -50,19 +50,9 @@
 
 ## Теория
 
-[ООП](./theory/indexOOP.md). 
+[ООП](./theory/indexOOP.md). [SOLID](./theory/indexSOLID.md). [REST](./theory/indexREST.md). [Микросервисы](./theory/indexMicroservices.md).
 
-[SOLID](./theory/indexSOLID.md).
-
-[REST](./theory/indexREST.md).
-
-[Микросервисы](./theory/indexMicroservices.md).
-
-[Порождающие паттерны](./theory/indexCreate.md).
-
-[Структурные паттерны](./theory/indexStruct.md).
-
-[Поведенческие паттерны](./theory/indexBehavior.md).
+[Порождающие паттерны](./theory/indexCreate.md). [Структурные паттерны](./theory/indexStruct.md).[Поведенческие паттерны](./theory/indexBehavior.md).
 
 # Старый раздел 
 
