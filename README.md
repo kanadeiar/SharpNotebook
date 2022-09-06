@@ -42,7 +42,7 @@
 
 ## Данные C#
 
-[Файлы](./data/files.md) 
+[Файлы](./data/files.md) [Entity Framework](./data/ef.md)
 
 ## Клиентские приложения C#
 
