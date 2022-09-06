@@ -48,6 +48,8 @@
 
 [Основы](./desktop/origin.md) [Компоненты](./desktop/components.md) [Позиционирование](./desktop/positions.md) [События](./desktop/events.md) [Привязки](./desktop/bindings.md) [Ресурсы](./desktop/resources.md) [Анимация](./desktop/animation.md) [Стили](./desktop/styles.md) [Шаблоны](./desktop/templates.md) [Уведомления](./desktop/notify.md) [Валидация](./desktop/validation.md) [Команды](./desktop/commands.md)
 
+[Фигуры](./desktop/shapes.md) [Рисунки](./desktop/draw.md) [Визуализация](./desktop/visual.md)
+
 ## Теория
 
 [ООП](./theory/indexOOP.md). [SOLID](./theory/indexSOLID.md). [REST](./theory/indexREST.md). [Микросервисы](./theory/indexMicroservices.md).
