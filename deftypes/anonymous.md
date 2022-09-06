@@ -1,8 +1,10 @@
-# Анонимные типы
+# Анонимные
+
+## Анонимные типы
 
 Механизм анонимных типов в C# позволяет автоматически объявить новый тип без названия, содержащих набор свойств, каким-либо образом связанных друг с другом. Значения в анонимных типах неизменны. Экземпляры анонимного типа не должны выходить за пределы метода. В прототипе метода не может содержаться параметр анонимного типа, так как задать анонимный тип невозможно. Метод не может возвращать ссылку на анонимный тип.
 
-Пример определения нового объекта и класса и вывод свойств в консоль:
+Пример определения нового анонимного объекта и класса и вывод его свойств в консоль:
 
 ```csharp
 var test = new { One = 1, Two = 2 };
@@ -36,7 +38,7 @@ foreach (var item in arr)
 };
 ```
 
-## Кортежи
+### Кортежи
 
 Кортежи предназначены для того, чтоб быть легковесным механизмом передачи данных.
 
@@ -131,3 +133,140 @@ var rez = p1 switch
 ...
 };
 ```
+
+## Анонимный метод
+
+В языке C# можно использовать анонимные методы:
+
+```csharp
+var sender = new MySender();
+sender.NewValue += delegate (object? s, ValueEventArgs e)
+{
+    System.Console.WriteLine($"New value = {e.Value}");
+};
+sender.Simulate(1);
+```
+
+Анонимные методы способны обращаться к локальным переменным кода, где они опеределены.
+
+Анонимные методы также могут быть помечены как статические с целью предохранения инкапсуляции и гарантирования того, что они не привнесут какие-либо побочные эффекты в код, где они содержатся. Можно применять отбрасывание при использовании анонимных методов.
+
+```csharp
+var value = 10;
+var simple = new Simple();
+simple.Sample1 += static delegate(object? _, SimpleEventArgs e) 
+{
+    //value = 20; //теперь нельзя так делать
+    Console.WriteLine("Вызов: " + e?.Message);
+};
+simple.Simulate();
+```
+
+## Лямбды
+
+Лямбда-выражения представляют упрощенную запись анонимных методов. Лямбда-выражения позволяют создать емкие лаконичные методы, которые могут возвращать некоторое значение и которые можно передать в качестве параметров в другие методы.
+
+Ламбда-выражения имеют следующий синтаксис: слева от лямбда-оператора => определяется список параметров, а справа блок выражений, использующий эти параметры.
+
+```csharp	
+(список_параметров) => выражение
+```
+
+Пример использования:
+
+```csharp	
+var hello = () => Console.WriteLine("Hello");
+hello();       // Hello
+hello();       // Hello
+```
+
+Если лямбда-выражение содержит несколько действий, то они помещаются в фигурные скобки:
+
+```csharp	
+var hello = () =>
+{
+    Console.Write("Hello ");
+    Console.WriteLine("World");
+};
+hello();       // Hello World
+```
+
+Лямбда-выражение может возвращать результат. Возвращаемый результат можно указать после лямбда-оператора
+
+```csharp	
+var sum = (int x, int y) => x + y;
+int sumResult = sum(4, 5);                  // 9
+Console.WriteLine(sumResult);               // 9
+ 
+Operation multiply = (x, y) => x * y;
+int multiplyResult = multiply(4, 5);        // 20
+Console.WriteLine(multiplyResult);          // 20
+ 
+delegate int Operation(int x, int y);
+```
+
+### Лямбда-выражение как параметр метода
+
+Лямбда-выражения можно передавать параметрам метода, которые представляют делегат.
+
+Пример:
+
+```csharp	
+int[] integers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+ 
+// найдем сумму чисел больше 5
+int result1 = Sum(integers, x => x > 5);
+Console.WriteLine(result1); // 30
+ 
+// найдем сумму четных чисел
+int result2 = Sum(integers, x => x % 2 == 0);
+Console.WriteLine(result2);  //20
+ 
+int Sum(int[] numbers, IsEqual func)
+{
+    int result = 0;
+    foreach (int i in numbers)
+    {
+        if (func(i))
+            result += i;
+    }
+    return result;
+}
+ 
+delegate bool IsEqual(int x);
+```
+
+### Лямбда-выражение как результат метода
+
+Метод также может возвращать лямбда-выражение. В этом случае возвращаемым типом метода выступает делегат, которому соответствует возвращаемое лямбда-выражение.
+
+Пример:
+
+```csharp	
+var operation = SelectOperation(OperationType.Add);
+Console.WriteLine(operation(10, 4));    // 14 
+operation = SelectOperation(OperationType.Subtract);
+Console.WriteLine(operation(10, 4));    // 6 
+operation = SelectOperation(OperationType.Multiply);
+Console.WriteLine(operation(10, 4));    // 40
+
+Operation SelectOperation(OperationType opType)
+{
+    switch (opType)
+    {
+        case OperationType.Add: return (x, y) => x + y;
+        case OperationType.Subtract: return (x, y) => x - y;
+        default: return (x, y) => x * y;
+    }
+}
+enum OperationType
+{
+    Add, Subtract, Multiply
+}
+delegate int Operation(int x, int y);
+```
+
+
+
+
+

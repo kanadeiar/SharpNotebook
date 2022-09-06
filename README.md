@@ -26,7 +26,7 @@
 
 ## Типы данных C#
 
-[Символы](./deftypes/symbols.md) [Строки](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md) [Массивы](./deftypes/arrays.md) [Делегаты](./deftypes/delegates.md) [Null-типы](./deftypes/nullable.md) [Анонимные типы](./deftypes/anonymous.md)
+[Символы](./deftypes/symbols.md) [Строки](./deftypes/strings.md) [Перечислимые типы](./deftypes/enums.md) [Массивы](./deftypes/arrays.md) [Делегаты](./deftypes/delegates.md) [Null-типы](./deftypes/nullable.md) [Анонимные](./deftypes/anonymous.md)
 
 ## Код C#
 
