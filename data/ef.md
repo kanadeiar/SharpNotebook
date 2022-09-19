@@ -243,6 +243,16 @@ public class Sample : BaseEntity // Зависимая сущность
 }
 ```
 
+Пример FluentAPI:
+
+```csharp
+x.HasOne(s => s.MakeNavigation)
+    .WithMany(p => p.Samples)
+    .HasForeignKey(s => s.MakeId)
+    .OnDelete(DeleteBehavior.ClientSetNull)
+    .HasConstraintName("FK_Sample_Make_MakeId");
+```
+
 ### Отношение один-к-одному
 
 В отношениях "один к одному" обе сущности имеют навигационные свойства типа ссылок друг на друга. Хотя отношения "один к одному" четко обозначают главную и зависимую сущности, при построении таких отношений EF Core необходимо сообщить о том, какая сторона является главной, либо явно определяя внешний ключ, либо указывая главную сущность с использованием Fluent API.
@@ -263,6 +273,19 @@ public class Ratio : BaseEntity // Зависимая сущность
 }
 ```
 
+Пример Fluent API:
+
+```csharp
+modelBuilder.Entity<Ratio>(x =>
+{
+    x.HasIndex(x => x.SampleId, "XII_Ratios_CarId")
+        .IsUnique();
+    x.HasOne(x => x.SampleNavigation)
+        .WithOne(x => x.RatioNavigation)
+        .HasForeignKey<Ratio>(x => x.SampleId);
+});
+```
+
 ### Отношение многие-ко-многим
 
 В отношении "многие ко многим" каждая сущность содержит навигационное свойство типа коллекции для другой сущности, что в хранилище данных реализуется с использованием таблицы соединения посреди двух сущностных таблиц. Такая таблица соединения именуется в соответствии с двумя таблицами в виде <Сущность1Сущность2>. Таблица соединения имеет отношения "один ко многим" с каждой сущностной таблицей.
@@ -281,6 +304,25 @@ public class Driver : BaseEntity
     public string LastName { get; set; }
     public IEnumerable<Sample> Samples { get; set; } = new List<Sample>();
 }
+```
+
+Пример FluentAPI:
+
+```csharp
+modelBuilder.Entity<Sample>()
+    .HasMany(x => x.Drivers)
+    .WithMany(x => x.Samples)
+    .UsingEntity<Dictionary<string, object>>(
+        "SampleDriver",
+        j => j.HasOne<Driver>()
+        .WithMany()
+        .HasForeignKey("DriverId")
+        .OnDelete(DeleteBehavior.Cascade),
+        j => j.HasOne<Sample>()
+        .WithMany()
+        .HasForeignKey("SamleId")
+        .OnDelete(DeleteBehavior.ClientCascade);
+    );
 ```
 
 ### Каскадное поведение
@@ -351,6 +393,134 @@ protected override void ConfigureConventions(ModelConfigurationBuilder configura
 Аннотация данных | Описание
 -----------|----------
 Table | Определяет имя схемы и таблицы для сущности
+EntityTypeConfiguration | Поддержка настройки собственного класса использованием Fluent API
+Keyless | Сущность не имеет ключа
+Column | Определение имени столбца
+BackingField | Указывает поддерживающее поле для свойства
+Key | Определяет первичный ключ для сущности
+Index | Указание в классе индекса из одного или нескольких столбцов
+Owned | Объявление, что классом будет владеть другой сущностный класс
+Required | Свойство не допускающее значения null в базе данных
+ForeignKey | Свойство, применяемое в качестве внешнего ключа для навигационного свойства
+InverseProperty | Навигационное свойство на другом конце отношения
+StringLength | Максимальная длинна для свтрокового свойства
+TimeStamp | Тип как rowevrsion и добавляет проверки параллелизма к операциям базы данных
+ConcurrencyCheck | Поле флагов, предназначенное для использования во время проверки параллелизма при выполнении обновлений и удалений
+DatabaseGenerated | Указывает на генерацию значания базой данных
+DataType | Более специфичное определение поля, чем внутренний тип данных
+Unicode | Отображает строковое свойство на колонку базы данных определенной кодировки без специфичности типа
+Precision | Уточнение точности и масштабирования для колонки базы данных без уточнения типа
+NotMapped | Исключает свойство или класс из полей или таблиц базы данных
+
+Пример применения аннотаций данных:
+
+```csharp
+public abstract class BaseEntity
+{
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    [Timestamp]
+    public byte[] TimeStamp { get; set; }
+}
+[Table("MySample", Schema = "dbo")]
+[Index(nameof(MakeId), Name = "IX_MySample_MakeId")]
+public class Sample : BaseEntity
+{
+    [Required, StringLength(40)]
+    public string Name { get; set; }
+    public int MakeId { get; set; }
+    [ForeignKey(nameof(MakeId))]
+    public Make MakeNavigation { get; set; }
+    public Ratio RatioNavigation { get; set; }
+    [InverseProperty(nameof(Driver.Samples))]
+    public IEnumerable<Driver> Drivers { get; set; } = new List<Driver>();
+}
+```
+
+## Fluent API
+
+С помощью интерфейса Fluent API сущности приложения конфигурируются посредством кода C#. Методы предоставляются объектом ModelBuilder в методе OnModelCreating() в классе DbContext. Является самым мощным способом конфигурирования и переопределяет любые конфликтующие между собой соглашения и аннотации данных.
+
+Пример настройки:
+
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Sample>(x =>
+    {
+        x.ToTable("MySamples", "dbo");
+        x.HasKey(x => x.Id);
+        x.HasIndex(x => x.MakeId, "IX_Index_1");
+        x.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(50);
+        x.Property(x => x.TimeStamp)
+            .IsRowVersion()
+            .IsConcurrencyToken();
+    });
+...
+}
+```
+
+### Стандартные значения
+
+Пример установки стандартного значения:
+
+```csharp
+x.Property(x => x.Name)
+    .IsRequired()
+    .HasMaxLength(50)
+    .HasDefaultValue("Копейка");
+```
+
+### Поддерживающее поле
+
+Для информаирования EF Core о поддерживающем поле используется Fluent API:
+
+```csharp
+private bool? _isTest;
+public bool IsTest
+{
+    get => _isTest ?? true;
+    set => _isTest = value;
+}
+x.Property(x => x.IsTest)
+    .HasField("_isTest")
+    .HasDefaultValue(true);
+```
+
+### Оптимизированные столбцы
+
+Можно оптимизировать столбцы, хранящие значения null. Нужно использовать метод IsSparce().
+
+Пример:
+
+```csharp
+x.Property(x => x.IsTest)
+    .IsSparse();
+```
+
+### Вычисляемые столбцы
+
+Столбцы могут вычисляться на основе возможностей хранилища данных. Плюс есть возможность сохранения вычисляемых данных, чтобы их значение каждый раз не вычислялось при запросе данных.
+
+Пример:
+
+```csharp
+x.Property(x => x.AdvancedName)
+    .HasComputedColumnSql("Advanced [Name]", stored: true);
+```
+
+### Проверка условий
+
+Можно описывать проверку входных данных на каждую строку. При выполнении условий - выполнять определенное действие.
+
+Пример:
+
+```csharp
+modelBuilder.Entity<Make>()
+    .HasCheckConstraint(name: "CH_Name", sql: "[Name]<>'Test'", buildAction: c => c.HasName("CK_Check_Name"));
+```
 
 
 
@@ -370,7 +540,7 @@ public class SampleViewModel
 
 Остальные действия по конфигурированию делаются в Fluent API.
 
-## Fluent API
+
 
 
 
