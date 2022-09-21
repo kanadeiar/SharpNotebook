@@ -321,7 +321,7 @@ modelBuilder.Entity<Sample>()
         j => j.HasOne<Sample>()
         .WithMany()
         .HasForeignKey("SamleId")
-        .OnDelete(DeleteBehavior.ClientCascade);
+        .OnDelete(DeleteBehavior.ClientCascade)
     );
 ```
 
@@ -522,19 +522,145 @@ modelBuilder.Entity<Make>()
     .HasCheckConstraint(name: "CH_Name", sql: "[Name]<>'Test'", buildAction: c => c.HasName("CK_Check_Name"));
 ```
 
+### Исключение сущностей из миграций
 
+Можно удалить одну сущность из системы миграций в DbContext в методе OnModelCreating().
 
+Пример:
+
+```csharp
+modelBuilder.Entity<BaseEntity>()
+    .ToTable("BaseEntities", t => t.ExcludeFromMigrations());
+```
+
+### Использование классов Fluent API для сущностей
+
+Можно в EF Core выносить инструкции Fluent API в отдельный класс с настройками для каждой отдельной сущности. 
+
+Пример вынесенного в папку "Configuration" класса SampleConfiguration:
+
+```csharp
+public class SampleConfiguration : IEntityTypeConfiguration<Sample>
+{
+    public void Configure(EntityTypeBuilder<Sample> builder)
+    {
+        builder.ToTable("MySamples", "dbo");
+        builder.HasKey(x => x.Id);
+        builder.HasIndex(x => x.MakeId, "IX_Index_1");
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(50)
+            .HasDefaultValue("Копейка");
+        builder.Property(x => x.TimeStamp)
+            .IsRowVersion()
+            .IsConcurrencyToken();
+        builder.Property(x => x.IsTest)
+            .HasField("_isTest")
+            .HasDefaultValue(true);
+        builder.Property(x => x.IsTest)
+            .IsSparse();
+        builder.Property(x => x.AdvancedName)
+            .HasComputedColumnSql("Advanced [Name]", stored: true);
+        builder.HasOne(s => s.MakeNavigation)
+            .WithMany(p => p.Samples)
+            .HasForeignKey(s => s.MakeId)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_Sample_Make_MakeId");
+        builder
+            .HasMany(x => x.Drivers)
+            .WithMany(x => x.Samples)
+            .UsingEntity<SampleDriver>(
+                j => j.HasOne(x => x.DriverNavigation)
+                     .WithMany(d => d.SampleDrivers)
+                     .HasForeignKey(nameof(SampleDriver.DriverId))
+                     .OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne(x => x.SampleNavigation)
+                     .WithMany(d => d.SampleDrivers)
+                     .HasForeignKey(nameof(SampleDriver.SampleId))
+                     .OnDelete(DeleteBehavior.ClientCascade),
+                j =>
+                {
+                    j.HasKey(x => new { x.SampleId, x.DriverId });
+                }
+            );
+    }
+}
+// Добавить использование класса конфигурации в метод создания моделей в DBContext
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    new SampleConfiguration().Configure(modelBuilder.Entity<Sample>());
+    ...
+}
+// Добавить аттрибут в класс сущности, уточняющий класс конфигурирования сущности
+...
+[EntityTypeConfiguration(typeof(SampleConfiguration))]
+public class Sample : BaseEntity
+{
+    ...
+}
+```
+
+### Принадлежащие сущностные классы
+
+В EF Core допустимо применение класса в качестве свойства сущности с целью создания коллекции свойств для другой сущности. Инфраструктура сама добавит все свойства из сущностного класса [Owned] к владеющему классу. Дает возможность многократного использования кода. 
+
+Под капотом EF Core считает это отношением "один-к-одному". Владеющий класс - главная сущность. 
+
+Пример:
+
+```csharp
+[Owned]
+public class Person
+{
+    [Required, StringLength(100)]
+    public string FirstName { get; set; }
+    [Required, StringLength(100)]
+    public string LastName { get; set; }
+}
+public class Driver : BaseEntity
+{
+    public Person PersonInfo { get; set; } = new Person();
+    ...
+}
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Driver>(x =>
+    {
+        x.OwnsOne(o => o.PersonInfo, pd =>
+        {
+            pd.Property<string>(nameof(Person.FirstName))
+                .HasColumnName(nameof(Person.FirstName))
+                .HasColumnType("nvarchar(50)");
+            pd.Property<string>(nameof(Person.LastName))
+                .HasColumnName(nameof(Person.LastName))
+                .HasColumnName("nvarchar(50)");
+        });
+        x.Navigation(d => d.PersonInfo).IsRequired(true);
+    });
+    ...
+```
+
+Ограничения при работе с принадлежащими сущностными классами:
+
+- Нельзя создавать свойства DbSet<T> с принадлежащими сущностными типами
+
+- Нельзя делать вызов Entity<T>() в собственном типе в построителе модели
+
+- Экземпляры принадлежащих сущностных классов не могут быть использованы в нескольких владельцах
+
+- Принадлежащие сущностные типы не поддерживают наследование
 
 ## Типы запросов
 
 Типы запросов — это коллекции DbSet<T>, которые применяются для изображения представлений, оператора SQL или таблиц без первичного ключа. Типы запросов добавляются к производному классу DbContext с применением свойств DbSet<T> и конфигурируются как не имеющие ключей.
 
-Требуемый класс SampleViewModel (который вы создадите при построении полной библиотеки доступа к данным AutoLot)конфигурируется с атрибутом [Keyless].
+Требуемый класс SampleViewModel конфигурируется с атрибутом [Keyless].
 
 ```csharp
 [Keyless]
 public class SampleViewModel
 {
+    
 }
 ```
 
