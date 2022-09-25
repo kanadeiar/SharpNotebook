@@ -42,7 +42,7 @@
 
 ## Данные C#
 
-[Файлы](./data/files.md) [Entity Framework](./data/ef.md)
+[Файлы](./data/files.md) [Entity Framework](./data/ef.md) [Команды CLI глобального инструмента EF Core](./data/efcli.md)
 
 ## Клиентские приложения C#
 

@@ -658,20 +658,81 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 
 ```csharp
 [Keyless]
+[EntityTypeConfiguration(typeof(SampleViewModelConfiguration))]
 public class SampleViewModel
 {
-    
+    public string Name { get; set; }
+    [NotMapped]
+    public string FullDetail => $"The {Name}";
+    public override string ToString() => FullDetail;
+}
+// в DbContext
+new SampleViewModelConfiguration().Configure(modelBuilder.Entity<SampleViewModel>());
+// конфигурация
+namespace SimpleConsole.ViewModels.Configuration;
+
+public class SampleViewModelConfiguration : IEntityTypeConfiguration<SampleViewModel>
+{
+    public void Configure(EntityTypeBuilder<SampleViewModel> builder)
+    {
+        builder.HasNoKey().ToView("SampleMakeView", "dbo");
+        // builder.HasNoKey().ToSqlQuery(@" // запрос SQL
+        // SELECT s.Name Name, m.Name MakeName
+        // FROM dbo.Samples s
+        // INNER JOIN dbo.Make m ON s.MakeId = m.Id").ToView("SampleMakeView");        
+        builder.ToTable(x => x.ExcludeFromMigrations());
+    }
 }
 ```
 
-Остальные действия по конфигурированию делаются в Fluent API.
+### Гибкое сопоставление с запросом или таблицей
 
+Есть возможность сопоставления одного и того же класса с более чем одним объектом базы данных. Такими объектами могут быть таблицы, представления или функции.
 
+Пример:
 
+```csharp
+modelBuilder.Entity<SampleViewModel>()
+    .ToTable("Samples")
+    .ToView("SampleWithMakeView");
+```
 
+## Выполнение запросов
 
+Запросы на извлечение данных создаются использованием запросов LINQ в отношении свойств DbSet<>. На стороне сервера запросы LINQ превращаются в инструкции SQL. Запросы не выполняются до тех пор, пока не начнется проход по результатам запросов.
 
+Пример отложенного запроса и немедленного:
 
+```csharp
+var samples = context.Samples.Where(x => x.Name == "Test"); // оценка
+var result = samples.ToList(); // выполнение
+result = context.Samples.Where(x => x.Name == "Sim").ToList(); // немедленное выполнение
+var query = context.Samples.AsQueryable(); // запрос
+query = query.Where(x => x.Name == "Two");
+result = query.ToList(); // получение
+```
+
+В EF Core возможность смешанного выполнения была изменена и теперь выполнять на стороне клиента можно только последний узел оператора LINQ.
+
+### Отслеживаемые и неотслеживаемые запросы
+
+По умолчанию сущности при получении через DbSet<T> отслеживаются компонентом ChangeTracker. Любые последующие обращения к базе данных за тем же самым элементом на основе перивичного ключа будут приводить к обновлению элемента, а не к его дублированию. Это снижает производительность.
+
+Чтоб сущности не отслеживались - нужно добавить к оператору LINQ вызов AsNoTracking(). 
+
+Пример:
+
+```csharp
+var one = context.Samples.AsNoTracking().FirstOrDefault(x => x.Id == 1);
+```
+
+Чтобы при этом не создавались добавочные копии сущностей, нужно вызвать метод AsNoTrackingWithIdentityResolution().
+
+Пример:
+
+```csharp
+var one = context.Samples.AsNoTrackingWithIdentityResolution().FirstOrDefault(x => x.Id == 1);
+```
 
 
 
