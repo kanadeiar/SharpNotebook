@@ -1,0 +1,146 @@
+# Разметка
+
+XAML - расширяемый язык разметки приложений - язык разметки, используемый для создания экземпляров объектов.NET и в WPF используется для конструирования пользовательских интерфейсов.
+
+Для WPF не требуется XAML, но XAML открывает возможности для кооперации, другие инструменты проектирования понимают форат XAML.
+
+## Основы разметки
+
+Корневой элемент разметки почти всегда ссылается на два заранее определенных пространства имен:
+
+```csharp
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" //основное пространство имен WPF
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" //пространство имен XAML
+```
+
+Первое пространство имен XML отображает множество связанных с WPF пространств для использования текущим файлом *.xaml - Windows, Controls, Data, Ink, Media, Navigation.
+
+Второе пространство имен XML служит для добавления специфичных для XAML "ключевых слов".
+
+Ключевое слово x:Name позволяют назначать имена компонентам и использовать их свойства в других компонентах:
+
+```csharp
+<StackPanel>
+    <Slider Maximum="100" Value="50" x:Name="mySlider"/>
+    <TextBlock Text="{Binding Path=Value, ElementName=mySlider}"></TextBlock>
+</StackPanel>
+```
+
+Помимо ключевых слов x:Name, x:Class, x:Code пространство имен http://schemas.microsoft.com/winfx/2006/xaml предоставляет несколько дополнительных ключевых слов.
+
+Для добавления новых элементов из других пространств имен используется синтаксис такой в корневом элементе XML:
+
+```csharp
+xmlns:myns="clr-namespace:MyControls;assembly=MyControls" //во внешней сборке
+xmlns:myns="clr-namespace:MyNewNamespace" //пространство имен в этой сборке
+//элемент:
+<myns:MyElement/>
+```
+
+По умолчанию все типы C#/XAML являются открытыми, а члены - внутренними. Это можно изменять используя ключевые слова ClassModifier & FieldModifier, пример:
+
+```csharp
+<Grid x:ClassModifier="internal">
+    <Button Name="myButton" x:FieldModifier="public" Content="OK"></Button>
+</Grid>
+```
+
+Элементы XAML отображаются на экземпляры классов или структур внутри заданного пространства имен .NET, а атрибуты в открывающем дескрипторе элемента отображаются на свойства или события этого типа. Когда нужно присвоить сложный объект в качестве значения свойства - нужно использовать синтаксис "свойство-элемент".
+
+Пример присвоения сложного свойства через синтаксис "свойство-элемент":
+
+```csharp
+<Button Height="40" Content="OK" FontSize="20" Foreground="Yellow">
+    <Button.Background>
+        <LinearGradientBrush StartPoint="1,0" EndPoint="1,1">
+            <GradientStop Color="LightGreen" Offset="0"/>
+            <GradientStop Color="DarkGreen" Offset="1"/>
+        </LinearGradientBrush>
+    </Button.Background>
+    <Button.Width>
+        100
+    </Button.Width>
+</Button>
+```
+
+В XAML поддерживается специальный синтаксис для установки значения присоединяемого свойства, позволяющее дочернему элементу устанавливать значение свойства, которое на самом деле определено в родительском элементе. 
+
+Пример применения такого свойства зависимости:
+
+```csharp
+<Grid>
+    <Button Grid.Column="0" Grid.Row="0" Height="40" Width="100" FontSize="20">
+        OK
+    </Button>
+</Grid>
+```
+
+Еденицы в WPF указываются в относительной системе измерения, где еденица равна 1/96 дюйма. В зависимости от системного разрешения элементы будут масштабироваться. Элемент в 100 едениц шириной равен 1 дюйму шириной на всех графических устройствах.
+
+Существует еще один способ установки значения атрибута XAML - расширенная разметка. Она позволяет получить значение для свойства из выделенного внешнего класса. Элементы расширенной разметки помещаются между фигурными скобками.
+
+Пример расширенной разметки:
+
+```csharp
+<Page xmlns:corlib="clr-namespace:System;assembly=mscorlib"
+    ...>
+    <StackPanel>
+        <!-- Получение значения статического члена класса -->
+        <Label Content="{x:Static corlib:Environment.OSVersion}"></Label>
+        <!-- Получение типа, операция typeof языка C# -->
+        <Label Content="{x:Type Button}"></Label>
+        <Label Content="{x:Type corlib:Int32}"></Label>
+        <!-- Наполнение элемента массивом строк -->
+        <ListBox Margin="10">
+            <ListBox.ItemsSource>
+                <x:Array Type="corlib:String">
+                    <corlib:String>Первая строка</corlib:String>
+                    <corlib:String>Вторая</corlib:String>
+                    <corlib:String>Третья строка</corlib:String>
+                </x:Array>
+            </ListBox.ItemsSource>
+        </ListBox>
+    </StackPanel>
+</Page>
+```
+
+C помощью XAML можно описывать любой тип из любой сборки при условии, что он является неабстрактным и содержит стандартный конструктор.
+
+## Свойства
+
+### Простые свойства
+
+Значение в атрибуте XAML всегда представлено простой строкой. Но свойство может быть любого типа .NET. Чтобы преодолеть этот зазор, анализатор XAML должен выполнить преобразование, оно осуществляется конвертерами типов. Это более простой подход - "свойство-атрибут".
+
+Пример:
+
+```csharp
+<TextBox Name="TextBoxTest" FontSize="24" Foreground="Green" />
+```
+
+### Сложные свойства
+
+Некоторые свойства являются полноценными объектами с собственными наборами свойств. В XAML предусматрен в таких случаях синтаксис "свойство-элемент", его форма: РодительскийЭлемент.ИмяСвойства. 
+
+Пример:
+
+```csharp
+<Button>
+    <Button.Background>
+        <LinearGradientBrush>
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Offset="0.0" Color="Red" />
+                <GradientStop Offset="1.0" Color="Yellow" />
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
+    </Button.Background>
+    Test
+</Button>
+```
+
+
+
+
+
+
+

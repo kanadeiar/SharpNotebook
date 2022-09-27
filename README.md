@@ -42,11 +42,11 @@
 
 ## Данные C#
 
-[Файлы](./data/files.md) [Entity Framework](./data/ef.md) [Команды CLI глобального инструмента EF Core](./data/efcli.md)
+[Файлы](./data/files.md) [Основы EF](./data/ef.md) [Работа EF](./data/efexploring.md) [Команды CLI EF Core](./data/efcli.md)
 
 ## Клиентские приложения C#
 
-[Основы](./desktop/origin.md) [Компоненты](./desktop/components.md) [Позиционирование](./desktop/positions.md) [События](./desktop/events.md) [Привязки](./desktop/bindings.md) [Ресурсы](./desktop/resources.md) [Анимация](./desktop/animation.md) [Стили](./desktop/styles.md) [Шаблоны](./desktop/templates.md) [Уведомления](./desktop/notify.md) [Валидация](./desktop/validation.md) [Команды](./desktop/commands.md)
+[Основы](./desktop/origin.md) [Разметка](./desktop/XAML.md) [Компоненты](./desktop/components.md) [Позиционирование](./desktop/positions.md) [События](./desktop/events.md) [Привязки](./desktop/bindings.md) [Ресурсы](./desktop/resources.md) [Анимация](./desktop/animation.md) [Стили](./desktop/styles.md) [Шаблоны](./desktop/templates.md) [Уведомления](./desktop/notify.md) [Валидация](./desktop/validation.md) [Команды](./desktop/commands.md)
 
 [Фигуры](./desktop/shapes.md) [Рисунки](./desktop/draw.md) [Визуализация](./desktop/visual.md)
 
