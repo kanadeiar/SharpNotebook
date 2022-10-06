@@ -369,17 +369,24 @@ var result = names.TryGetNonEnumeratedCount(out int count);
 
 Есть возможность указать значение по умолчанию, возвращаемое, если коллекция пуста - метод DefaultIfEmpty(). В параметре метода нужно указать значение по умолчанию.
 
+Пример:
+
+```csharp
+var names = new[] { "Иван", "Петр", "Сидор", "Вася", "Павел", "Дима" };
+var result = names.DefaultIfEmpty("нет").FirstOrDefault(x => x.StartsWith("test"));
+```
+
 ## LINQ при чтении файлов
 
 Пример:
 
 ```csharp
 var sum = System.IO
-              .File.ReadAllText("data.txt")
-              .Split(' ')
-              .Select(int.Parse)
-              .Where(e => e % 2 == 0)
-              .ToArray()
-              .Sum();
+    .File.ReadAllText("data.txt")
+    .Split(' ')
+    .Select(int.Parse)
+    .Where(e => e % 2 == 0)
+    .ToArray()
+    .Sum();
 ```
 
