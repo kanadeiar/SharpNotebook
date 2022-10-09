@@ -4,20 +4,20 @@
 
 Создание решения:
 
-csharp```
+```csharp
 dotnet new sln -n SimpleSolution -o .\SimpleSolutionDir
 ```
 
 Создание консольного приложения:
 
-csharp```
+```csharp
 dotnet new console -lang c# -n SimpleConsoleApp -o .\SimpleSolutionDir\
 SimpleConsoleApp -f net5.0
 ```
 
 Добавление приложения в решение:
 
-csharp```
+```csharp
 dotnet sln .\SimpleSolutionDir\SimpleSolution.sln add .\SimpleSolutionDir\
 SimpleConsoleApp
 ```

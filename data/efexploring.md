@@ -28,12 +28,9 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-{
-    var newSample = new Sample();
-    context.Samples.Attach(newSample);
-    context.SaveChanges();
-}
+var newSample = new Sample();
+context.Samples.Attach(newSample);
+context.SaveChanges();
 ```
 
 Можно добавлять сразу несколько записей в базу данных использованием метода AddRange().
@@ -41,16 +38,13 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-{
-    var list = new List<Sample>{
-        new Sample(),
-        new Sample(),
-        new Sample(),
-    };
-    context.Samples.AddRange(list);
-    context.SaveChanges();
-}
+var list = new List<Sample>{
+    new Sample(),
+    new Sample(),
+    new Sample(),
+};
+context.Samples.AddRange(list);
+context.SaveChanges();
 ```
 
 Можно добавляь в базу данных объектные графы - несколько взаимосвязанных объектов, которые являются несколькими записями в разных таблицах базы данных. EF Core создаст связи автоматически.
@@ -58,14 +52,11 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-{
-    var make = new Make { Name = "Make" };
-    var sample = new Sample { Name = "One" };
-    ((List<Sample>)make.Samples).Add(sample);
-    context.Makes.Add(make);
-    context.SaveChanges();
-}
+var make = new Make { Name = "Make" };
+var sample = new Sample { Name = "One" };
+((List<Sample>)make.Samples).Add(sample);
+context.Makes.Add(make);
+context.SaveChanges();
 ```
 
 Можно добавлять в базу данных в разные таблицы данных связанные записи типа "многие-ко-многим" в удобной и быстрой форме.
@@ -73,18 +64,15 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+var drivers = new List<Driver>
 {
-    var drivers = new List<Driver>
-    {
-        new() { PersonInfo = new Person { FirstName = "One", LastName = "Two" }},
-        new() { PersonInfo = new Person { FirstName = "Three", LastName = "Four" }},
-    };
-    var samples = context.Samples.Take(2).ToList();
-    ((List<Driver>)samples[0].Drivers).AddRange(drivers.Take(..1));
-    ((List<Driver>)samples[1].Drivers).AddRange(drivers.Take(1..));
-    context.SaveChanges();
-}
+    new() { PersonInfo = new Person { FirstName = "One", LastName = "Two" }},
+    new() { PersonInfo = new Person { FirstName = "Three", LastName = "Four" }},
+};
+var samples = context.Samples.Take(2).ToList();
+((List<Driver>)samples[0].Drivers).AddRange(drivers.Take(..1));
+((List<Driver>)samples[1].Drivers).AddRange(drivers.Take(1..));
+context.SaveChanges();
 ```
 
 Добавление множества записей в базу данных возможно вызовыми простых методов производного от DbContext класса.
@@ -92,23 +80,20 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+List<Make> makes = new()
 {
-    List<Make> makes = new()
-    {
-        new() { Name = "Test" },
-        new() { Name = "Dott" },
-    };
-    context.Makes.AddRange(makes);
-    context.SaveChanges();
-    List<Sample> samples = new()
-    {
-        new() { MakeId = 1, Name = "Vova" },
-        new() { MakeId = 2, Name = "Maka" },
-    };
-    context.Samples.AddRange(samples);
-    context.SaveChanges();
-}
+    new() { Name = "Test" },
+    new() { Name = "Dott" },
+};
+context.Makes.AddRange(makes);
+context.SaveChanges();
+List<Sample> samples = new()
+{
+    new() { MakeId = 1, Name = "Vova" },
+    new() { MakeId = 2, Name = "Maka" },
+};
+context.Samples.AddRange(samples);
+context.SaveChanges();
 ```
 
 ### Столбец идентификации
@@ -132,22 +117,19 @@ context.Database.ExecuteSqlRaw($"SET IDENTITY_INSERT {schema}.{tableName} OFF");
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+var entities = new[]
 {
-    var entities = new[]
-    {
-        typeof(Driver).FullName,
-        typeof(Sample).FullName,
-        typeof(Make).FullName,
-    };
-    foreach (var entityName in entities)
-    {
-        var entity = context.Model.FindEntityType(entityName);
-        var tableName = entity.GetTableName;
-        var schemaName = entity.GetSchema;
-        context.Database.ExecuteSqlRaw($"DELETE FROM {schemaName}.{tableName}");
-        context.Database.ExecuteSqlRaw($"DBCC CHECKIDENT (\"{schemaName}.{tableName}\", RESEED, 0)");
-    }
+    typeof(Driver).FullName,
+    typeof(Sample).FullName,
+    typeof(Make).FullName,
+};
+foreach (var entityName in entities)
+{
+    var entity = context.Model.FindEntityType(entityName);
+    var tableName = entity.GetTableName;
+    var schemaName = entity.GetSchema;
+    context.Database.ExecuteSqlRaw($"DELETE FROM {schemaName}.{tableName}");
+    context.Database.ExecuteSqlRaw($"DBCC CHECKIDENT (\"{schemaName}.{tableName}\", RESEED, 0)");
 }
 ```
 
@@ -160,21 +142,18 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+// простейшее
+var samples = context.Samples;
+foreach (var e in samples)
 {
-    // простейшее
-    var samples = context.Samples;
-    foreach (var e in samples)
-    {
-        Console.WriteLine($"{e.Name} {e.AdvancedName}");
-    }
-    // очистка контекста
-    context.ChangeTracker.Clear();
-    var arr = context.Samples.ToArray();
-    foreach (var e in arr) // clean
-    {
-        Console.WriteLine($"{e.Name} {e.AdvancedName}");
-    }
+    Console.WriteLine($"{e.Name} {e.AdvancedName}");
+}
+// очистка контекста
+context.ChangeTracker.Clear();
+var arr = context.Samples.ToArray();
+foreach (var e in arr) // clean
+{
+    Console.WriteLine($"{e.Name} {e.AdvancedName}");
 }
 ```
 
@@ -185,29 +164,26 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+// простейшая фильтрация
+var query = context.Samples.Where(x => x.IsTest == true).AsQueryable();
+foreach (var e in query)
 {
-    // простейшая фильтрация
-    var query = context.Samples.Where(x => x.IsTest == true).AsQueryable();
-    foreach (var e in query)
-    {
-        Console.WriteLine($"{e.Name} {e.AdvancedName}");
-    }
-    context.ChangeTracker.Clear();
-    // обычная
-    query = context.Samples.Where(x => x.Name.StartsWith("Test")).AsQueryable();
-    query = query.Where(x => x.IsTest == true);
-    foreach (var e in query)
-    {
-        Console.WriteLine($"{e.Name}");
-    }
-    context.ChangeTracker.Clear();
-    // ускоренная
-    var samples = context.Samples.Where(x => !string.IsNullOrWhiteSpace(x.Name));
-    foreach (var e in samples)
-    {
-        Console.WriteLine($"{e.Name}");
-    }
+    Console.WriteLine($"{e.Name} {e.AdvancedName}");
+}
+context.ChangeTracker.Clear();
+// обычная
+query = context.Samples.Where(x => x.Name.StartsWith("Test")).AsQueryable();
+query = query.Where(x => x.IsTest == true);
+foreach (var e in query)
+{
+    Console.WriteLine($"{e.Name}");
+}
+context.ChangeTracker.Clear();
+// ускоренная
+var samples = context.Samples.Where(x => !string.IsNullOrWhiteSpace(x.Name));
+foreach (var e in samples)
+{
+    Console.WriteLine($"{e.Name}");
 }
 ```
 
@@ -218,13 +194,10 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+var samples = context.Samples.OrderBy(x => x.Name).ThenByDescending(x => x.AdvancedName);
+foreach (var e in samples)
 {
-    var samples = context.Samples.OrderBy(x => x.Name).ThenByDescending(x => x.AdvancedName);
-    foreach (var e in samples)
-    {
-        Console.WriteLine($"{e.Name} {e.AdvancedName}");
-    }
+    Console.WriteLine($"{e.Name} {e.AdvancedName}");
 }
 ```
 
@@ -233,13 +206,10 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+var samples = context.Samples.OrderBy(x => x.Name).ThenBy(x => x.AdvancedName).Reverse();
+foreach (var e in samples)
 {
-    var samples = context.Samples.OrderBy(x => x.Name).ThenBy(x => x.AdvancedName).Reverse();
-    foreach (var e in samples)
-    {
-        Console.WriteLine($"{e.Name} {e.AdvancedName}");
-    }
+    Console.WriteLine($"{e.Name} {e.AdvancedName}");
 }
 ```
 
@@ -250,13 +220,10 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+var samples = context.Samples.Skip(2).Take(3).ToList();
+foreach (var e in samples)
 {
-    var samples = context.Samples.Skip(2).Take(3).ToList();
-    foreach (var e in samples)
-    {
-        Console.WriteLine($"{e.Name} {e.AdvancedName}");
-    }
+    Console.WriteLine($"{e.Name} {e.AdvancedName}");
 }
 ```
 
@@ -281,13 +248,10 @@ Find() - получение одной записи, значение перви
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-{
-    var one = context.Samples.Where(x => x.Id == 1).First();
-    var two = context.Samples.FirstOrDefault(x => x.Id == 1);
-    var third = context.Samples.Find(12);
-    context.ChangeTracker.Clear();
-}
+var one = context.Samples.Where(x => x.Id == 1).First();
+var two = context.Samples.FirstOrDefault(x => x.Id == 1);
+var third = context.Samples.Find(12);
+context.ChangeTracker.Clear();
 ```
 
 ### Агрегация данных
@@ -297,12 +261,9 @@ EF Core поддерживает методы агрегации данных, �
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-{
-    var count = context.Samples.Count(x => x.IsTest);
-    var one = context.Samples.Max(x => x.Id);
-    var two = context.Samples.Average(x => x.Id);
-}
+var count = context.Samples.Count(x => x.IsTest);
+var one = context.Samples.Max(x => x.Id);
+var two = context.Samples.Average(x => x.Id);
 ```
 
 ### Получение результата от записей по критерию
@@ -312,11 +273,8 @@ using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDb
 Пример:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
-{
-    var yes = context.Samples.Any(x => x.IsTest);
-    var no = context.Samples.All(x => x.Id == 1);
-}
+var yes = context.Samples.Any(x => x.IsTest);
+var no = context.Samples.All(x => x.Id == 1);
 ```
 
 ### Получение результата из хранимых процедур
@@ -334,26 +292,86 @@ SELECT @name = Name from dbo.MySample where Id = @Id
 Пример работы с этой хранимой процедурой:
 
 ```csharp
-using (var context = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>()))
+var parameterId = new SqlParameter
 {
-    var parameterId = new SqlParameter
-    {
-        ParameterName = "@Id",
-        SqlDbType = SqlDbType.Int,
-        Value = 1,
-    };
-    var parameterName = new SqlParameter
-    {
-        ParameterName = "@Name",
-        SqlDbType = SqlDbType.NVarChar,
-        Size = 50,
-        Direction = ParameterDirection.Output,
-    };
-    var result = context.Database.ExecuteSqlRaw("EXEC [dbo].[GetName] @Id, @Name OUTPUT", parameterId, parameterName);
-}
+    ParameterName = "@Id",
+    SqlDbType = SqlDbType.Int,
+    Value = 1,
+};
+var parameterName = new SqlParameter
+{
+    ParameterName = "@Name",
+    SqlDbType = SqlDbType.NVarChar,
+    Size = 50,
+    Direction = ParameterDirection.Output,
+};
+var result = context.Database.ExecuteSqlRaw("EXEC [dbo].[GetName] @Id, @Name OUTPUT", parameterId, parameterName);
 ```
 
 ## Связанные данные
+
+Навигационные свойства в сущности позволяют загружать связанные данные этой сущности. Данные могут быть загружены разными способами. При загрузке этих связанных сущностей ChangeTracker автоматически будет их отслеживать. 
+
+### Энергичная загрузка
+
+Энергичная загрузка подразумевает загрузку связанных данных из нескольких таблиц базы данных за один вызов. EF Core все делает автоматически. Используются методы Include() и ThenInclude() для путешествия по навигационным свойствам сущности в LINQ запросах. 
+
+Если отношения сущностей обязательны, то LINQ создает запрос внутреннего объединения таблиц. Если же отношения сущностей необязательны - запрос левого простого объединения таблиц.
+
+Пример:
+
+```csharp
+var sampleWithMakes = context.Samples.Include(x => x.MakeNavigation).ToList();
+context.ChangeTracker.Clear();
+var sampleWithDrivers = context.Samples.Include(x => x.Drivers).ThenInclude(d => d.SampleDrivers).ToList();
+context.ChangeTracker.Clear();
+```
+
+Внутрь метода Include() можно передавать методы сортировки, выборки и постраничной разбивки для того, чтобы отсортировать, отфильтровать или постранично разбить получаемые связанные данные.
+
+Пример:
+
+```csharp
+var sampleWithMakes = context.Makes
+    .Include(x => x.Samples.Where(x => x.IsTest).OrderBy(x => x.Name).Skip(1).Take(2))
+    .ToList();
+context.ChangeTracker.Clear();
+```
+
+Можно заставить EF Core разделить большой запрос на несколько подзапросов, применив метод AsSplitQuery(), и потом уже EF Core подулючет связанные данные. Это может повысить производительность при больших запросах.
+
+Пример:
+
+```csharp
+var sampleWithMakes = context.Makes.AsSplitQuery()
+    .Include(x => x.Samples.Where(x => x.IsTest).OrderBy(x => x.Name).Skip(1).Take(2))
+    .ToList();
+context.ChangeTracker.Clear();
+```
+
+Для получения данных из таблиц сущностей связанных по типу "многие-ко-многим" следует применять запросы, проходящие через связанную таблицу.
+
+Пример:
+
+```csharp
+var sampleAndDrivers = context.Samples.Include(x => x.Drivers).Where(x => x.Drivers.Any());
+context.ChangeTracker.Clear();
+```
+
+### Явная загрузка
+
+Такая загрузка связанных данных по навигационному свойству производится после того, как объект уже загружен. 
+
+Начинать запрос следует с метода Entry() у производного от DbContext объекта. При запросе справочного навигационного свойства нужно использовать метод Reference(). При запросе свойства навигации коллекции нужно использовать метод Collection(). Запрос откладывается до тех пор, пока не будет вызваны методы Load(), ToList() или агрегатная функция.
+
+Пример:
+
+```csharp
+var sample = context.Samples.First(x => x.Id == 1);
+context.Entry(sample).Reference(c => c.MakeNavigation).Load();
+context.Entry(sample).Collection(c => c.Drivers).Query().Load();
+```
+
 
 
 

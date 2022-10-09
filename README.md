@@ -30,7 +30,7 @@
 
 ## Код C#
 
-[Ветвления](./code/ifs.md) [Итерации](./code/whiles.md) [Стандартные интерфейсы](./code/stdinterfaces.md) [LINQ](./code/linq.md)
+[Ветвления](./code/ifs.md) [Итерации](./code/whiles.md) [Стандартные интерфейсы](./code/stdinterfaces.md) [Язык интегрированных запросов](./code/linq.md)
 
 ## Механизмы C#
 
