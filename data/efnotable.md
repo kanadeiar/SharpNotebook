@@ -75,7 +75,75 @@ var sample = context.Samples
 
 
 
-958
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Принадлежащие сущностные классы
+
+В EF Core допустимо применение класса в качестве свойства сущности с целью создания коллекции свойств для другой сущности. Инфраструктура сама добавит все свойства из сущностного класса [Owned] к владеющему классу. Дает возможность многократного использования кода. 
+
+Под капотом EF Core считает это отношением "один-к-одному". Владеющий класс - главная сущность. 
+
+Пример:
+
+```csharp
+[Owned]
+public class Person
+{
+    [Required, StringLength(100)]
+    public string FirstName { get; set; }
+    [Required, StringLength(100)]
+    public string LastName { get; set; }
+}
+public class Driver : BaseEntity
+{
+    public Person PersonInfo { get; set; } = new Person();
+    ...
+}
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Driver>(x =>
+    {
+        x.OwnsOne(o => o.PersonInfo, pd =>
+        {
+            pd.Property<string>(nameof(Person.FirstName))
+                .HasColumnName(nameof(Person.FirstName))
+                .HasColumnType("nvarchar(50)");
+            pd.Property<string>(nameof(Person.LastName))
+                .HasColumnName(nameof(Person.LastName))
+                .HasColumnName("nvarchar(50)");
+        });
+        x.Navigation(d => d.PersonInfo).IsRequired(true);
+    });
+    ...
+```
+
+Ограничения при работе с принадлежащими сущностными классами:
+
+- Нельзя создавать свойства DbSet<T> с принадлежащими сущностными типами
+
+- Нельзя делать вызов Entity<T>() в собственном типе в построителе модели
+
+- Экземпляры принадлежащих сущностных классов не могут быть использованы в нескольких владельцах
+
+- Принадлежащие сущностные типы не поддерживают наследование
+
+
+1012
 
 
 
