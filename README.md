@@ -30,11 +30,11 @@
 
 ## Код C#
 
-[Ветвления](./code/ifs.md) [Итерации](./code/whiles.md) [Стандартные интерфейсы](./code/stdinterfaces.md) [Язык интегрированных запросов](./code/linq.md)
+[Ветвления](./code/ifs.md) [Итерации](./code/whiles.md) [Стандартные интерфейсы](./code/stdinterfaces.md) [LINQ](./code/linq.md)
 
 ## Механизмы C#
 
-[Механизмы работы CLR](./mech/details.md) [Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md) [Пул потоков](./mech/threadpool.md) [Конечный автомат async](./mech/async.md)
+[Механизмы работы CLR](./mech/details.md) [Исключения](./mech/exceptions.md) [Сборщик мусора](./mech/garbage.md) [Пул потоков](./mech/threadpool.md) [Асинхронный конечный автомат](./mech/async.md)
 
 ## Многопоточность C#
 
