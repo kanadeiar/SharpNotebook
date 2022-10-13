@@ -42,7 +42,7 @@
 
 ## Данные C#
 
-[Файлы](./data/files.md) [Основы EF](./data/ef.md) [Чтение EF](./data/efquery.md) [Работа EF](./data/efexploring.md) [Фичи EF](./data/efnotable.md) [Команды CLI EF Core](./data/efcli.md)
+[Файлы](./data/files.md) [Основы EF](./data/ef.md) [Чтение EF](./data/efread.md) [Работа EF](./data/efedit.md) [Фичи EF](./data/efnotable.md) [Команды CLI EF Core](./data/efcli.md)
 
 ## Клиентские приложения C#
 
