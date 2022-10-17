@@ -137,6 +137,83 @@ optionsBuilder.UseSqlServer(connectionString, options => options.EnableRetryOnFa
 
 Как только количество повторных подключений достигнуто, то EF Core уведомляет приложение о том, что возникла проблема с подключением путем броска исключения RetryLimitExceededException.
 
+## Отображение хранимых функций
+
+Функции базы данных могуть быть отражены на C#-методы и могут быть включены в LINQ-выражения. EF Core поддерживает множество встроенных функций SQL сервера. Оператор C# ?? отражается на функцию coalese SQL сервера. String.IsNullOrEmpty() отражается на функцию проверки на null и использует функцию len SQL сервера для проверки длинны строки.
+
+Чтоб использовать эту функцию в C#, нужно добавить новый метод в унаследованный от DbContext класс.
+
+Пример типичной функции базы данных SQL Server:
+
+```sql
+CREATE FUNCTION test_SamplesCountFor ( @makeId int )
+RETURNS int
+AS
+BEGIN
+    DECLARE @Result int
+    SELECT @Result = COUNT(makeId) FROM dbo.Samples WHERE makeId = @makeId
+    RETURN @Result
+END
+GO
+```
+
+Пример добавленного метода:
+
+```csharp
+public partial class ApplicationDbContext : DbContext
+{
+    [DbFunction("test_SamplesCountFor", Schema = "dbo")]
+    public static int SamplesCountFor(int makeId) => throw new NotSupportedException();
+    ...
+}
+```
+
+Пример использования этого метода:
+
+```csharp
+var makes = context.Makes
+    .Where(x => ApplicationDbContext.SamplesCountFor(x.Id) > 1).ToList();
+```
+
+Платформа EF Core поддерживает отображение функций, вертающих в качестве результата значение-таблицу.
+
+Пример типичной функции базы данных SQL Server, возвращающей в качестве результата значение-таблицу:
+
+```sql
+CREATE FUNCTION test_GetSamplesForMake ( @makeId int )
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT Id, IsTest, Name, MakeId
+    FROM MySample WHERE MakeId = @makeId
+)
+GO
+```
+
+Пример добавленного метода:
+
+```csharp
+public partial class ApplicationDbContext : DbContext
+{
+    [DbFunction("test_GetSamplesForMake", Schema = "dbo")]
+    public IQueryable<Sample> GetSamplesFor(int makeId) => FromExpression(() => GetSamplesFor(makeId));
+    ...
+}
+```
+
+Пример использования этого метода:
+
+```csharp
+var samples = context.GetSamplesFor(1).ToList();
+```
+
+## Функции EF.Functions
+
+
+
+
+
 969 (1018)
 
 
