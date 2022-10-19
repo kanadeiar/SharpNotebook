@@ -210,11 +210,37 @@ var samples = context.GetSamplesFor(1).ToList();
 
 ## Функции EF.Functions
 
+Статический класс EF предоставляет множество методов C#, отражающихся на специальные функции базы данных.
+
+Наиболее полезные методы:
+
+Метод | Описание
+------|------
+Like() | Реализация операции SQL LIKE. Для SQL Server сравнение регистронезависимое с предоставлением подстановочного символа %
+Random() | Возвращает псевдослучайное число от 0 до 1, отражается на функцию RAND базы данных
+Collation<TProperty>() | Задает параметры сопоставления, которые будут использоватся в запросе LINQ
+Contains() | Отражается на функцию CONTAINS базы данных. Таблица должна быть проиндексирована в полнотекстовом поиске.
+FreeText() | Отражается на функцию FREETEXT базы данных. Таблица должна быть проиндексирована в полнотекстовом поиске.
+DataLength() | Количество байт, необходимых для предоставления выражения
+DateDiffYear() ... DateDiffNansecond() | Отражается на функцию DATEDIFF базы данных. Возвращает интервал между двумя датами
+DateFromParts() | Инициализирует структуру новую DateTime и отражается на функцию DATEFROMPARTS базы данных
+DateTime2FromParts() | Инициализирует структуру новую DateTime и отражается на функцию DATETIME2FROMPARTS базы данных
+DateTimeFromParts() | Инициализирует структуру новую DateTime и отражается на функцию DATETIMEFROMPARTS базы данных
+DateTimeOffsetFromParts() | Инициализирует структуру новую DateTimeOffset и отражается на функцию DATETIMEOFFSETFROMPARTS базы данных
+SmallDateTimeFromParts() | Инициализирует структуру новую DateTime и отражается на функцию SMALLDATETIMEFROMPARTS базы данных
+TimeFromParts() | Инициализирует структуру новую TimeSpan и отражается на функцию TIMEFROMPARTS базы данных
+IsDate() | Проверка что строка является датой. Отражается на функцию ISDATE базы данных
+
+Пример:
+
+```csharp
+var samples = context.Samples.IgnoreQueryFilters().Where(x => EF.Functions.Like(x.Name, "%Test%")).ToList();
+```
 
 
 
 
-969 (1018)
+973 (1022)
 
 
 
