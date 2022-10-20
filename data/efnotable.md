@@ -210,9 +210,9 @@ var samples = context.GetSamplesFor(1).ToList();
 
 ## Функции EF.Functions
 
-Статический класс EF предоставляет множество методов C#, отражающихся на специальные функции базы данных.
+Статический класс EF предоставляет множество функций C#, отражающихся на специальные функции базы данных.
 
-Наиболее полезные методы:
+Наиболее полезные функции:
 
 Метод | Описание
 ------|------
@@ -243,6 +243,110 @@ var samples = context.Samples.IgnoreQueryFilters().Where(x => EF.Functions.Like(
 
 Когда, например, добавляется несколько записей в рамках одной транзакции, то исполняющая среда EF Core пакетирует операторы в одиночное сообщение.
 
+## Конверторы значений
+
+В EF Core поддерживаются специальные конверторы значений, которые автоматически преобразовывают значения при записи и чтении данных из базы данных. Можно создавать и собственные конверторы значений.
+
+Наиболее полезные конверторы значений:
+
+Конвертор значений | Описание
+------|------
+BoolToStringConverter | Преобразовывает bool в/из строки
+BytesToStringConverter | Преобразовывает массив байт в/из строки
+CharToStringConverter | Преобразовывает символ в/из строки
+DateTimeOffsetToBinaryConverter | Преобразовывает смещение датывремени в/из бинарное представление long
+DateTimeOffsetToBytesConverter | Преобразовывает смещение датывремени в/из массив байт
+DateTimeOffsetToStringConverter | Преобразовывает смещение датывремени в/из строки
+DateTimeToBinaryConverter | Преобразовывает датувремя используя метод ToBinary()
+DateTimeToStringConverter | Преобразовывает датувремя в/из строки
+DateTimeToTicksConverter | Преобразовывает датувремя в/из временные тики
+EnumToNumberConverter<TEnum,TNumber> | Преобразовывает значение перечисления в/из число
+EnumToStringConverter<TEnum> | Преобразовывает значение перечисления в/из строку
+GuidToStringConverter | Преобразовывает Guid в/из строки, по формату “8-4-4-4-12”
+NumberToStringConverter<TNumber> | Преобразовывает число в/из строкового представления
+StringToBoolConverter | Преобразовывает строку в/из bool
+StringToBytesConverter | Преобразовывает строку в/из массива байт
+StringToCharConverter | Преобразовывает строку в/из символа
+StringToDateTimeConverter | Преобразовывает строку в/из датувремя
+StringToDateTimeOffsetConverter | Преобразовывает строку в/из смещения датывремени
+StringToEnumConverter<TEnum> | Преобразовывает строку в/из перечисления
+StringToGuidConverter | Преобразовывает строку в Guid, по формату “8-4-4-4-12”
+StringToNumberConverter<TNumber> | Преобразовывает строку в/из число
+StringToTimeSpanConverter | Преобразовывает строку в/из интервал времени
+StringToUriConverter | Преобразовывает строку в/из Uri
+TimeSpanToStringConverter | Преобразовывает интервал времени в/из строки
+TimeSpanToTicksConverter | Преобразовывает интервал времени в/из временные тики
+UriToStringConverter | Преобразовывает Uri в/из строку
+ValueConverter | Преобразовывает один тип данных в другой или тот-же самый тип
+
+Как правило конверторы не нуждаются в дополнительном конфигурировании, все настраивается автоматически.
+
+Пример простой настройки преобразования типа:
+
+```csharp
+// Модель:
+public class Sample : BaseEntity
+{
+    ...
+    public string Price { get; set; }
+}
+// Настройка:
+public void Configure(EntityTypeBuilder<Sample> builder)
+{
+    builder.Property(x => x.Price).HasConversion(new StringToNumberConverter<decimal>());
+}
+```
+
+Для более тонкой настройки можно создавать собственный конвертор. Первый параметр - это преобразование значения в базу данных, а второй параметр - это преобразование из базы данных.
+
+Пример тонкой настройки преобразования типа:
+
+```csharp
+// Модель:
+public class Sample : BaseEntity
+{
+    ...
+    public string Price { get; set; }
+}
+// Настройка:
+public void Configure(EntityTypeBuilder<Sample> builder)
+{
+    CultureInfo provider = new CultureInfo("en-us");
+    NumberStyles style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
+    builder.Property(x => x.Price).HasConversion(v => decimal.Parse(v, style, provider), v => v.ToString("C2"));
+}
+```
+
+## Теневые свойства
+
+Теневые свойства это свойства, которые явно не объявлены в классе сущности, но неявно существуют в EF Core. Значение и состояние таких свойств полностью поддерживаются ChangeTracker. 
+
+Теневое свойство, не добавленное в модель, добавляется через Fluent API с помощью метода Property(). Fluent API конфигурирует явное свойство.
+
+Пример добавления теневого свойства:
+
+```csharp
+// Настройка:
+public void Configure(EntityTypeBuilder<Sample> builder)
+{
+    builder.Property<bool?>("IsDeleted").IsRequired(false).HasDefaultValue(true);
+}
+```
+
+Теневые свойства доступны через Change Tracker и через LINQ.
+
+Примеры работы с теневыми свойствами:
+
+```csharp
+var newSample = new Sample();
+context.Samples.Add(newSample);
+context.Entry(newSample).Property("IsDeleted").CurrentValue = true;
+var nonDeleteds = context.Samples.Where(c => !EF.Property<bool>(c, "IsDeleted")).ToList();
+foreach (var e in nonDeleteds)
+{
+    Console.WriteLine($"{e.Name} Is deleted: {context.Entry(e).Property("IsDeleted").CurrentValue}");
+}
+```
 
 973 (1022)
 
