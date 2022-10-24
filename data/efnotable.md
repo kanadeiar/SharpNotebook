@@ -348,23 +348,155 @@ foreach (var e in nonDeleteds)
 }
 ```
 
+## Поддержка временных таблиц SQL Server
+
+Временные таблицы SQL Server автоматически отслеживают все данные, когда-либо хранившиеся в таблице. Это достигается с помощью таблицы истории, в которой хранится копия данных с отметкой времени всякий раз, когда в основную таблицу вносятся изменения или удаления. В EF Core есть поддержка работы с временными таблицами: создание, преобразование обычных таблиц во временные, запрос исторических данных и восстановление данных на определенный момент времени.
+
+### Настройка временной таблицы
+
+Для простой настройки временной таблицы нужно использовать во FluentAPI метод ToTable(). Будет создана таблица с двумя дополнительными полями типа datetime2 - PeriodEnd и PeriodStart. Еще создается дополнительная таблица исторических даных с названием <ИмяКласса>History. Такая таблица является клоном обычной и сохраняет все изменения данных обычной таблицы.
+
+Пример:
+
+```csharp
+public void Configure(EntityTypeBuilder<Sample> builder)
+{
+    //builder.ToTable("MySamples", "dbo", x => x.IsTemporal());
+    builder.ToTable(x => x.IsTemporal());
+    ...
+}
+```
+
+Пример тонкой настройки временной таблицы:
+
+```csharp
+public void Configure(EntityTypeBuilder<Sample> builder)
+{
+    builder.ToTable(x => x.IsTemporal(t =>
+    {
+        t.HasPeriodEnd("ValidTo");
+        t.HasPeriodStart("ValidFrom");
+        t.UseHistoryTable("SampleHistory", "audits");
+    }));
+    ...
+}
+```
+
+При запросе данных с такой таблицы, EF Core включает в запрос свойство датовременного штампа. Но для получения значений этих дополнительных теневых свойств нужно использовать специальные запросы данных.
+
+Пример запроса:
+
+```csharp
+var sample = context.Samples
+    .FromSqlInterpolated($"Select *,ValidFrom,ValidTo from dbo.Samples where Id = {sampleId}")
+    .Include(x => x.MakeNavigation)
+    .First();
+```
+
+### Взаимодействие между обычной таблицей и временной
+
+Можно продолжать работать с сущностью EF Core как с обычной обычной, до добавления временной таблицы. При опрациях CRUD за кулисами происходит постоянное взаимодействие с временной таблицей.
+
+Каждая вставка, редактирование и удаление записи запоминается в исторической таблице. 
+
+Когда запись вставляется в основную таблицу, устанавливается значение в поле ValidFrom, а ValidTo устанавливается в максимальное значение. 
+
+Когда запись обновляется, то копия записи будет записана в историчекую таблицу (до изменений) и в поле ValidTo записывается время транзации. В основной таблице при этом в этой записи в поле ValidFrom будет записано значение времени транзакции. 
+
+Когда запись удаляется, то копия записи будет записана в историческую таблицу (до удаления) и в поле ValidTo будет записано время транзакции. В основной таблице запись будет удалена.
+
+### Чтение из временной таблицы
+
+Когда нужно считать данные из временной таблицы, не нужно явным образом указывать поля ValidFrom и ValidTo. Следует использовать специальные методы.
+
+Основные методы:
+
+Метод LINQ | Код SQL | Описание
+------|------|-----
+TemporalAsOf() | AS OF <date_time> | Получение записей определенной временной точки 
+TemporalFromTo() | FROM <start_date_time> TO <end_date_time> | Получение записей за интервал времени
+TemporalBetween() | BETWEEN <start_date_time> TO <end_date_time> | Получение записей за интервал времени
+TemporalContainedIn() | CONTAINED IN <start_date_time> TO <end_date_time> | Получение записей которые активны за интервал времени
+TemporalAll() | ALL | Получение всех записей
+
+Пример запроса отсортированных данных:
+
+```csharp
+var samples = context.Samples.TemporallAll().OrderBy(x => EF.Property<DateTime>(x, ValidFrom));
+```
+
+Пример получения всех данных:
+
+```csharp
+var samples = context.Samples
+    .TemporalAll()
+    .OrderBy(x => EF.Property<DateTime>(x, "ValidFrom"))
+    .Select(x => new
+    {
+        Sample = x,
+        ValidFrom = EF.Property<DateTime>(x, "ValidFrom"),
+        ValidTo = EF.Property<DateTime>(x, "ValidTo"),
+    });
+foreach (var x in samples)
+{
+    Console.WriteLine($"{x.Name} - {x.ValidFrom}, {x.ValidTo}");
+}
+```
+
+### Очистка временной таблицы
+
+Для очистки временной и исторической таблиц нужно выполнить определенный запрос на языке SQL.
+
+Запрос очистки:
+
+```sql
+ALTER TABLE [dbo].[Samples]
+    SET (SYSTEM_VERSIONING = OFF)
+DELETE FROM [dbo].[Samples]
+DELETE FROM [audits].[SamplesAudit]
+ALTER TABLE [dbo].[Samples]
+    SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE=audits.SamplesAudit))
+```
+
+Пример очистки использованием EF Core:
+
+```csharp
+var strategy = context.Database.CreateExecutionStrategy();
+strategy.Execute(() =>
+{
+    using var trans = context.Database.BeginTransaction();
+    context.Database.ExecuteSqlRaw($"ALTER TABLE dbo.Samples SET (SYSTEM_VERSIONING = OFF)");
+    context.Database.ExecuteSqlRaw($"DELETE FROM audits.SamplesHistory");
+    context.Database.ExecuteSqlRaw($"ALTER TABLE dbo.Samples SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE={historySchema}.{historyTable}))");
+    trans.Commit();
+});
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 979 (1028)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### Принадлежащие сущностные классы
 
