@@ -27,11 +27,11 @@ internal delegate void Feedback(int value);
     {
         fb?.Invoke(value);
     }
-    private static void StaticFeedbackToConsole(Int32 value)
+    private static void StaticFeedbackToConsole(int value)
     {
         Console.WriteLine("Static Console = " + value);
     }
-    public void FeedbackToConsole(Int32 value)
+    public void FeedbackToConsole(int value)
     {
         Console.WriteLine("Console = " + value);
     }
@@ -45,7 +45,7 @@ internal delegate void Feedback(int value);
         var fbChain = default(Feedback);
         fbChain = (Feedback)Delegate.Combine(fbChain, fb1);
         fbChain = fbChain += fb2;
-        Processor(fbChain, 4);
+        Processor(fbChain, 4); //вызов цепочки методов делегата
         Processor(StaticFeedbackToConsole, 5); //неявное создание делегата
 ```
 
@@ -57,15 +57,17 @@ internal delegate string Feedback(out int val1, ref int val2, int val3);
 
 Поддерживается ковариантность и контравариантность при привязке метода к делегату. 
 
-- Ковариантность означает, что метод может возвратить тип производный от типа, возвращаемого делегатом.
+- Ковариантность означает, что метод может возвратить тип производный(конкретный) от типа, возвращаемого делегатом.
 
-- Контравариантность означает, что метод может принимать параметр, который является базовым для типа делегата.
+- Контравариантность означает, что метод может принимать параметр, который может быть более универсальным (базовым).
+
+- Инвариантность означает, что метод возвращает и принимает только заданный изначально тип.
 
 Пример:
 
 ```csharp
 internal delegate object MoveDelegate(FileStream stream);
-// метод подходящий по вариантности
+// метод подходящий по инвариантности
     private static string MoveTest(Stream stream)
     {
         return "Test";
@@ -152,9 +154,9 @@ button1.Click += button1_Click;
 Можно не указывать создание делегата - компилятор сам догадается и вставит нужный код за разработчика.
 
 ```csharp
-ThreadPool.QueueUserWorkItem(SomeAsyncTask, 5);
-// равносильно
 ThreadPool.QueueUserWorkItem(new WaitCallback(SomeAsyncTask), 5);
+// равносильно
+ThreadPool.QueueUserWorkItem(SomeAsyncTask, 5);
 // метод
 private static void SomeAsyncTask(Object o)
 {

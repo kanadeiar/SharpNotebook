@@ -168,11 +168,55 @@ WrapPanel будет подэлементом панели другого тип
 
 - установка пропорциональных размеров (например, * или 3*).
 
+Пример:
 
+```csharp
+<Grid Background="LightSteelBlue">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="*"></RowDefinition>
+        <RowDefinition Height="*"></RowDefinition>
+        <RowDefinition Height="Auto"></RowDefinition>
+    </Grid.RowDefinitions>
+    <TextBox Margin="10" Grid.Row="0">Текстовый блок 1</TextBox>
+    <TextBox Margin="10" Grid.Row="1">Текстовый блок 2</TextBox>
+    <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+        <Button Margin="10,10,5,15" Padding="5">OK</Button>
+        <Button Margin="5,10,10,15" Padding="5">Отмена</Button>
+    </StackPanel>
+</Grid>
+```
 
+У элементов при их компоновке значения позиционирования и размерность может иметь вещественное значение, тогда происходит округление чисел. При этом может происходить размытие границ элементов. Для решени этой проблемы следует установить свойство UseLayoutRendering в значение true. Тогда WPF будет размещать границы этого элемента четко по ближайшим границам пикселей.
 
+Пример:
 
-101
+```csharp
+<Grid UseLayoutRendering="true">
+</Grid>
+```
+
+Для объединения соседник строк и колонок следует использовать присоединенные свойства RowSpan и ColumnSpan. Эти свойства устанавливают количество строк или колонок, которые должна занять ячейка.
+
+Пример:
+
+```csharp
+<Grid Background ="LightSteelBlue">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="*"></RowDefinition>
+        <RowDefinition Height="Auto"></RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <TextBox Margin="10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">Текстовый блок 1</TextBox>
+    <Button Margin="10,10,5,15" Padding="5" Grid.Row="1" Grid.Column="1">OK</Button>
+    <Button Margin="5,10,10,15" Padding="5" Grid.Row="1" Grid.Column="2">Отмена</Button>
+</Grid>
+```
+
+104
 
 
 

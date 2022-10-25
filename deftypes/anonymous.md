@@ -195,13 +195,12 @@ hello();       // Hello World
 
 ```csharp	
 var sum = (int x, int y) => x + y;
-int sumResult = sum(4, 5);                  // 9
+var sumResult = sum(4, 5);                  // 9
 Console.WriteLine(sumResult);               // 9
- 
-Operation multiply = (x, y) => x * y;
-int multiplyResult = multiply(4, 5);        // 20
+var multiply = (x, y) => x * y;
+var multiplyResult = multiply(4, 5);        // 20
 Console.WriteLine(multiplyResult);          // 20
- 
+
 delegate int Operation(int x, int y);
 ```
 
