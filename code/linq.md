@@ -65,6 +65,7 @@ foreach (var elem in subset)
 Выражения запросы LINQ имеют важную особенность - они в действительности не оцениваются до тех пор, пока не начнется итерация по последовательности в блоке foreach. Это называется отложенным выполнением. Преимущество такого подхода - возможность примененения одного и того же запроса LINQ многократно к тому же самому контейнеру и полной гарантией получения актуальных результатов.
 
 Пример:
+
 ```csharp
 string[] names = {"Andrey", "Max", "Fedor 2", "1 Ivan", "Egor"};
 var subset = from n in names 
@@ -203,21 +204,21 @@ var all2 = from p in infos orderby p descending select p; //по убывани�
 - пример разности двух контейнеров метод Except():
 
 ```csharp
-List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
-List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+List<string> name1 = new() { "And", "Vlad", "Sergey" };
+var name2 = new List<string> { "Vlad", "Sergey", "Max" };
 var diff = (from n in name1 select n)
     .Except(from n in name2 select n);
 foreach (var el in diff)
 {
-    WriteLine(el); //And
+    Console.WriteLine(el); //And
 }
 ```
 
 - пример общие элементы данных в наборе контейнеров метод Intersect():
 
 ```csharp
-List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
-List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+List<string> name1 = new() {"And", "Vlad", "Sergey"};
+var name2 = new List<string> {"Vlad", "Sergey", "Max"};
 var intersect = (from n in name1 select n)
     .Intersect(from n in name2 select n);
 foreach (var el in intersect)
@@ -229,21 +230,21 @@ foreach (var el in intersect)
 - пример включеие всех членов множества запросов LINQ метод Union():
 
 ```csharp
-List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
-List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
-var union = (from n in name1 select n)
-    .Union(from n in name2 select n);
+List<string> name1 = new() { "And", "Vlad", "Sergey" };
+var name2 = new List<string> { "Vlad", "Sergey", "Max" };
+var union = name1.Select(x => x)
+    .Union(name2.Select(x => x));
 foreach (var el in union)
 {
-    WriteLine(el); //And Vlad Sergey Max
+    Console.WriteLine(el); //And Vlad Sergey Max
 }
 ```
 
 - пример прямой конкатенацией результирующих наборов LINQ метод Concat():
 
 ```csharp
-List<string> name1 = new List<string> {"And", "Vlad", "Sergey"};
-List<string> name2 = new List<string> {"Vlad", "Sergey", "Max"};
+var name1 = new List<string> {"And", "Vlad", "Sergey"};
+var name2 = new List<string> {"Vlad", "Sergey", "Max"};
 var concat = (from n in name1 select n)
     .Concat(from n in name2 select n);
 foreach (var el in concat)
@@ -268,17 +269,18 @@ foreach (var el in concat)
 Операции агрегирования могут использоватся для выполнения надо результирующим набором разообразных операций агрегирования.
 
 ```csharp
-int[] arrInts = {2, -3, 4, 9, 0, 10};
-WriteLine($"Max = {(from i in arrInts select i).Max()}");
-WriteLine($"Min = {(from i in arrInts select i).Min()}");
-WriteLine($"Average = {(from i in arrInts select i).Average()}");
-WriteLine($"Sum = {(from i in arrInts select i).Sum()}");
-var arr1=(from i in arrInts select i).Take(2);
+var arrInts = new[] { 2, -3, 4, 9, 0, 10 };
+Console.WriteLine($"Max = {(from i in arrInts select i).Max()}");
+Console.WriteLine($"Min = {arrInts.Min()}");
+Console.WriteLine($"Average = {(from i in arrInts select i).Average()}");
+Console.WriteLine($"Sum = {arrInts.Select(x => x).Sum()}");
+var arr1 = (from i in arrInts select i).Take(2);
 foreach (var el in arr1)
-    WriteLine($"{el}");
-var arr2=(from i in arrInts select i).Skip(2);
+    Console.Write($"{el} ");
+Console.WriteLine();
+var arr2 = arrInts.Skip(2);
 foreach (var el in arr2)
-    WriteLine($"{el}");
+    Console.Write($"{el} ");
 ```
 
 ## Группировка
