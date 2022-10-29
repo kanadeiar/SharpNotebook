@@ -47,14 +47,14 @@ foreach (var elem in subset)
 Неявная типизация при работе с запросами LINQ значительно упрощает работу:
 
 ```csharp
-string[] names = {"Andrey", "Max", "Fedor 2", "1 Ivan", "Egor"};
-var subset = from n in names 
-    where n.Contains(" ")
-    orderby n
-    select n;
+string[] names = { "Andrey", "Max", "Fedor 2", "1 Ivan", "Egor" };
+var subset = names
+    .Where(x => x.Contains(" "))
+    .OrderBy(x => x)
+    .Select(x => x);
 foreach (var elem in subset)
 {
-    WriteLine($"Item: {elem}");
+    Console.WriteLine($"Item: {elem}");
 }
 ```
 
@@ -67,19 +67,19 @@ foreach (var elem in subset)
 Пример:
 
 ```csharp
-string[] names = {"Andrey", "Max", "Fedor 2", "1 Ivan", "Egor"};
-var subset = from n in names 
-    select n;
+string[] names = { "Andrey", "Max", "Fedor 2", "1 Ivan", "Egor" };
+var subset = names
+    .Select(x => x);
 //оператор LINQ здесь оценивается
 foreach (var elem in subset)
 {
-    WriteLine($"Item: {elem}");
+    Console.WriteLine($"Item: {elem}");
 }
 names[0] = "Pavel";
 //оператор LINQ здесь снова оценивается
 foreach (var elem in subset)
 {
-    WriteLine($"Item: {elem}");
+    Console.WriteLine($"Item: {elem}");
 }
 ```
 
@@ -88,13 +88,13 @@ foreach (var elem in subset)
 Пример немедленного выполенения:
 
 ```csharp
-string[] names = {"Andrey", "Max", "Fedor 2", "1 Ivan", "Egor"};
+string[] names = { "Andrey", "Max", "Fedor 2", "1 Ivan", "Egor" };
 string[] substr = (from n in names
-    where n.Contains("M")
-    select n).ToArray();
-List<string> subList = (from n in names
-    where n.Contains("A")
-    select n).ToList();
+                    where n.Contains("M")
+                    select n).ToArray();
+List<string> subList = names
+    .Where(x => x.Contains("A"))
+    .ToList();
 ```
 
 ## Возвращение результатов запроса LINQ
@@ -106,12 +106,12 @@ List<string> subList = (from n in names
 ```csharp
 class MyClass
 {
-    private static string[] names = {"Andrey", "Max", "Fedor 2", "1 Ivan", "Egor"};
+    private static string[] names = { "Andrey", "Max", "Fedor 2", "1 Ivan", "Egor" };
     public IEnumerable<string> GetNames()
     {
-        IEnumerable<string> enumerable = from n in names
-            where n.Contains(" ")
-            select n;
+        IEnumerable<string> enumerable = names
+            .Where(x => x.Contains(" "))
+            .Select(x => x);
         return enumerable;
     }
 }
@@ -121,7 +121,7 @@ foreach (var item in m.GetNames()) //отложенная оценка выра�
     WriteLine(item);
 ```
 
-## Фильтрация LINQ
+## Фильтрация LINQ по типу
 
 Можно использовать методы OfType<T> для фильтрации элементов коллекции, которые удовлетворяют заданному в параметре-типе типу.
 
@@ -138,15 +138,28 @@ var ints = values.OfType<int>();
 var результат = from элемент in контейнер select элемент;
 ```
 
+Структура для примеров:
+
+```csharp
+struct Info
+{
+    public string Name { get; set; } = string.Empty;
+    public int Number { get; set; } = default;
+    public int Desc { get; set; } = default;
+    public Info() { }
+}
+```
+
 Пример:
 
 ```csharp
-Info[] infos = Info.GetTestArr();
 var all = from p in infos select p.Name; //только имена товаров
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info { Name = $"N{x}", Number = x, Desc = x });
+var all = infos
+    .Select(x => x.Name); //только имена товаров
 foreach (var el in all)
-{
-    WriteLine(el);
-}
+    Console.WriteLine(el);
 ```
 
 Получение подмножества данных:
@@ -158,46 +171,62 @@ var результат = from элемент in контейнер where выр�
 Пример:
 
 ```csharp
-Info[] infos = Info.GetTestArr();
 var all = from p in infos where p.Number>3 select p.Name;
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info { Name = $"N{x}", Number = x, Desc = x });
+var all = infos
+    .Where(x => x.Number > 3)
+    .Select(x => x.Name); //только имена товаров
 foreach (var el in all)
-{
-    WriteLine(el);
-}
+    Console.WriteLine(el);
 ```
 
 Проецирование новых типов данных из существующих источников данных:
 
 ```csharp
-Info[] infos = Info.GetTestArr();
 var all = from p in infos select new {p.Name, p.Desc}; //проецирование нового типа данных
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info { Name = $"N{x}", Number = x, Desc = x });
+var all = infos
+    .Select(x => new { x.Name, x.Desc }); //проецирование нового типа данных
 foreach (var el in all)
-{
-    WriteLine(el.Name + " " + el.Desc);
-}
+    Console.WriteLine($"{el.Name} {el.Desc}");
 ```
 
 Подсчет количества с использование класса Enumerable:
 
 ```csharp
-Info[] infos = Info.GetTestArr();
 int count = (from p in infos select p).Count();
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info { Name = $"N{x}", Number = x, Desc = x });
+var count = infos.Count();
+```
+
+В C# есть возможность получить количество элементов в коллекции без актуального перечисления элементов списка. Для этого следует использовать расширяющий метод LINQ TryGetNonEnumeratedCount().
+
+```csharp
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info { Name = $"N{x}", Number = x, Desc = x });
+var _ = infos.TryGetNonEnumeratedCount(out int count);
+Console.WriteLine(count);
 ```
 
 Изменение порядка следования элементов на противоположный:
 
 ```csharp
-Info[] infos = Info.GetTestArr();
-var all = (from p in infos select p).Reverse();
+var all = infos.Reverse();
 ```
 
 Выражения сортировки:
 
 ```csharp
-Info[] infos = Info.GetTestArr();
-var all = from p in infos orderby p select p; //по возрастанию
-var all2 = from p in infos orderby p descending select p; //по убыванию
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info { Name = $"N{x}", Number = x, Desc = x });
+var all1 = infos.OrderBy(x => x.Name);
+var all2 = infos.OrderByDescending(x => x.Desc);
 ```
+
+## Манипуляции коллекциями LINQ
 
 Класс Enumerable поддерживает несколько расширяющих методов для работы с двумя и более коллекциями одновременно с целью нахождения их объединений, разностей, конкатенаций и пересечений данных.
 
@@ -206,8 +235,8 @@ var all2 = from p in infos orderby p descending select p; //по убывани�
 ```csharp
 List<string> name1 = new() { "And", "Vlad", "Sergey" };
 var name2 = new List<string> { "Vlad", "Sergey", "Max" };
-var diff = (from n in name1 select n)
-    .Except(from n in name2 select n);
+var diff = name1
+    .Except(name2);
 foreach (var el in diff)
 {
     Console.WriteLine(el); //And
@@ -266,6 +295,8 @@ foreach (var el in concat)
 }
 ```
 
+## Агрегирование
+
 Операции агрегирования могут использоватся для выполнения надо результирующим набором разообразных операций агрегирования.
 
 ```csharp
@@ -285,24 +316,49 @@ foreach (var el in arr2)
 
 ## Группировка
 
-Пример группировки данных:
+Разбивает последовательность на подпоследовательности.
+
+Пример простой группировки данных:
 
 ```csharp
-var group1 = users.GroupBy(p=>p.LastName)
-    .Select(g=>new
-    {
-        Family = g.Key,
-        Count = g.Count(),
-        Names = g.Select(p=>p),
-    });
+record class Info(string Name, int Number, int Desc);
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info($"N{x}", x, x));
+var group1 = infos.GroupBy(p => p.Name);
 foreach (var el in group1)
 {
-    Console.Write($"{el.Family} {el.Count} шт.: ");
-    foreach (var t in el.Names)
-        Console.Write($"{t.FirstName} ");
+    Console.WriteLine($"{el.Key} - {el.Count()} шт.:");
+    foreach (var x in el)
+    {
+        Console.WriteLine($"{x.Name} {x.Number}");
+    }
     Console.WriteLine();
 }
 ```
+
+Пример группировки данных с проецированием:
+
+```csharp
+record class Info(string Name, int Number, int Desc);
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new Info($"N{x}", x, x));
+var group1 = infos.GroupBy(p => p.Name)
+    .Select(g => new
+    {
+        Name = g.Key,
+        Count = g.Count(),
+        Elems = g.Select(p => p),
+    });
+foreach (var el in group1)
+{
+    Console.Write($"{el.Name} {el.Count} шт.: ");
+    foreach (var t in el.Elems)
+        Console.Write($"{t.Name} ");
+    Console.WriteLine();
+}
+```
+
+Возможно делать вложенные запросы.
 
 Проход по коллекциям - детям:
 
@@ -316,15 +372,50 @@ class Person : Child
 {
     public List<Child> Children { get; set; }
 }
-static void Main(string[] args)
+var persons = Enumerable.Range(1, 5)
+    .Select(x => new Person { Name = "Родитель", Age = x + 20, Children = new List<Child> { new Child { Name = "Ребенок", Age = x + 20 } } });
+//проецирование нового типа
+var newTypes = persons.GroupBy(x => x.Name).Select(x => new
 {
-    var persons = new List<Person>();
-    //дети есть с десятилетним возрастом
-    var with10AgeChild = persons.Where(p => p.Children.Select(c => c.Age).Contains(10));
-    //есть маленькие дети
-    var withManyKindChild = persons.Where(p => p.Children.Count(c => c.Age < 8) > 0);
-    //есть хотяб один малельний ребенок
-    var withOneKind = persons.Where(p => p.Children.FirstOrDefault(c => c.Age < 8) != null);
+    Name = x.Key,
+    Count = x.Count(),
+    Childs = x.Select(a => a),
+});
+//дети есть с десятилетним возрастом
+var with10AgeChild = persons.Where(p => p.Children.Select(c => c.Age).Contains(10));
+//есть маленькие дети
+var withManyKindChild = persons.Where(p => p.Children.Count(c => c.Age < 8) > 0);
+//есть хотяб один малельний ребенок
+var withOneKind = persons.Where(p => p.Children.FirstOrDefault(c => c.Age < 8) != null);
+```
+
+## Сведение объектов
+
+С помощью метода SelectMany() можно производить сведение коллекций в одну или проецировать элементы коллекций в другой тип.
+
+Пример простой:
+
+```csharp
+record class Info(string Name, int Number, int Desc);
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new { Name = x, Infos = new List<Info> { new Info($"N{x}", x, x) } });
+var allinfos = infos.SelectMany(x => x.Infos);
+foreach (var el in allinfos)
+{
+    Console.Write($"{el.Name} {el.Number} ");
+}
+```
+
+Пример с проецированием:
+
+```csharp
+var infos = Enumerable.Range(1, 10)
+    .Select(x => new { Name = $"Имя{x}", Infos = new List<Info> { new Info($"N{x}", x, x) } });
+var converted = infos.SelectMany(x => x.Infos, (x, y) => new { Name = x.Name, InfoName = y.Name });
+foreach (var el in converted)
+{
+    Console.Write($"{el.Name} {el.InfoName} ");
+}
 ```
 
 ## Пагинация данных
@@ -354,15 +445,6 @@ foreach (var chunk in chunks)
     }
     Console.WriteLine();
 }
-```
-
-## Получение количества элементов
-
-В C# есть возможность получить количество элементов в коллекции без актуального перечисления элементов списка. Для этого следует использовать расширяющий метод LINQ TryGetNonEnumeratedCount().
-
-```csharp
-var names = new[] { "Иван", "Петр", "Сидор", "Вася", "Павел", "Дима" };
-var result = names.TryGetNonEnumeratedCount(out int count);
 ```
 
 ## Значение по умолчанию
