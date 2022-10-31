@@ -216,6 +216,72 @@ WrapPanel будет подэлементом панели другого тип
 </Grid>
 ```
 
+### Разделительные полосы
+
+Разделительные полосы в WPF представлены классом GridSplitter и являются средствами Grid. GridSplitter должен быть помщен в ячейку Grid. GridSplitter всегда изменяет размер всей строки или всей колонки, нужно растягивать GridSplitter по всей строке или колонке, а не ограничиваться единственной ячейкой. Нужно обязательно указать размер для GridSplitter, иначе его не будет видно. 
+
+В случае вертикальной разделительной полосы нужно установить VerticalAlignment в Stretch, Width - фиксированный размер, а в случае горизонтальной разделительной полосы - HorizontalAlignment в Stretch, Heidht - фиксированный размер. В случае горизонтальной разделительной полосы следует установить VerticalAlignment в Center, а в случае вертикальной полосы - HorizontalAlignment в Center.
+
+Если установить значение свойства ShowPreview в true, то при перетаскивании отображается лишь серая тень, показывающая куда попадет разделитель после отпускания курсора мышки.
+
+Если установить значение свойства DragIncrement в какое-либо значение, то изменение позиции разделителя будет производится шагами.
+
+Пример с одним разделителем:
+
+```csharp
+<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition></RowDefinition>
+        <RowDefinition></RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition MinWidth="50"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+        <ColumnDefinition MinWidth="30"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Button Grid.Row="0" Grid.Column="0">Первая</Button>
+    <Button Grid.Row="0" Grid.Column="2">Вторая</Button>
+    <Button Grid.Row="1" Grid.Column="0">Третья</Button>
+    <Button Grid.Row="1" Grid.Column="2">Четвертая</Button>
+    <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="true" DragIncrement="10"/>
+</Grid>
+```
+
+Можно использовать несколько вертиальных/горизонтальных разделителей в одном компоненте Grid.
+
+Пример с двумя разделителями:
+
+```csharp
+<Grid>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+        <ColumnDefinition></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Grid Grid.Column="0" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0">Первая</Button>
+        <Button Grid.Row="1">Третья</Button>
+    </Grid>
+    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+    <Grid Grid.Column="2" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0">Вторая</Button>
+        <Button Grid.Row="2">Четвертая</Button>
+        <GridSplitter Grid.Row="1" Height="3" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+    </Grid>
+</Grid>
+```
+
+
+
 104
 
 
