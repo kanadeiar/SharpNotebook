@@ -280,9 +280,52 @@ WrapPanel будет подэлементом панели другого тип
 </Grid>
 ```
 
+Можно элементы группировать в группы с общими размерами.
+
+Пример:
+
+```csharp
+<Grid Grid.Row="0">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" SharedSizeGroup="Test"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+        <ColumnDefinition></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Button Grid.Column="0">Первая</Button>
+    <Button Grid.Column="1">Вторая</Button>
+    <Button Grid.Column="2">Третья</Button>
+</Grid>
+<Grid Grid.Row="1">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" SharedSizeGroup="Test"></ColumnDefinition>
+        <ColumnDefinition Width="Auto"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Button Grid.Column="0">Первая</Button>
+    <Button Grid.Column="1">Вторая</Button>
+</Grid>
+```
+
+## Позиционирование внутри UniformGrid
+
+Этот элемент не требует предопределенных колонок и строк. Устанавливается количество колонок и строк и все пространство делится между ними поровну. Помещает элементы в невидимуют таблицу, устанавливая одинаковый размер для всех ячеек.
+
+Пример:
+
+```csharp
+<UniformGrid Rows="2" Columns="3">
+    <Button>Первая</Button>
+    <Button>Вторая</Button>
+    <Button>Третья</Button>
+    <Button>Четвертая</Button>
+</UniformGrid>
+```
 
 
-104
+
+
+
+
+110
 
 
 
@@ -325,13 +368,6 @@ WrapPanel будет подэлементом панели другого тип
 </Canvas>
 ```
 
-
-
-
-
-## Позиционирование внутри панели UniformGrid
-
-Помещает элементы в невидимуют таблицу, устанавливая одинаковый размер для всех ячеек.
 
 
 
