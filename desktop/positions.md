@@ -216,7 +216,7 @@ WrapPanel будет подэлементом панели другого тип
 </Grid>
 ```
 
-### Разделительные полосы
+### Разделительные полосы Grid
 
 Разделительные полосы в WPF представлены классом GridSplitter и являются средствами Grid. GridSplitter должен быть помщен в ячейку Grid. GridSplitter всегда изменяет размер всей строки или всей колонки, нужно растягивать GridSplitter по всей строке или колонке, а не ограничиваться единственной ячейкой. Нужно обязательно указать размер для GridSplitter, иначе его не будет видно. 
 
@@ -320,56 +320,35 @@ WrapPanel будет подэлементом панели другого тип
 </UniformGrid>
 ```
 
-
-
-
-
-
-110
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Позиционирование внутри панелей Canvas
 
 Панель Canvas делает возможным абсолютное позиционирование содержимого пользовательского интерфейса.
 
-Для каждого элемента управления необходимо указать левый верхний угол с использованием свойств Canvas.Тор и Canvas.Left. Правый нижний угол каждого элемента управления можно задать неявно, устанавливая свойства Canvas.Height и Canvas.Width. 
+Для каждого элемента управления необходимо указать левый верхний угол с использованием свойств Canvas.Тор и Canvas.Left. Правый нижний угол каждого элемента управления можно задать неявно, устанавливая свойства Height и Width. Значения задаются в независимых от устройства еденицах. Альтернативно вместо Canvas.Top или Canvas.Right можно использовать Canvas.Right и Canvas.Bottom.
 
 Наилучшим применением типа Canvas является позиционирование графического содержимого.
 
+Пример:
+
 ```csharp
 <Canvas Background="LightsteelBlue">
-    <Label x:Name="LabelTest" Canvas.Left="17" Canvas.Top="155" Content="Test"/>
+    <Button x:Name="ButtonOne" Canvas.Left="17" Canvas.Top="155" Width="200" Height="100" Content="Button1"/>
+    <Button x:Name="ButtonTwo" Canvas.Left="120" Canvas.Top="200" Width="150" Height="50" Content="Button2"/>
 </Canvas>
 ```
 
+### Z-порядок
 
+С помощью присоединяемого свойства Canvas.ZIndex можно управлять расположением элементов внутри Canvas, когда они перекрываются. По умолчанию у каждого элемента XIndex неявно равен 0.
 
+Пример:
+
+```csharp
+<Canvas Background="LightsteelBlue">
+    <Button x:Name="ButtonOne" Canvas.ZIndex="1" Canvas.Left="17" Canvas.Top="155" Width="200" Height="100" Content="Button1"/>
+    <Button x:Name="ButtonTwo" Canvas.Left="120" Canvas.Top="200" Width="150" Height="50" Content="Button2"/>
+</Canvas>
+```
 
 ## Прокрутка
 
