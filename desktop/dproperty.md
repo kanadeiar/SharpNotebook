@@ -16,26 +16,74 @@
 
 - Взаимодействовать с существующим свойством зависимости можно в манере, идентичной работе с обычным свойством CLR.
 
-Пример определения и регистрации свойства зависимости в элементе управления:
+## Простое использование
+
+Пример определения и регистрации свойства зависимости в пользовательском элементе управления:
 
 ```csharp
-public class TestElement : UIElement
+<UserControl x:Class="Wpf.Controls.NumberControl"
+...
+    xmlns:local="clr-namespace:Wpf.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>
+        <TextBlock VerticalAlignment="Center" Margin="3,0"
+            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:NumberControl}}"/>     
+        <Label x:Name="LabelNumber" Height="50" Width="200" Background="LightBlue" 
+            Content="{Binding CurrentNumber, RelativeSource={RelativeSource AncestorType=local:NumberControl}}"/>
+    </StackPanel>
+</UserControl>
+public partial class NumberControl : UserControl
 {
-    public static readonly DependencyProperty MergeProperty;
-    public Thickness Sample
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register("Title",
+        typeof(string),
+        typeof(NumberControl),
+        new UIPropertyMetadata(default(string)));
+    [Description("Заголовок")]
+    public string Title
     {
-        get => (Thickness)GetValue(MergeProperty);
-        set => SetValue(MergeProperty, value);
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
-    static TestElement()
+    public static readonly DependencyProperty CurrentNumberProperty =
+        DependencyProperty.Register("CurrentNumber",
+        typeof(int),
+        typeof(NumberControl),
+    new UIPropertyMetadata(default(int)));
+    [Description("Текущий номер")]
+    public int CurrentNumber
     {
-        var metadata = new FrameworkPropertyMetadata(new Thickness());
-        MergeProperty = DependencyProperty.Register("Merge", typeof(Thickness), typeof(FrameworkElement), metadata);
+        get => (int)GetValue(CurrentNumberProperty);
+        set => SetValue(CurrentNumberProperty, value);
+    }
+    public NumberControl()
+    {
+        InitializeComponent();
     }
 }
 ```
 
-Если необходимо установить привязку данных в коде, нужно вызывать метод SetBinding():
+Использование этого компонента в окне приложения:
+
+```csharp
+xmlns:myc="clr-namespace:Wpf.Controls"
+...
+<StackPanel>
+    <myc:NumberControl x:Name="NumControl" Title="Тестовый заголовок" CurrentNumber="100"/>
+    <TextBox Text="{Binding ElementName=NumControl, Path=CurrentNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+</StackPanel>
+```
+
+## Дополнительный функционал
+
+Можно добавить проверку свойств и уведомление о изменении.
+
+
+
+## Дополнительное
+
+А если необходимо установить привязку данных в коде, нужно вызывать метод SetBinding():
 
 ```csharp
 <ScrollBar x:Name="scrollBar" Orientation="Horizontal" Minimum="0" Maximum="100"></ScrollBar>
