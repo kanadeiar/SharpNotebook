@@ -16,7 +16,7 @@
 
 - Взаимодействовать с существующим свойством зависимости можно в манере, идентичной работе с обычным свойством CLR.
 
-## Простое использование
+## Использование
 
 Пример определения и регистрации свойства зависимости в пользовательском элементе управления:
 
@@ -27,59 +27,91 @@
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
-        <TextBlock VerticalAlignment="Center" Margin="3,0"
-            Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:NumberControl}}"/>     
         <Label x:Name="LabelNumber" Height="50" Width="200" Background="LightBlue" 
             Content="{Binding CurrentNumber, RelativeSource={RelativeSource AncestorType=local:NumberControl}}"/>
     </StackPanel>
 </UserControl>
 public partial class NumberControl : UserControl
 {
-    public static readonly DependencyProperty TitleProperty =
-        DependencyProperty.Register("Title",
-        typeof(string),
-        typeof(NumberControl),
-        new UIPropertyMetadata(default(string)));
-    [Description("Заголовок")]
-    public string Title
-    {
-        get => (string)GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
-    }
     public static readonly DependencyProperty CurrentNumberProperty =
         DependencyProperty.Register("CurrentNumber",
         typeof(int),
         typeof(NumberControl),
-    new UIPropertyMetadata(default(int)));
+        new UIPropertyMetadata(default(int)));
     [Description("Текущий номер")]
     public int CurrentNumber
     {
         get => (int)GetValue(CurrentNumberProperty);
         set => SetValue(CurrentNumberProperty, value);
     }
-    public NumberControl()
-    {
-        InitializeComponent();
-    }
+...
 }
 ```
 
-Использование этого компонента в окне приложения:
+Пример использования этого компонента в окне приложения:
 
 ```csharp
 xmlns:myc="clr-namespace:Wpf.Controls"
 ...
 <StackPanel>
-    <myc:NumberControl x:Name="NumControl" Title="Тестовый заголовок" CurrentNumber="100"/>
+    <myc:NumberControl x:Name="NumControl" CurrentNumber="100"/>
     <TextBox Text="{Binding ElementName=NumControl, Path=CurrentNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 </StackPanel>
 ```
 
 ## Дополнительный функционал
 
-Можно добавить проверку свойств и уведомление о изменении.
+Можно добавить в свойство зависимости проверку значения, приведение значения и уведомление о изменении.
 
+Пример с приведением значения, проверкой и уведомлением:
 
+```csharp
+<UserControl x:Class="Wpf.Controls.NumberControl"
+...
+    mc:Ignorable="d"
+    d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel>   
+        <Label x:Name="LabelNumber" Height="50" Width="200" Background="LightBlue" />
+    </StackPanel>
+</UserControl>
+public partial class NumberControl : UserControl
+{
+    public static readonly DependencyProperty CurrentNumberProperty =
+        DependencyProperty.Register("CurrentNumber",
+        typeof(int),
+        typeof(NumberControl),
+        new UIPropertyMetadata(0, new PropertyChangedCallback(CurrentNumberChanged), new CoerceValueCallback(CoerceCurrentNumber)), new ValidateValueCallback(ValidateCurrentNumber));
+    private static void CurrentNumberChanged(DependencyObject depObj,
+        DependencyPropertyChangedEventArgs args)
+    {
+        var c = (NumberControl)depObj;
+        var theLabel = c.LabelNumber;
+        theLabel.Content = args.NewValue.ToString();
+    }
+    private static object CoerceCurrentNumber(DependencyObject d, object value)
+    {
+        var baseVal = (NumberControl)d;
+        if ((int)value < default(int))
+        {
+            return default(int);
+        }
+        if ((int)value > 1000)
+        {
+            return 1000;
+        }
+        return value;
+    }
+    public static bool ValidateCurrentNumber(object value) =>
+        Convert.ToInt32(value) >= 0 && Convert.ToInt32(value) <= 9000;
+    [Description("Текущий номер")]
+    public int CurrentNumber
+    {
+        get => (int)GetValue(CurrentNumberProperty);
+        set => SetValue(CurrentNumberProperty, value);
+    }
+...
+}
+```
 
 ## Дополнительное
 
